@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.compileOnly
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
@@ -23,6 +26,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation ("org.springframework.boot:spring-boot-starter-actuator")
+    implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation ("org.flywaydb:flyway-core")
+    compileOnly ("org.projectlombok:lombok")
+    runtimeOnly ("org.postgresql:postgresql")
+    annotationProcessor ("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
