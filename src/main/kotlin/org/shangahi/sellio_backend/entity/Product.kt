@@ -20,8 +20,6 @@ data class Product(
     val subCategoryId: UUID,
     @Column(name = "is_used")
     val isUsed: Boolean = false,
-    @Column(name = "price")
-    val price: Double,
     @Column(name = "created_at")
     val createdAt: Instant = Instant.now()
 )
