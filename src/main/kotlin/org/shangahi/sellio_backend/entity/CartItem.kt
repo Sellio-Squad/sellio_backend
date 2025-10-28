@@ -21,8 +21,8 @@ data class CartItem(
     @JoinColumn(name = "product_id", nullable = false)
     val product: Product,
 
-    @Column(name = "qty", nullable = false)
-    val qty: Int,
+    @Column(name = "quantity", nullable = false)
+    val quantity: Int,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
