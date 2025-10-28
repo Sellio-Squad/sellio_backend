@@ -12,13 +12,7 @@ data class Size(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "value", nullable = false)
-    val value: SizeValue
-) {
-    enum class SizeValue {
-        SMALL,
-        MEDIUM,
-        LARGE
-    }
-}
+    val value: String
+)
 
 
