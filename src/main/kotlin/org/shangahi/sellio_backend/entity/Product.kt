@@ -5,12 +5,12 @@ import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
 import java.util.*
 
-@Table(name = "product", schema = "sellio_db")
+@Table(name = "product")
 @Entity
 data class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     @Column(name = "title")
     val title: String,
     @Column(name = "description", nullable = true)

@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.util.UUID
 
-@Table(name = "color", schema = "sellio_db")
+@Table(name = "color")
 @Entity
 data class Color(
     @Id

@@ -9,13 +9,13 @@ import jakarta.persistence.Table
 import java.time.Instant
 import java.util.UUID
 
-@Table(name = "users", schema = "sellio_db")
+@Table(name = "users")
 @Entity
 data class User(
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     @Column(name = "first_name",nullable= false)
     val firstName: String,
     @Column(name = "last_name",nullable= false)

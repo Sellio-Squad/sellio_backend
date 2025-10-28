@@ -9,12 +9,12 @@ import jakarta.persistence.Table
 import java.time.Instant
 import java.util.UUID
 
-@Table(name = "product_item", schema = "sellio_db")
+@Table(name = "product_item")
 @Entity
 data class ProductItem(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     @Column(name = "product_id", nullable = false)
     val productId: UUID,
     @Column(name = "price")
