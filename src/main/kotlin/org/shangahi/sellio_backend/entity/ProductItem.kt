@@ -22,11 +22,11 @@ data class ProductItem(
     @Column(name ="discount_id")
     val discountId: UUID,
     @Column(name ="color_id")
-    val colorId: UUID,
+    val colorId: UUID? = null,
     @Column(name ="size_id")
-    val sizeId: UUID,
+    val sizeId: UUID? = null,
     @Column(name ="weight_id")
-    val weightId: UUID,
+    val weightId: UUID? = null,
     @Column(name ="stock")
     val stock: Int
 )

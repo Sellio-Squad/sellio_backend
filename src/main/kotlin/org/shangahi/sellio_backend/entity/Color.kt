@@ -13,7 +13,7 @@ import java.util.UUID
 data class Color(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null ,
     @Column(name = "value", nullable = false)
     val value: String
 )

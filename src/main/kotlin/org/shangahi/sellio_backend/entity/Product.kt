@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
 import java.util.*
 
@@ -20,6 +21,7 @@ data class Product(
     val subCategoryId: UUID,
     @Column(name = "is_used")
     val isUsed: Boolean = false,
-    @Column(name = "created_at")
-    val createdAt: Instant = Instant.now()
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    val createdAt: Instant? = null
 )

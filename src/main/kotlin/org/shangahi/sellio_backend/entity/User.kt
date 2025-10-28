@@ -16,13 +16,13 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID = UUID.randomUUID(),
-    @Column(name = "first_name")
+    @Column(name = "first_name",nullable= false)
     val firstName: String,
-    @Column(name = "last_name")
+    @Column(name = "last_name",nullable= false)
     val lastName: String,
     @Column(name = "email",nullable = true)
     val email: String? = null,
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "password", nullable = false)
     val password: String,
     @Column(name = "phone_number", nullable = false)
     val phoneNumber: String,
