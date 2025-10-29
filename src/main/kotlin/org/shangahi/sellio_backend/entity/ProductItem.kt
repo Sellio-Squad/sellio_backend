@@ -1,13 +1,10 @@
 package org.shangahi.sellio_backend.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 @Table(name = "product_item")
 @Entity
@@ -15,18 +12,38 @@ data class ProductItem(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "product_id", nullable = false)
-    val productId: UUID,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    val product: Product,
+
     @Column(name = "price")
     val price: Double,
-    @Column(name ="discount_id")
-    val discountId: UUID,
-    @Column(name ="color_id")
-    val colorId: UUID? = null,
-    @Column(name ="size_id")
-    val sizeId: UUID? = null,
-    @Column(name ="weight_id")
-    val weightId: UUID? = null,
-    @Column(name ="stock")
-    val stock: Int
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discount_id", nullable = true)
+    val discount: Discount? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "color_id", nullable = true)
+    val color: Color? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "size_id", nullable = true)
+    val size: Size? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "weight_id")
+    val weight: Weight? = null,
+
+    @Column(name = "stock")
+    val stock: Int,
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    val createdAt: Instant? = null,
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    val updatedAt: Instant? = null
 )
