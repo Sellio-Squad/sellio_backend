@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 import java.util.*
 
@@ -14,6 +15,13 @@ data class Category(
 
     @Column(name = "title", nullable = false)
     val title: String,
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    val subCategories: Set<SubCategory> = emptySet(),
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, updatable = true)
+    val updatedAt: Instant? = null,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
