@@ -14,7 +14,7 @@ data class Category(
     val id: UUID? = null,
 
     @Column(name = "title", nullable = false)
-    val title: String,
+    val title: String = "",
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     val subCategories: Set<SubCategory> = emptySet(),
