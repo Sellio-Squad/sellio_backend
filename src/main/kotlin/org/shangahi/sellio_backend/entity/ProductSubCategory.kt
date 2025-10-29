@@ -1,13 +1,13 @@
 package org.shangahi.sellio_backend.entity
 
-import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import jakarta.persistence.*
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
-@Table(name = "product_image")
 @Entity
-data class ProductImage(
+@Table(name = "product_subcategory")
+data class ProductSubCategory(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
@@ -16,10 +16,11 @@ data class ProductImage(
     @JoinColumn(name = "product_id", nullable = false)
     val product: Product,
 
-    @Column(name = "image_url", nullable = false)
-    val imageUrl: String,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_category_id", nullable = false)
+    val subCategory: SubCategory,
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    val createdAt: Instant? = null,
+    @Column(name = "created_at", nullable = false, updatable = false)
+    val createdAt: Instant? = null
 )

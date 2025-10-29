@@ -13,13 +13,13 @@ data class CartItem(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     val cart: Cart,
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    val product: Product,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_item_id", nullable = false)
+    val productItem: ProductItem,
 
     @Column(name = "quantity", nullable = false)
     val quantity: Int,

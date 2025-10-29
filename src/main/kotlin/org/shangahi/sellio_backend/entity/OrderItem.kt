@@ -12,15 +12,22 @@ data class OrderItem(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "product_item_id", nullable = false)
-    val productItemId: UUID,
-    @Column(name = "order_id", nullable = false)
-    val orderId: UUID,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_item_id", nullable = false)
+    val productItem: ProductItem,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    val order: Orders,
+
     @Column(name = "quantity", nullable = false)
     val quantity: Int,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Instant? = null,
+
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     val updatedAt: Instant? = null

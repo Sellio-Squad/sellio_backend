@@ -5,21 +5,22 @@ import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
 import java.util.*
 
-@Table(name = "product_image")
 @Entity
-data class ProductImage(
+@Table(name = "favorite_store")
+data class FavoriteStore(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    val product: Product,
+    @JoinColumn(name = "store_id")
+    val store: Store,
 
-    @Column(name = "image_url", nullable = false)
-    val imageUrl: String,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    val user: User,
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false,updatable = false)
     val createdAt: Instant? = null,
 )

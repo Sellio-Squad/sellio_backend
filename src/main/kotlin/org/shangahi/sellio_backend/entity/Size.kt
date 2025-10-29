@@ -10,7 +10,6 @@ data class Size(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "value", nullable = false)
     val value: String
 )
