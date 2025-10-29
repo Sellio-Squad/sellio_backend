@@ -13,12 +13,12 @@ data class Cart(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
-    @Column(name = "total", nullable = false)
-    val total: Int,
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart")
+    val cartItems: Set<CartItem> = emptySet(),
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
