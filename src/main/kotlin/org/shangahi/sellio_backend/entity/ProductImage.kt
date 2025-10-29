@@ -1,21 +1,25 @@
 package org.shangahi.sellio_backend.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
-import java.util.UUID
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import java.time.Instant
+import java.util.*
 
 @Table(name = "product_image")
 @Entity
-data class ProductImage (
+data class ProductImage(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "product_id", nullable = false)
-    val productId: UUID,
-    @Column(name = "image_url")
-    val imageUrl: String
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    val product: Product,
+
+    @Column(name = "image_url", nullable = false)
+    val imageUrl: String,
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    val createdAt: Instant? = null,
 )
