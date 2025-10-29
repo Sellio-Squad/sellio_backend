@@ -12,16 +12,22 @@ data class Orders(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "user_id", nullable = false)
-    val userId: UUID,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    val user: User,
+
     @Column(name = "note", nullable = true)
     val note: String? = null,
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     val status: OrderStatus = OrderStatus.IN_PROGRESS,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Instant? = null,
+
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     val updatedAt: Instant? = null
