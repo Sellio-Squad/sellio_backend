@@ -17,6 +17,9 @@ data class Orders(
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY,)
+    val items: Set<OrderItem> = emptySet(),
+
     @Column(name = "note", nullable = true)
     val note: String? = null,
 
