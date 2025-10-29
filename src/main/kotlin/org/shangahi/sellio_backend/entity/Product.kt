@@ -26,13 +26,8 @@ data class Product(
     @JoinColumn(name = "store_id", nullable = false)
     val store: Store,
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "product_subcategory_junction",
-        joinColumns = [JoinColumn(name = "product_id")],
-        inverseJoinColumns = [JoinColumn(name = "sub_category_id")]
-    )
-    val subCategories: Set<SubCategory> = emptySet(),
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,)
+    val productSubCategories: Set<ProductSubCategory> = emptySet(),
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,)
     val images: Set<ProductImage> = emptySet(),

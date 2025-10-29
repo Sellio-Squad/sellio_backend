@@ -20,8 +20,8 @@ data class SubCategory(
     @Column(name = "title", nullable = false, unique = true)
     val title: String,
 
-    @ManyToMany(mappedBy = "subCategories", fetch = FetchType.LAZY)
-    val products: Set<Product> = emptySet(),
+    @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
+    val products: Set<ProductSubCategory> = emptySet(),
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
