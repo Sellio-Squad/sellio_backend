@@ -39,10 +39,10 @@ data class User(
     val avatarUrl: String? = null,
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    val favoriteProducts: Set<FavoriteProducts> = emptySet(),
+    val favoriteProducts: Set<FavoriteProduct> = emptySet(),
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    val favoriteStores: Set<FavoriteStores> = emptySet(),
+    val favoriteStores: Set<FavoriteStore> = emptySet(),
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

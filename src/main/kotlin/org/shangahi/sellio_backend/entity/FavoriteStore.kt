@@ -6,15 +6,15 @@ import java.time.Instant
 import java.util.*
 
 @Entity
-@Table(name = "favorite_products")
-data class FavoriteProducts(
+@Table(name = "favorite_store")
+data class FavoriteStore(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    val product: Product,
+    @JoinColumn(name = "store_id")
+    val store: Store,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

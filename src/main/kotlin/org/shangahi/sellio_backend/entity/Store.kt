@@ -42,7 +42,7 @@ data class Store(
     val country: String,
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
-    val favoriteByUsers: Set<FavoriteStores> = emptySet(),
+    val favoriteByUsers: Set<FavoriteStore> = emptySet(),
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
