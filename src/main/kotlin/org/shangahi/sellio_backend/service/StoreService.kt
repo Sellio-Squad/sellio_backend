@@ -24,6 +24,7 @@ class StoreService(
         val featuredPageable = PageRequest.of(0, 10)
         val featuredProductsPage = productRepository.findFeaturedProductsByStoreId(storeId, featuredPageable)
         val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse() }
+
         return store.toStoreDetailsResponse(featuredProducts)
     }
 }
