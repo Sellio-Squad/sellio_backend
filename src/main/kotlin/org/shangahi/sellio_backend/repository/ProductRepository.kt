@@ -19,7 +19,7 @@ interface ProductRepository : JpaRepository<Product, UUID> {
         WHERE p.store.id = :storeId AND p.isFeatured = true
     """
     )
-    fun findFeaturedProductsByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
+    fun findStoreFeaturedProductsByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
 
     @EntityGraph(attributePaths = ["images"])
     fun findAllByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
