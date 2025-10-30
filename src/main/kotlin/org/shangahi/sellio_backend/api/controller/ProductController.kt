@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 // GET http://localhost:8080/v1/stores/store_id/products
+// GET http://localhost:8080/v1/stores/store_id/products?page=0&size=2
 @RestController
 @RequestMapping("/v1/stores/{storeId}/products")
 class ProductController(
