@@ -14,10 +14,6 @@ import java.nio.file.Files.size
 class StoreService(
     private val storeRatingRepository: StoreRatingRepository
 ) {
-    fun getTopStores(limit: Int = 10): Page<Store> {
-        val pageable = PageRequest.of(0, limit)
-        return storeRatingRepository.findTopStoresByHighestRating(pageable)
-    }
     fun getPagedTopStores(pageable: Pageable): Page<Store> {
         val pageable = PageRequest.of(pageable.pageNumber, pageable.pageSize)
         return storeRatingRepository.findTopStoresByHighestRating(pageable)
