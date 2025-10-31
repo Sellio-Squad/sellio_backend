@@ -6,7 +6,7 @@ open class SellioException (
     val httpStatus: HttpStatus,
     val code: String,
     override val message: String
-):RuntimeException(message)
+): Exception(message)
 
 
 class ValidationException(message: String) : SellioException(
