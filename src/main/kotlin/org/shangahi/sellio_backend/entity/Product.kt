@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.entity
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -26,7 +27,8 @@ data class Product(
     @JoinColumn(name = "store_id", nullable = false)
     val store: Store,
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonManagedReference
     val productSubCategories: Set<ProductSubCategory> = emptySet(),
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,)

@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.entity.SubCategory
+import org.shangahi.sellio_backend.api.dto.SubCategoryDTO
+import org.shangahi.sellio_backend.api.mapper.toDTO
 import org.shangahi.sellio_backend.service.SubCategoryService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -13,11 +14,7 @@ import java.util.*
 class SubCategoryController(private val subCategoryService: SubCategoryService) {
 
     @GetMapping("/category/{categoryId}")
-    fun getByCategory(@PathVariable categoryId: UUID): List<SubCategory> =
-        subCategoryService.getSubCategoriesByCategoryId(categoryId)
-
-    @GetMapping("/store/{storeId}")
-    fun getByStoreId(@PathVariable storeId: UUID): List<SubCategory> {
-        return subCategoryService.getSubCategoriesByStoreId(storeId)
+    fun getByCategory(@PathVariable categoryId: UUID): List<SubCategoryDTO> {
+        return subCategoryService.getSubCategoriesByCategoryId(categoryId).map { it.toDTO() }
     }
 }

@@ -9,8 +9,4 @@ import java.util.*
 class SubCategoryService(private val subCategoryRepository: SubCategoryRepository) {
     fun getSubCategoriesByCategoryId(categoryId: UUID): List<SubCategory> =
         subCategoryRepository.findByCategoryId(categoryId)
-
-    fun getSubCategoriesByStoreId(storeId: UUID): List<SubCategory> {
-        return subCategoryRepository.findAllByStoreId(storeId)
-    }
 }
