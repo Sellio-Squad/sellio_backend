@@ -34,7 +34,6 @@ class StoreService(
     }
 
     fun getPagedTopStores(pageable: Pageable): Page<Store> {
-        val pageable = PageRequest.of(pageable.pageNumber, pageable.pageSize)
         return storeRatingRepository.findTopStoresByHighestRating(pageable)
     }
 }
