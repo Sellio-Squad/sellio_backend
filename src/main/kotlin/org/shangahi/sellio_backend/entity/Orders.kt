@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import org.shangahi.sellio_backend.model.OrderStatus
 import java.time.Instant
 import java.util.*
 
@@ -35,10 +36,3 @@ data class Orders(
     @Column(name = "updated_at", nullable = false)
     val updatedAt: Instant? = null
 )
-
-
-enum class OrderStatus {
-    IN_PROGRESS,
-    COMPLETED,
-    CANCELLED
-}
