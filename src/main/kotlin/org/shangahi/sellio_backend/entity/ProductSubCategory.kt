@@ -1,9 +1,9 @@
 package org.shangahi.sellio_backend.entity
 
-import org.hibernate.annotations.CreationTimestamp
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "product_subcategory")
