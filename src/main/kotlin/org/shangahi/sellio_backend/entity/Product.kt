@@ -20,7 +20,10 @@ data class Product(
     @Column(name = "description", nullable = true)
     val description: String?,
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,)
+    @Column(name = "main_image_url", nullable = true)
+    val mainImageURL: String?,
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     val items: Set<ProductItem> = emptySet(),
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,11 +34,17 @@ data class Product(
     @JsonManagedReference
     val productSubCategories: Set<ProductSubCategory> = emptySet(),
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     val images: Set<ProductImage> = emptySet(),
+
+    @Column(name = "price")
+    val price: Double,
 
     @Column(name = "is_used", nullable = false)
     val isUsed: Boolean = false,
+
+    @Column(name = "is_featured", nullable = false)
+    val isFeatured: Boolean = false,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
