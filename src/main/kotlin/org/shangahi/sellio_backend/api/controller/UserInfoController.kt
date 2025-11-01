@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping("/user-info")
+@RequestMapping("/v1/user")
 class UserInfoController(
     private val userService: UserService,
     @param:Value("spring.datasource.url") private val cdnEndpoint: String,
     ) {
 
-    @GetMapping
+    @GetMapping("/profile")
     fun getUserProfile(@RequestParam userId: UUID): ResponseEntity<UserInfoResponse> {
         val response = userService.findById(userId).toResponse(cdnEndpoint)
         return ResponseEntity.ok(response)
