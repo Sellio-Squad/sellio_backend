@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
 import org.shangahi.sellio_backend.api.dto.PageResponse
+import org.shangahi.sellio_backend.api.dto.StoreDetailsResponse
 import org.shangahi.sellio_backend.api.dto.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.service.StoreService
@@ -21,6 +22,8 @@ class StoreController(
     @GetMapping("/{storeId}")
     fun getStoreDetailsById(@PathVariable storeId: UUID): StoreDetailsResponse {
         return storeService.getStoreDetailsById(storeId)
+    }
+
     @GetMapping("/top")
     fun getTopStores(
         pageable: Pageable

@@ -8,24 +8,17 @@ import org.shangahi.sellio_backend.repository.ProductRepository
 import org.shangahi.sellio_backend.repository.StoreRatingRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.springframework.data.domain.Page
-import org.hibernate.query.Page.page
-import org.shangahi.sellio_backend.entity.Store
-import org.shangahi.sellio_backend.repository.StoreRatingRepository
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import java.nio.file.Files.size
 
 @Service
 class StoreService(
-    private val storeRatingRepository: StoreRatingRepository
-    val productRepository: ProductRepository,
-    val storeRepository: StoreRepository,
+    private val storeRatingRepository: StoreRatingRepository,
+    private val productRepository: ProductRepository,
+    private val storeRepository: StoreRepository,
 ) {
 
     @Transactional(readOnly = true)
@@ -39,6 +32,7 @@ class StoreService(
 
         return store.toStoreDetailsResponse(featuredProducts)
     }
+
     fun getPagedTopStores(pageable: Pageable): Page<Store> {
         val pageable = PageRequest.of(pageable.pageNumber, pageable.pageSize)
         return storeRatingRepository.findTopStoresByHighestRating(pageable)
