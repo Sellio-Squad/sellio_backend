@@ -1,5 +1,7 @@
 package org.shangahi.sellio_backend.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -8,20 +10,22 @@ import java.util.*
 
 @Entity
 @Table(name = "sub_category")
-data class SubCategory(
+class SubCategory(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
     @ManyToOne
     @JoinColumn(name = "parent_id", nullable = false)
+    @JsonBackReference
     val category: Category,
 
     @Column(name = "title", nullable = false, unique = true)
-    val title: String,
+    val title: String = "",
 
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
-    val products: Set<ProductSubCategory> = emptySet(),
+    @JsonManagedReference
+    val products: Set<ProductSubCategory>,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
