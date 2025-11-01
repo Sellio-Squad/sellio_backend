@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.api.controller
 import org.shangahi.sellio_backend.api.dto.FavoriteStoreResponse
 import org.shangahi.sellio_backend.api.dto.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
+import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.service.FavoriteStoreService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -19,7 +20,7 @@ class FavoriteStoreController(
     private val favoriteStoreService: FavoriteStoreService
 ) {
 
-    @GetMapping("/{userId}/favorite")
+    @GetMapping("/{userId}/favorite-stores")
     fun getFavoriteStoresByUserId(
         @PathVariable userId: UUID,
         @PageableDefault(page = 0, size = 10) pageable: Pageable

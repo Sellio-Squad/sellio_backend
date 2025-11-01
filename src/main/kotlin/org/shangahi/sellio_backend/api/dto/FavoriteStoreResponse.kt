@@ -7,7 +7,7 @@ import java.util.*
 
 data class FavoriteStoreResponse(
     val id: UUID?,
-    val storeId: Store,
-    val userId: User,
+    val storeId: UUID,
+    val userId: UUID,
     val createdAt: Instant?
 )
