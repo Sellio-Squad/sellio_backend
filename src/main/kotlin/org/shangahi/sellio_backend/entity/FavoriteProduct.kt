@@ -21,6 +21,6 @@ data class FavoriteProduct(
     val user: User,
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false,updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Instant? = null,
 )

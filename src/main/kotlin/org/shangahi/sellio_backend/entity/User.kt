@@ -20,13 +20,13 @@ data class User(
     @Column(name = "last_name", nullable = false)
     val lastName: String,
 
-    @Column(name = "email", nullable = true,unique = true)
+    @Column(name = "email", nullable = true, unique = true)
     val email: String? = null,
 
     @Column(name = "password", nullable = false)
     val password: String,
 
-    @Column(name = "phone_number", nullable = false,unique = true)
+    @Column(name = "phone_number", nullable = false, unique = true)
     val phoneNumber: String,
 
     @Column(name = "city", nullable = false)

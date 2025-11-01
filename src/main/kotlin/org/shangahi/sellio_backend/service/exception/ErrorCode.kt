@@ -1,0 +1,24 @@
+package org.shangahi.sellio_backend.service.exception
+
+internal object ErrorCode {
+    //GEN_xxx
+    const val GEN_VALIDATION_ERROR = "GEN_001"
+    const val GEN_REQUEST_BODY_ERROR = "GEN_002"
+    const val GEN_INTERNAL_SERVER_ERROR = "GEN_003"
+    //USER_xxx
+    const val USER_EMAIL_ALREADY_EXISTS = "USER_001"
+    const val USER_PHONE_NUMBER_ALREADY_EXISTS = "USER_002"
+    const val USER_COUNTY_NOT_SUPPORTED = "USER_003"
+    const val USER_NOT_FOUND = "USER_004"
+    //STORE_xxx
+    const val STORE_EMAIL_ALREADY_EXISTS = "STORE_001"
+    const val STORE_PHONE_NUMBER_ALREADY_EXIST = "STORE_002"
+    const val STORE_NAME_ALREADY_EXISTS = "STORE_003"
+    const val STORE_NOT_FOUND = "STORE_004"
+    const val STORE_INACTIVE = "STORE_005"
+    const val STORE_NOT_OWNER = "STORE_006"
+    //PROD_xxx
+    const val PROD_OUT_OF_STOCK = "PROD_001"
+    const val PROD_NOT_ENOUGH_STOCK = "PROD_002"
+    const val PROD_NOT_FOUND = "PROD_004"
+}

@@ -1,0 +1,44 @@
+package org.shangahi.sellio_backend.api.mapper
+
+import org.shangahi.sellio_backend.api.dto.PageResponse
+import org.shangahi.sellio_backend.api.dto.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.StoreDetailsResponse
+import org.shangahi.sellio_backend.api.dto.StoreResponse
+import org.shangahi.sellio_backend.entity.Store
+import org.springframework.data.domain.Page
+
+fun Store.toStoreDetailsResponse(featuredProducts: List<ProductCardResponse>) = StoreDetailsResponse(
+    id = this.id ?: throw IllegalStateException("Store ID was null for Store ${this.title}"),
+    ownerId = this.owner.id ?: throw IllegalStateException("Store owner ID was null for Store ${this.title}"),
+    title = this.title,
+    description = this.description,
+    avatarImageURL = this.avatarImageURL,
+    coverImageURL = this.coverImageURL,
+    featuredProducts = featuredProducts,
+    phoneNumber = this.phoneNumber,
+    city = this.city,
+    government = this.government,
+    country = this.country,
+)
+fun Store.toStoreResponse(): StoreResponse {
+    return StoreResponse(
+        id = id,
+        title = title,
+        city = city,
+        government = government,
+        country = country,
+        avatarImageURL = avatarImageURL,
+        coverImageURL = coverImageURL
+    )
+}
+
+
+fun Page<Store>.toResponse(): PageResponse<StoreResponse> {
+    return PageResponse(
+        data = this.content.map { it.toStoreResponse() },
+        totalElements = this.totalElements,
+        page = this.number,
+        pageSize = this.size,
+        totalPages = this.totalPages
+    )
+}
