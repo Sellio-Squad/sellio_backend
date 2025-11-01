@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import org.shangahi.sellio_backend.model.OrderStatus
 import java.time.Instant
 import java.util.*
 
@@ -20,6 +21,10 @@ data class OrderItem(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     val order: Orders,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    val status: OrderStatus = OrderStatus.IN_PROGRESS,
 
     @Column(name = "quantity", nullable = false)
     val quantity: Int,
