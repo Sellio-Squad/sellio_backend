@@ -1,6 +1,3 @@
-import org.gradle.kotlin.dsl.compileOnly
-import org.gradle.kotlin.dsl.implementation
-
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
