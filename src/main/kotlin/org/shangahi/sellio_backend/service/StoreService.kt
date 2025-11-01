@@ -3,17 +3,22 @@ package org.shangahi.sellio_backend.service
 import org.shangahi.sellio_backend.api.dto.StoreDetailsResponse
 import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDetailsResponse
+import org.shangahi.sellio_backend.entity.Store
 import org.shangahi.sellio_backend.repository.ProductRepository
+import org.shangahi.sellio_backend.repository.StoreRatingRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
 class StoreService(
-    val productRepository: ProductRepository,
-    val storeRepository: StoreRepository,
+    private val storeRatingRepository: StoreRatingRepository,
+    private val productRepository: ProductRepository,
+    private val storeRepository: StoreRepository,
 ) {
 
     @Transactional(readOnly = true)
@@ -26,5 +31,9 @@ class StoreService(
         val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse() }
 
         return store.toStoreDetailsResponse(featuredProducts)
+    }
+
+    fun getPagedTopStores(pageable: Pageable): Page<Store> {
+        return storeRatingRepository.findTopStoresByHighestRating(pageable)
     }
 }
