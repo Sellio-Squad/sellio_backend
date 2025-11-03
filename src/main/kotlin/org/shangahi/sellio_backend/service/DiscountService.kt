@@ -9,9 +9,10 @@ import org.shangahi.sellio_backend.repository.DiscountRepository
 import org.shangahi.sellio_backend.repository.ProductRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.shangahi.sellio_backend.repository.SubCategoryRepository
+import org.shangahi.sellio_backend.service.exception.CategoryNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
-import org.shangahi.sellio_backend.service.exception.SubCategoryAlreadyExistException
+import org.shangahi.sellio_backend.service.exception.SubCategoryNotFoundException
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -55,7 +56,7 @@ class DiscountService(
 
         if (!categoryRepository.existsById(categoryId))
         {
-            throw SubCategoryAlreadyExistException()
+            throw CategoryNotFoundException()
         }
         val discountPage = discountRepository.findByCategoryId(categoryId, pageable)
 
@@ -67,7 +68,7 @@ class DiscountService(
 
         if (!subCategoryRepository.existsById(subCategoryId))
         {
-            throw SubCategoryAlreadyExistException()
+            throw SubCategoryNotFoundException()
         }
         val discountPage = discountRepository.findBySubCategoryId(subCategoryId, pageable)
 
