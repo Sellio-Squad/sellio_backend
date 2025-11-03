@@ -12,17 +12,28 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-//  http://localhost:8080/v1/stores/discounts/{storeId}
-@RequestMapping("/v1/stores/discounts")
+//  http://localhost:8080/v1/discounts/{storeId}
+//  http://localhost:8080/v1/discounts/{productId}
+//  http://localhost:8080/v1/discounts/{subcategoryId}
+
+@RequestMapping("/v1/discounts")
 class DiscountController(
     private val discountService: DiscountService
 ) {
 
     @GetMapping("/{storeId}")
     fun getStoreDiscounts(
-        @PathVariable storeId: UUID,
+        @PathVariable("storeId") storeId: UUID,
         @PageableDefault(page = 0, size = 10) pageable: Pageable
     ): PageResponse<DiscountResponse> {
         return discountService.getDiscountsByStoreId(storeId, pageable)
+    }
+
+    @GetMapping("/product/{productId}")
+    fun getProductDiscounts(
+        @PathVariable("productId") productId: UUID,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable
+    ): PageResponse<DiscountResponse> {
+        return discountService.getDiscountsByProductId(productId, pageable)
     }
 }
