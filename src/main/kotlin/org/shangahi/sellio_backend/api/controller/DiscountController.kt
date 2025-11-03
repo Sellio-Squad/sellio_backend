@@ -21,7 +21,7 @@ class DiscountController(
     private val discountService: DiscountService
 ) {
 
-    @GetMapping("/{storeId}")
+    @GetMapping("/store/{storeId}")
     fun getStoreDiscounts(
         @PathVariable("storeId") storeId: UUID,
         @PageableDefault(page = 0, size = 10) pageable: Pageable
@@ -35,6 +35,14 @@ class DiscountController(
         @PageableDefault(page = 0, size = 10) pageable: Pageable
     ): PageResponse<DiscountResponse> {
         return discountService.getDiscountsByProductId(productId, pageable)
+    }
+
+    @GetMapping("/category/{CategoryId}")
+    fun getCategoryDiscounts(
+        @PathVariable("CategoryId") categoryId: UUID,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable
+    ): PageResponse<DiscountResponse> {
+        return discountService.getDiscountsByCategoryId(categoryId, pageable)
     }
 
     @GetMapping("/sub-category/{subCategoryId}")
