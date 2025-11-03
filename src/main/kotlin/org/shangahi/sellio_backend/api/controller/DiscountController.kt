@@ -36,4 +36,13 @@ class DiscountController(
     ): PageResponse<DiscountResponse> {
         return discountService.getDiscountsByProductId(productId, pageable)
     }
+
+    @GetMapping("/sub-category/{subCategoryId}")
+    fun getSubCategoryDiscounts(
+        @PathVariable("subCategoryId") subCategoryId: UUID,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable
+    ): PageResponse<DiscountResponse> {
+        return discountService.getDiscountsBySubCategoryId(subCategoryId, pageable)
+    }
+
 }
