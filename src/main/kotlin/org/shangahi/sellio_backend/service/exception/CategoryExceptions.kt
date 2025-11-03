@@ -10,6 +10,6 @@ class CategoryAlreadyExist : SellioException(
 
 class CategoryNotFoundException : SellioException(
     httpStatus = HttpStatus.NOT_FOUND,
-    code = ErrorCode.PROD_NOT_FOUND,
+    code = ErrorCode.CATEG_NOT_FOUND,
     message = "Sorry, but this Category was not found"
 )
