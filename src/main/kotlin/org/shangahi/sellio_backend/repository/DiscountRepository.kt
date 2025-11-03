@@ -13,4 +13,6 @@ import java.util.UUID
         fun findByStoreId(storeId: UUID, pageable: Pageable): Page<Discount>
         fun findByProductId(id: UUID, pageable: Pageable): Page<Discount>
         fun findBySubCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
+        fun findByCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
+
     }
