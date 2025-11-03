@@ -3,7 +3,7 @@ package org.shangahi.sellio_backend.api.dto
 import java.time.Instant
 import java.util.*
 
-data class SubCategoryDTO(
+data class SubCategoryResponse(
     val id: UUID?,
     val title: String,
     val categoryId: UUID?,
