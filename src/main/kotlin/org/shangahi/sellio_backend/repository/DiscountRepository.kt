@@ -11,4 +11,5 @@ import java.util.UUID
     interface DiscountRepository : JpaRepository<Discount, UUID> {
 
         fun findByStoreId(storeId: UUID, pageable: Pageable): Page<Discount>
+        fun findByProductId(id: UUID, pageable: Pageable): Page<Discount>
     }
