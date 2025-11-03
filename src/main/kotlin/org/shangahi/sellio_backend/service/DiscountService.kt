@@ -7,8 +7,10 @@ import org.shangahi.sellio_backend.api.mapper.toDiscountResponse
 import org.shangahi.sellio_backend.repository.DiscountRepository
 import org.shangahi.sellio_backend.repository.ProductRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
+import org.shangahi.sellio_backend.repository.SubCategoryRepository
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
+import org.shangahi.sellio_backend.service.exception.SubCategoryAlreadyExistException
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -17,12 +19,14 @@ import java.util.UUID
 class DiscountService(
     private val discountRepository: DiscountRepository,
     private val productRepository: ProductRepository,
-    private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository,
+    private val subCategoryRepository: SubCategoryRepository
 ) {
 
     fun getDiscountsByStoreId(storeId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
 
-        if (!storeRepository.existsById(storeId)) {
+        if (!storeRepository.existsById(storeId))
+        {
             throw StoreNotFoundException()
         }
 
@@ -33,11 +37,23 @@ class DiscountService(
 
     fun getDiscountsByProductId(productId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
 
-        if (!productRepository.existsById(productId)) {
+        if (!productRepository.existsById(productId))
+        {
             throw ProductNotFoundException()
         }
 
         val discountPage = discountRepository.findByProductId(productId, pageable)
+
+        return discountPage.toPageResponse { it.toDiscountResponse() }
+    }
+
+    fun getDiscountsBySubCategoryId (subCategoryId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
+
+        if (!subCategoryRepository.existsById(subCategoryId))
+        {
+            throw SubCategoryAlreadyExistException()
+        }
+        val discountPage = discountRepository.findByProductId(subCategoryId, pageable)
 
         return discountPage.toPageResponse { it.toDiscountResponse() }
     }
