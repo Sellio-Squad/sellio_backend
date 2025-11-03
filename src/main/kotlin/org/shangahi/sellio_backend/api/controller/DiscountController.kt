@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-//  http://localhost:8080/v1/discounts/{storeId}
-//  http://localhost:8080/v1/discounts/{productId}
-//  http://localhost:8080/v1/discounts/{subcategoryId}
+//  http://localhost:8080/v1/discounts/store/{storeId}
+//  http://localhost:8080/v1/discounts/product/{productId}
+//  http://localhost:8080/v1/discounts/category/{subcategoryId}
+//  http://localhost:8080/v1/discounts/sub-category/{subcategoryId}
 
 @RequestMapping("/v1/discounts")
 class DiscountController(
