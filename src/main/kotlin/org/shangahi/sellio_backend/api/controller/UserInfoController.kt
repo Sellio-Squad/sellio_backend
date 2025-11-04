@@ -27,6 +27,12 @@ class UserInfoController(
         return ResponseEntity.ok(savedUser.toResponse())
     }
 
+    @PostMapping("/update")
+    fun updateUser(@RequestBody request: UserUpdateRequest): ResponseEntity<UserInfoResponse> {
+        val updatedUser = userService.updateUser(request.toUser())
+        return ResponseEntity.ok(updatedUser.toResponse())
+    }
+
     @GetMapping("/profile")
     fun getUserProfile(@RequestParam userId: UUID): ResponseEntity<UserInfoResponse> {
         val response = userService.findById(userId).toResponse()
