@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.service.exception
 import jakarta.servlet.http.HttpServletRequest
 import org.shangahi.sellio_backend.api.dto.ErrorResponse
 import org.shangahi.sellio_backend.service.exception.ErrorCode.GEN_INTERNAL_SERVER_ERROR
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class SellioExceptionHandler {
-
+    private val log = LoggerFactory.getLogger(SellioExceptionHandler::class.java)
     @ExceptionHandler(SellioException::class)
     fun handleSellioException(ex: SellioException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         val body = ErrorResponse(
@@ -23,8 +24,8 @@ class SellioExceptionHandler {
         return ResponseEntity(body, ex.httpStatus)
     }
     @ExceptionHandler(Exception::class)
-    fun handleGenericException(request: HttpServletRequest): ResponseEntity<ErrorResponse> {
-
+    fun handleGenericException(ex: Exception,request: HttpServletRequest): ResponseEntity<ErrorResponse> {
+        log.error("Unhandled exception occurred at path: ${request.requestURI}", ex)
         val body = ErrorResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             error = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase,
