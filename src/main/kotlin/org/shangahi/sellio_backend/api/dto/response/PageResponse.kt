@@ -1,4 +1,4 @@
-package org.shangahi.sellio_backend.api.dto
+package org.shangahi.sellio_backend.api.dto.response
 
 data class PageResponse<T>(
     val data: List<T>,

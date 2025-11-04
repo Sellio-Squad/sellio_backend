@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.CategoryDTO
+import org.shangahi.sellio_backend.api.dto.response.CategoryDTO
 import org.shangahi.sellio_backend.entity.Category
 
 fun Category.toDTO(): CategoryDTO {
