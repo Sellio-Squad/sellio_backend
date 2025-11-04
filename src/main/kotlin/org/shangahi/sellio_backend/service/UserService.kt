@@ -32,5 +32,18 @@ class UserService(
     }
 
 
-
+    fun updateUser(user: User): User {
+        val existingUser = findById(user.id!!)
+        val updatedUser = existingUser.copy(
+            firstName = user.firstName,
+            lastName = user.lastName,
+            phoneNumber = user.phoneNumber,
+            email = user.email,
+            city = user.city,
+            country = user.country,
+            password = user.password,
+            avatarUrl = user.avatarUrl
+        )
+        return userRepository.save(updatedUser)
+    }
 }
