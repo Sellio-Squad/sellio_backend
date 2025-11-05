@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.CategoryDTO
+import org.shangahi.sellio_backend.api.dto.response.CategoryDTO
 import org.shangahi.sellio_backend.api.mapper.toDTO
 import org.shangahi.sellio_backend.service.CategoryService
 import org.springframework.web.bind.annotation.GetMapping

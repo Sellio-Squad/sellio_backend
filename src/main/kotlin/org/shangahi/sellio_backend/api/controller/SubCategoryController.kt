@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.SubCategoryDTO
+import org.shangahi.sellio_backend.api.dto.response.SubCategoryDTO
 import org.shangahi.sellio_backend.service.SubCategoryService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

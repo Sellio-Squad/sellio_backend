@@ -1,9 +1,9 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.PageResponse
-import org.shangahi.sellio_backend.api.dto.ProductCardResponse
-import org.shangahi.sellio_backend.api.dto.StoreDetailsResponse
-import org.shangahi.sellio_backend.api.dto.StoreResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.response.StoreDetailsResponse
+import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.entity.Store
 import org.springframework.data.domain.Page
 
