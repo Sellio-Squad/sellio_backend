@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.springframework.data.domain.Page
 
 fun <T, R> Page<T>.toPageResponse(mapper: (T) -> R): PageResponse<R> {

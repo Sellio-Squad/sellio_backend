@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.DiscountResponse
-import org.shangahi.sellio_backend.api.dto.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toDiscountResponse
 import org.shangahi.sellio_backend.repository.CategoryRepository
