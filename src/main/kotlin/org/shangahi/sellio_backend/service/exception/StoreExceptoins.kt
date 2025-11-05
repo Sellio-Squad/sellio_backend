@@ -33,3 +33,8 @@ class StoreNotOwnerException : SellioException(
     message = "Not an owner of this store"
 )
 
+class StoreAlreadyFavoriteException : SellioException(
+    httpStatus = HttpStatus.CONFLICT,
+    code = ErrorCode.STORE_ALREADY_FAVORITE,
+    message = "Store already favorited by this user"
+)
