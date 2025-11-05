@@ -1,5 +1,9 @@
 package org.shangahi.sellio_backend.service
 
+import org.shangahi.sellio_backend.api.dto.CategoryRequest
+import org.shangahi.sellio_backend.api.dto.CategoryResponse
+import org.shangahi.sellio_backend.api.mapper.toDTO
+import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.entity.Category
 import org.shangahi.sellio_backend.repository.CategoryRepository
 import org.springframework.stereotype.Service
@@ -9,4 +13,8 @@ import java.util.*
 class CategoryService(private val categoryRepository: CategoryRepository) {
     fun getAllCategories(): List<Category> = categoryRepository.findAll()
     fun getCategoryById(id: UUID): Category = categoryRepository.findById(id).orElse(null)
+    fun create(request: CategoryRequest): CategoryResponse {
+        val saved = categoryRepository.save(request.toEntity())
+        return saved.toDTO()
+    }
 }

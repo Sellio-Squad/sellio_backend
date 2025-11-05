@@ -1,12 +1,11 @@
 package org.shangahi.sellio_backend.api.controller
 
+import org.shangahi.sellio_backend.api.dto.CategoryRequest
 import org.shangahi.sellio_backend.api.dto.CategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toDTO
 import org.shangahi.sellio_backend.service.CategoryService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -19,4 +18,9 @@ class CategoryController(private val categoryService: CategoryService) {
     @GetMapping("/{id}")
     fun getById(@PathVariable id: UUID): CategoryResponse = categoryService.getCategoryById(id).toDTO()
 
+    @PostMapping("/create")
+    fun createCategory(@RequestBody request: CategoryRequest): ResponseEntity<CategoryResponse> {
+        val saved = categoryService.create(request)
+        return ResponseEntity.ok(saved)
+    }
 }
