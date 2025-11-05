@@ -27,14 +27,9 @@ class StoreInActiveException : SellioException(
     code = ErrorCode.STORE_INACTIVE,
     message = "Unfortunately this store is inactive"
 )
-class StoreNotOwnerException : SellioException(
+class SToreNotOwnerException : SellioException(
     httpStatus = HttpStatus.FORBIDDEN,
     code = ErrorCode.STORE_NOT_OWNER,
     message = "Not an owner of this store"
 )
 
-class StoreAlreadyFavoriteException : SellioException(
-    httpStatus = HttpStatus.CONFLICT,
-    code = ErrorCode.STORE_ALREADY_FAVORITE,
-    message = "Store already favorited by this user"
-)
