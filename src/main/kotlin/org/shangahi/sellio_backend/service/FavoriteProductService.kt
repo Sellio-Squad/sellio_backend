@@ -1,7 +1,6 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.FavoriteProductsResponse
-import org.shangahi.sellio_backend.api.dto.FavoriteToggleRequest
+import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.api.mapper.toFavoriteProductsResponse
 import org.shangahi.sellio_backend.entity.FavoriteProduct
 import org.shangahi.sellio_backend.repository.FavoriteProductRepository

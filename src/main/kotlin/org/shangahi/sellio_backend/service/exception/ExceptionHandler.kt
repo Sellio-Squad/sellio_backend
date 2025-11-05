@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.service.exception
 
 import jakarta.servlet.http.HttpServletRequest
-import org.shangahi.sellio_backend.api.dto.ErrorResponse
+import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.service.exception.ErrorCode.GEN_INTERNAL_SERVER_ERROR
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

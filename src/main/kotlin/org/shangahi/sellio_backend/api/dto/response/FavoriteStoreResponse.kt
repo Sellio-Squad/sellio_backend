@@ -1,7 +1,5 @@
-package org.shangahi.sellio_backend.api.dto
+package org.shangahi.sellio_backend.api.dto.response
 
-import org.shangahi.sellio_backend.entity.Store
-import org.shangahi.sellio_backend.entity.User
 import java.time.Instant
 import java.util.*
 

@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.SubCategoryDTO
+import org.shangahi.sellio_backend.api.dto.response.SubCategoryDTO
 import org.shangahi.sellio_backend.api.mapper.toDTO
 import org.shangahi.sellio_backend.repository.SubCategoryRepository
 import org.springframework.stereotype.Service
