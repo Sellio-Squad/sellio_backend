@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.api.controller
 
 import org.shangahi.sellio_backend.api.dto.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.UserUpdateRequest
-import org.shangahi.sellio_backend.api.dto.UserInfoResponse
+import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.mapper.toUser
 import org.shangahi.sellio_backend.service.UserService
