@@ -1,11 +1,10 @@
 package org.shangahi.sellio_backend.api.controller
 
+import org.shangahi.sellio_backend.api.dto.SubCategoryRequest
 import org.shangahi.sellio_backend.api.dto.SubCategoryResponse
 import org.shangahi.sellio_backend.service.SubCategoryService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -21,4 +20,8 @@ class SubCategoryController(private val subCategoryService: SubCategoryService) 
     fun getByStoreId(@PathVariable storeId: UUID): List<SubCategoryResponse> {
         return subCategoryService.getSubCategoriesByStoreId(storeId)
     }
+
+    @PostMapping("/create")
+    fun create(@RequestBody request: SubCategoryRequest): ResponseEntity<SubCategoryResponse> =
+        ResponseEntity.ok(subCategoryService.create(request))
 }
