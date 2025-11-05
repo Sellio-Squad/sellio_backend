@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.PageResponse
-import org.shangahi.sellio_backend.api.dto.TrendingProductResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.TrendingProductResponse
 import org.shangahi.sellio_backend.model.TrendingProduct
 import org.springframework.data.domain.Page
 

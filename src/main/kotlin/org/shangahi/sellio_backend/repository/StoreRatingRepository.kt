@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.repository
 
-import org.shangahi.sellio_backend.api.dto.RatingBreakdown
-import org.shangahi.sellio_backend.api.dto.RatingStats
+import org.shangahi.sellio_backend.api.dto.response.RatingBreakdown
+import org.shangahi.sellio_backend.api.dto.response.RatingStats
 import org.shangahi.sellio_backend.entity.Store
 import org.shangahi.sellio_backend.entity.StoreRating
 import org.springframework.data.domain.Page

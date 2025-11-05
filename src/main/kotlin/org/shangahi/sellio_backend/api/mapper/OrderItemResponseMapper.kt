@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.OrderItemResponse
-import org.shangahi.sellio_backend.api.dto.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.OrderItemResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.entity.OrderItem
 import org.springframework.data.domain.Page
 

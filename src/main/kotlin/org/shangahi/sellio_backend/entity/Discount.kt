@@ -20,6 +20,10 @@ data class Discount(
     val product: Product? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    val category: Category? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_category_id")
     val subCategory: SubCategory? = null,
 

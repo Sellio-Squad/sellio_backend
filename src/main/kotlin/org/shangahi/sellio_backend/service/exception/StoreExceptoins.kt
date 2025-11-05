@@ -12,7 +12,7 @@ class StorePhoneNumberExistException : SellioException(
     code = ErrorCode.STORE_PHONE_NUMBER_ALREADY_EXIST,
     message = "Store phone number already exists, you should try another one"
 )
-class StoreNameExistException : SellioException(
+class StoreTitleAlreadyExistException : SellioException(
     httpStatus = HttpStatus.CONFLICT,
     code = ErrorCode.STORE_NAME_ALREADY_EXISTS,
     message = "Please try different name, Store name already exists"

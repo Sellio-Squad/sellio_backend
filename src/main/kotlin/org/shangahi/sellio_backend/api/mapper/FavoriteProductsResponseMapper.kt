@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.FavoriteProductsResponse
+import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.entity.FavoriteProduct
 import java.time.Instant
 
