@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import org.shangahi.sellio_backend.api.dto.FavoriteToggleRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.service.FavoriteProductService
 import org.springframework.http.ResponseEntity
