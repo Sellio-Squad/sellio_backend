@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.entity.Product
 
 fun Product.toProductCardResponse(): ProductCardResponse = ProductCardResponse(

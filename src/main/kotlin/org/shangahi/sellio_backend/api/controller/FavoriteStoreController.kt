@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.FavoriteStoreResponse
-import org.shangahi.sellio_backend.api.dto.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.FavoriteStoreResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.service.FavoriteStoreService
 import org.springframework.data.domain.Pageable
