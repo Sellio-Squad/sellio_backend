@@ -1,6 +1,5 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.DiscountResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.DiscountResponse
 import org.shangahi.sellio_backend.service.DiscountService
