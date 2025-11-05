@@ -29,7 +29,7 @@ class SellioExceptionHandler {
         val body = ErrorResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             error = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase,
-            message = "An internal server error occurred. Please try again later.",
+            message = ex.message ?: "An internal server error occurred",
             path = request.requestURI,
             code = GEN_INTERNAL_SERVER_ERROR
         )
