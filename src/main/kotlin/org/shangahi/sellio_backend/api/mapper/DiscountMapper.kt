@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.DiscountResponse
+import org.shangahi.sellio_backend.api.dto.response.DiscountResponse
 import org.shangahi.sellio_backend.entity.Discount
 import org.shangahi.sellio_backend.service.exception.InternalServerErrorException
 
