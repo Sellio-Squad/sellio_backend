@@ -17,7 +17,6 @@ internal object ErrorCode {
     const val STORE_NOT_FOUND = "STORE_004"
     const val STORE_INACTIVE = "STORE_005"
     const val STORE_NOT_OWNER = "STORE_006"
-    const val STORE_ALREADY_FAVORITE = "STORE_007"
     //PROD_xxx
     const val PROD_OUT_OF_STOCK = "PROD_001"
     const val PROD_NOT_ENOUGH_STOCK = "PROD_002"
