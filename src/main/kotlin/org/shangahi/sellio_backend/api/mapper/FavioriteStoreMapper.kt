@@ -1,10 +1,9 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.FavoriteStoreResponse
-import org.shangahi.sellio_backend.api.dto.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.FavoriteStoreResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.entity.FavoriteStore
 import org.springframework.data.domain.Page
-import java.time.Instant
 
 fun FavoriteStore.toResponse(): FavoriteStoreResponse {
     return FavoriteStoreResponse(

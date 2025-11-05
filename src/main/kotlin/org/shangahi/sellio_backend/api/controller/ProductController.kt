@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.service.ProductService
 import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.*
