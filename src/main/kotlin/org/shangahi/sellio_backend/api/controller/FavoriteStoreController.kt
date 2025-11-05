@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import org.shangahi.sellio_backend.api.dto.request.FavouriteStoreRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteStoreResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
@@ -10,6 +11,7 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
@@ -19,12 +21,11 @@ import java.util.UUID
 class FavoriteStoreController(
     private val favoriteStoreService: FavoriteStoreService
 ) {
-    @PostMapping("/{userId}/favorite-stores/{storeId}")
+    @PostMapping("/toggle")
     fun addFavoriteStore(
-        @PathVariable userId: UUID,
-        @PathVariable storeId: UUID
+        @RequestBody request: FavouriteStoreRequest
     ): FavoriteStoreResponse {
-        return favoriteStoreService.addFavoriteStore(userId, storeId).toResponse()
+        return favoriteStoreService.addFavoriteStore(request).toResponse()
     }
     @GetMapping("/{userId}/favorite-stores")
     fun getFavoriteStoresByUserId(
