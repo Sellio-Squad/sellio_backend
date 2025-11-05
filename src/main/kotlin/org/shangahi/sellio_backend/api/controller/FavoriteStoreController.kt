@@ -22,10 +22,10 @@ class FavoriteStoreController(
     private val favoriteStoreService: FavoriteStoreService
 ) {
     @PostMapping("/toggle")
-    fun addFavoriteStore(
+    fun toggleFavoriteStore(
         @RequestBody request: FavouriteStoreRequest
     ): FavoriteStoreResponse {
-        return favoriteStoreService.addFavoriteStore(request).toResponse()
+        return favoriteStoreService.toggleFavoriteStore(request).toResponse()
     }
     @GetMapping("/{userId}/favorite-stores")
     fun getFavoriteStoresByUserId(

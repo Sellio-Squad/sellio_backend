@@ -11,7 +11,7 @@ import java.util.*
 interface FavoriteStoreRepository : JpaRepository<FavoriteStore, UUID> {
 
     fun findByUserId(userId: UUID, pageable: Pageable): Page<FavoriteStore>
-    fun existsByUserAndStore(user: User, store: Store): Boolean
-    fun deleteFavoriteStoreByUserAndStore(user: User, store: Store)
+    fun deleteFavoriteStoreByUserIdAndStoreId(userId: UUID, storeId: UUID)
+    fun findFavoriteStoresByUserIdAndStoreId(userId: UUID, storeId: UUID): FavoriteStore?
 
 }
