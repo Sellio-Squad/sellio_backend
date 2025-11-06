@@ -3,9 +3,15 @@ package org.shangahi.sellio_backend.repository
 import org.shangahi.sellio_backend.entity.FavoriteProduct
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.UUID
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Repository
 interface FavoriteProductRepository: JpaRepository<FavoriteProduct, UUID>{
     fun findByUserId(userId: UUID): List<FavoriteProduct>
+    fun findByUserIdAndProductId(userId: UUID, productId: UUID): FavoriteProduct?
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun deleteByUserIdAndProductId(userId: UUID, productId: UUID)
 }

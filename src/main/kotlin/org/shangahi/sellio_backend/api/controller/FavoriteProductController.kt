@@ -1,14 +1,15 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.FavoriteProductsResponse
+import org.shangahi.sellio_backend.api.dto.FavoriteToggleRequest
+import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.service.FavoriteProductService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 // http://localhost:8080/v1/favorite-products/userId
+// http://localhost:8080/v1/favorite-products/toggle
+
 @RestController
 @RequestMapping("/v1/favorite-products")
 class FavoriteProductController(private val favoriteProductService: FavoriteProductService) {
@@ -18,4 +19,14 @@ class FavoriteProductController(private val favoriteProductService: FavoriteProd
 
         return favoriteProductService.getFavoriteProductsByUserId(userId)
     }
+
+    @PostMapping("/toggle")
+
+    fun toggleFavorite(@RequestBody request: FavoriteToggleRequest): ResponseEntity<String> {
+
+        val message = favoriteProductService.toggleFavorite(request)
+
+        return ResponseEntity.ok(message)
+    }
+
 }

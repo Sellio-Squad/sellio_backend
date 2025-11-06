@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
 import org.shangahi.sellio_backend.api.dto.CategoryRequest
-import org.shangahi.sellio_backend.api.dto.CategoryResponse
+import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toDTO
 import org.shangahi.sellio_backend.service.CategoryService
 import org.springframework.http.ResponseEntity

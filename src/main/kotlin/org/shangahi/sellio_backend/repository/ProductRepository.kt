@@ -22,6 +22,8 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     )
     fun findStoreFeaturedProductsByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
 
+    fun findByTitleContainingIgnoreCase(title: String, pageable: Pageable): Page<Product>
+
     @EntityGraph(attributePaths = ["images"])
     fun findAllByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
 

@@ -17,8 +17,18 @@ internal object ErrorCode {
     const val STORE_NOT_FOUND = "STORE_004"
     const val STORE_INACTIVE = "STORE_005"
     const val STORE_NOT_OWNER = "STORE_006"
+    const val STORE_ALREADY_FAVORITE = "STORE_007"
+
     //PROD_xxx
     const val PROD_OUT_OF_STOCK = "PROD_001"
     const val PROD_NOT_ENOUGH_STOCK = "PROD_002"
     const val PROD_NOT_FOUND = "PROD_004"
+
+    //CATEG_xxx
+    const val CATEG_ALREADY_EXISTS = "CATEG_001"
+    const val CATEG_NOT_FOUND = "CATEG_004"
+
+    //SUBCATEG_xxx
+    const val SUBCATEG_ALREADY_EXISTS = "CATEG_001"
+    const val SUBCATEG_NOT_FOUND = "CATEG_004"
 }

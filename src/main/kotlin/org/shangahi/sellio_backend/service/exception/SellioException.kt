@@ -21,8 +21,8 @@ class RequestBodyException : SellioException(
     message = "Request body is missing"
 )
 
-class InternalServerErrorException() : SellioException(
+class InternalServerErrorException(details: String) : SellioException(
     httpStatus = HttpStatus.INTERNAL_SERVER_ERROR,
     code = ErrorCode.GEN_INTERNAL_SERVER_ERROR,
-    message = "An unexpected internal error"
+    message = "An unexpected internal error: $details"
 )

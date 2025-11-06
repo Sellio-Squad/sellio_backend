@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.repository
 
-import org.shangahi.sellio_backend.api.dto.RatingBreakdown
-import org.shangahi.sellio_backend.api.dto.RatingStats
+import org.shangahi.sellio_backend.api.dto.response.RatingBreakdown
+import org.shangahi.sellio_backend.api.dto.response.RatingStats
 import org.shangahi.sellio_backend.entity.Store
 import org.shangahi.sellio_backend.entity.StoreRating
 import org.springframework.data.domain.Page
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.UUID
+import java.util.*
 
 
 @Repository

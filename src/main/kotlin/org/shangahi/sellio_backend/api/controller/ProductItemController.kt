@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.PageResponse
-import org.shangahi.sellio_backend.api.dto.TrendingProductResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.TrendingProductResponse
 import org.shangahi.sellio_backend.api.mapper.toPagedResponse
 import org.shangahi.sellio_backend.service.ProductItemService
 import org.springframework.data.domain.Pageable
