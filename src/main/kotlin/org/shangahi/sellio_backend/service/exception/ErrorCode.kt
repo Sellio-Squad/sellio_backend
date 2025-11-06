@@ -27,4 +27,8 @@ internal object ErrorCode {
     //SUBCATEG_xxx
     const val SUBCATEG_ALREADY_EXISTS = "CATEG_001"
     const val SUBCATEG_NOT_FOUND = "CATEG_004"
+
+    //IMAGE_xxx
+    const val IMAGE_INVALID_FORMAT = "IMAGE_001"
+    const val IMAGE_UPLOAD_FAILED = "IMAGE_002"
 }
