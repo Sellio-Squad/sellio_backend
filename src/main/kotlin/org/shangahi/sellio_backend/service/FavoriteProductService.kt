@@ -12,7 +12,7 @@ import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
+import java.util.*
 
 @Service
 class FavoriteProductService(

@@ -1,21 +1,17 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.DiscountResponse
+import org.shangahi.sellio_backend.api.dto.response.DiscountResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
-import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toDiscountResponse
-import org.shangahi.sellio_backend.repository.CategoryRepository
-import org.shangahi.sellio_backend.repository.DiscountRepository
-import org.shangahi.sellio_backend.repository.ProductRepository
-import org.shangahi.sellio_backend.repository.StoreRepository
-import org.shangahi.sellio_backend.repository.SubCategoryRepository
+import org.shangahi.sellio_backend.api.mapper.toPageResponse
+import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.service.exception.CategoryNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.shangahi.sellio_backend.service.exception.SubCategoryNotFoundException
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class DiscountService(
@@ -28,8 +24,7 @@ class DiscountService(
 
     fun getDiscountsByStoreId(storeId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
 
-        if (!storeRepository.existsById(storeId))
-        {
+        if (!storeRepository.existsById(storeId)) {
             throw StoreNotFoundException()
         }
 
@@ -41,8 +36,7 @@ class DiscountService(
 
     fun getDiscountsByProductId(productId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
 
-        if (!productRepository.existsById(productId))
-        {
+        if (!productRepository.existsById(productId)) {
             throw ProductNotFoundException()
         }
 
@@ -52,10 +46,9 @@ class DiscountService(
     }
 
 
-    fun getDiscountsByCategoryId (categoryId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
+    fun getDiscountsByCategoryId(categoryId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
 
-        if (!categoryRepository.existsById(categoryId))
-        {
+        if (!categoryRepository.existsById(categoryId)) {
             throw CategoryNotFoundException()
         }
         val discountPage = discountRepository.findByCategoryId(categoryId, pageable)
@@ -64,10 +57,9 @@ class DiscountService(
     }
 
 
-    fun getDiscountsBySubCategoryId (subCategoryId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
+    fun getDiscountsBySubCategoryId(subCategoryId: UUID, pageable: Pageable): PageResponse<DiscountResponse> {
 
-        if (!subCategoryRepository.existsById(subCategoryId))
-        {
+        if (!subCategoryRepository.existsById(subCategoryId)) {
             throw SubCategoryNotFoundException()
         }
         val discountPage = discountRepository.findBySubCategoryId(subCategoryId, pageable)

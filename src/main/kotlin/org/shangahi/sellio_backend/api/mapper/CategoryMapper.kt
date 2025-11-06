@@ -1,10 +1,11 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.response.CategoryDTO
+import org.shangahi.sellio_backend.api.dto.CategoryRequest
+import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.entity.Category
 
-fun Category.toDTO(): CategoryDTO {
-    return CategoryDTO(
+fun Category.toDTO(): CategoryResponse {
+    return CategoryResponse(
         id = this.id!!,
         title = this.title,
         createdAt = this.createdAt,
@@ -12,3 +13,5 @@ fun Category.toDTO(): CategoryDTO {
         subCategories = this.subCategories.map { it.toDTO() }
     )
 }
+
+fun CategoryRequest.toEntity(): Category = Category(title = this.title)

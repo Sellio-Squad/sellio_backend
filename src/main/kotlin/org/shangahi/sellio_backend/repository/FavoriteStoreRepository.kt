@@ -9,4 +9,7 @@ import java.util.*
 interface FavoriteStoreRepository : JpaRepository<FavoriteStore, UUID> {
 
     fun findByUserId(userId: UUID, pageable: Pageable): Page<FavoriteStore>
+    fun deleteFavoriteStoreByUserIdAndStoreId(userId: UUID, storeId: UUID)
+    fun findFavoriteStoresByUserIdAndStoreId(userId: UUID, storeId: UUID): FavoriteStore?
+
 }

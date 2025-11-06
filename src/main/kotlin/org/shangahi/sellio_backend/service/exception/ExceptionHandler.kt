@@ -24,7 +24,7 @@ class SellioExceptionHandler {
         return ResponseEntity(body, ex.httpStatus)
     }
     @ExceptionHandler(Exception::class)
-    fun handleGenericException(ex: Exception,request: HttpServletRequest): ResponseEntity<ErrorResponse> {
+    fun handleGenericException(ex: Exception, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         log.error("Unhandled exception occurred at path: ${request.requestURI}", ex)
         val body = ErrorResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -21,6 +22,19 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     )
     fun findStoreFeaturedProductsByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
 
+    fun findByTitleContainingIgnoreCase(title: String, pageable: Pageable): Page<Product>
+
     @EntityGraph(attributePaths = ["images"])
     fun findAllByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
+
+    @Query(
+        """
+    SELECT DISTINCT p FROM Product p
+    LEFT JOIN FETCH p.images
+    LEFT JOIN FETCH p.items
+    LEFT JOIN FETCH p.productSubCategories
+    WHERE p.id = :id
+"""
+    )
+    fun findByIdWithItems(@Param("id") id: UUID): Product?
 }
