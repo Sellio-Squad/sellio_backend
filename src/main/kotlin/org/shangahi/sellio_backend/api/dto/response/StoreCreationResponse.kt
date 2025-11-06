@@ -7,5 +7,7 @@ data class StoreCreationResponse(
     val id: UUID,
     val title: String,
     val ownerId: UUID,
+    val avatarUrl: String,
+    val coverUrl: String,
     val createdAt: Instant
 )
