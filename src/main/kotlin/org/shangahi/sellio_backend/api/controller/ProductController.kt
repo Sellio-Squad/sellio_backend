@@ -1,11 +1,14 @@
 package org.shangahi.sellio_backend.api.controller
 
+import org.shangahi.sellio_backend.api.dto.ProductRequest
+import org.shangahi.sellio_backend.api.dto.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.service.ProductService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -29,10 +32,16 @@ class ProductController(
 
     @GetMapping("/search")
     fun searchProducts(
-        @RequestParam("query",required = true) query: String,
-        @PageableDefault(page = 0, size = 10)pageable: Pageable
+        @RequestParam("query", required = true) query: String,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable
     ): PageResponse<ProductCardResponse> {
 
         return productService.searchProductsByTitle(query, pageable)
+    }
+
+    @PostMapping("/create")
+    fun create(@RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
+        val saved = productService.create(request)
+        return ResponseEntity.ok(saved)
     }
 }

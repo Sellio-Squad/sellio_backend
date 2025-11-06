@@ -10,11 +10,7 @@ import org.shangahi.sellio_backend.repository.ProductRepository
 import org.shangahi.sellio_backend.repository.StoreRatingRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.shangahi.sellio_backend.repository.UserRepository
-import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
-import org.shangahi.sellio_backend.service.exception.StoreNotOwnerException
-import org.shangahi.sellio_backend.service.exception.StorePhoneNumberExistException
-import org.shangahi.sellio_backend.service.exception.StoreTitleAlreadyExistException
-import org.shangahi.sellio_backend.service.exception.UserNotFoundException
+import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -68,14 +64,14 @@ class StoreService(
         val savedStore = storeRepository.save(newStore)
 
         return StoreCreationResponse(
-            id = savedStore.id?:throw StoreNotFoundException(),
+            id = savedStore.id ?: throw StoreNotFoundException(),
             title = savedStore.title,
-            ownerId = savedStore.owner.id?:throw UserNotFoundException(),
-            createdAt = savedStore.createdAt?: Instant.now(),
+            ownerId = savedStore.owner.id ?: throw UserNotFoundException(),
+            createdAt = savedStore.createdAt ?: Instant.now(),
         )
     }
 
-    private fun storeCreationValidation(request: CreateStoreRequest){
+    private fun storeCreationValidation(request: CreateStoreRequest) {
 
         if (storeRepository.isExistByOwnerId(request.ownerId)) {
             throw StoreNotOwnerException()

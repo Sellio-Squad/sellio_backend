@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.dto.response
 
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 data class FavoriteProductsResponse(
     val id: UUID,

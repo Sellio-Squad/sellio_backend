@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.dto
 
-import java.util.UUID
+import java.util.*
 
 data class UserUpdateRequest(
     val id: UUID,

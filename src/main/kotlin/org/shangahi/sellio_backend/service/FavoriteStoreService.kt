@@ -26,14 +26,15 @@ class FavoriteStoreService(
         val store = storeRepository.findById(request.storeId)
             .orElseThrow { StoreNotFoundException() }
 
-        val existingStoreFavorite = favoriteStoreRepository.findFavoriteStoresByUserIdAndStoreId(request.userId, request.storeId)
+        val existingStoreFavorite =
+            favoriteStoreRepository.findFavoriteStoresByUserIdAndStoreId(request.userId, request.storeId)
 
-         return if (existingStoreFavorite != null) {
+        return if (existingStoreFavorite != null) {
 
-             favoriteStoreRepository.deleteFavoriteStoreByUserIdAndStoreId(request.userId, request.storeId)
-              existingStoreFavorite
+            favoriteStoreRepository.deleteFavoriteStoreByUserIdAndStoreId(request.userId, request.storeId)
+            existingStoreFavorite
         } else {
-             favoriteStoreRepository.save(FavoriteStore(user = user, store = store))
+            favoriteStoreRepository.save(FavoriteStore(user = user, store = store))
         }
     }
 
