@@ -10,17 +10,14 @@ import org.shangahi.sellio_backend.repository.ProductRepository
 import org.shangahi.sellio_backend.repository.StoreRatingRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.shangahi.sellio_backend.repository.UserRepository
-import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
-import org.shangahi.sellio_backend.service.exception.StoreNotOwnerException
-import org.shangahi.sellio_backend.service.exception.StorePhoneNumberExistException
-import org.shangahi.sellio_backend.service.exception.StoreTitleAlreadyExistException
-import org.shangahi.sellio_backend.service.exception.UserNotFoundException
+import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.util.*
 
@@ -30,6 +27,7 @@ class StoreService(
     private val productRepository: ProductRepository,
     private val storeRepository: StoreRepository,
     private val userRepository: UserRepository,
+    private val storageService: StorageService
 ) {
 
     @Transactional(readOnly = true)
@@ -68,14 +66,41 @@ class StoreService(
         val savedStore = storeRepository.save(newStore)
 
         return StoreCreationResponse(
-            id = savedStore.id?:throw StoreNotFoundException(),
+            id = savedStore.id ?: throw StoreNotFoundException(),
             title = savedStore.title,
-            ownerId = savedStore.owner.id?:throw UserNotFoundException(),
-            createdAt = savedStore.createdAt?: Instant.now(),
+            ownerId = savedStore.owner.id ?: throw UserNotFoundException(),
+            avatarUrl = savedStore.avatarImageURL.orEmpty(),
+            coverUrl = savedStore.coverImageURL.orEmpty(),
+            createdAt = savedStore.createdAt ?: Instant.now()
         )
     }
 
-    private fun storeCreationValidation(request: CreateStoreRequest){
+    @Transactional
+    fun uploadStoreImages(
+        storeId: UUID,
+        newAvatar: MultipartFile?,
+        newCover: MultipartFile?
+    ): Store {
+        val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
+
+        var updatedStore = store
+
+        if (newAvatar != null && !newAvatar.isEmpty) {
+            store.avatarImageURL?.let { storageService.deleteImage(it) }
+            val avatarUrl = storageService.uploadImage(newAvatar, store.title, "stores/avatars")
+            updatedStore = updatedStore.copy(avatarImageURL = avatarUrl)
+        }
+
+        if (newCover != null && !newCover.isEmpty) {
+            store.coverImageURL?.let { storageService.deleteImage(it) }
+            val coverUrl = storageService.uploadImage(newCover, store.title, "stores/covers")
+            updatedStore = updatedStore.copy(coverImageURL = coverUrl)
+        }
+
+        return storeRepository.save(updatedStore)
+    }
+
+    private fun storeCreationValidation(request: CreateStoreRequest) {
 
         if (storeRepository.isExistByOwnerId(request.ownerId)) {
             throw StoreNotOwnerException()
