@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
 import org.shangahi.sellio_backend.api.dto.SubCategoryRequest
-import org.shangahi.sellio_backend.api.dto.SubCategoryResponse
+import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
 import org.shangahi.sellio_backend.service.SubCategoryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.CategoryRequest
-import org.shangahi.sellio_backend.api.dto.CategoryResponse
+import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toDTO
 import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.entity.Category
