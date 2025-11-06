@@ -1,16 +1,19 @@
 package org.shangahi.sellio_backend.service
 
+import jakarta.transaction.Transactional
 import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.repository.UserRepository
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
+    val storageService: StorageService
 ) {
     fun findUserByPhoneNumber(phoneNumber: String): User? {
         return userRepository.findByPhoneNumber(phoneNumber)
@@ -30,6 +33,25 @@ class UserService(
         }
         return userRepository.save(user)
     }
+
+    @Transactional
+    fun uploadUserAvatar(userId: UUID, file: MultipartFile): User {
+        val user = findById(userId)
+
+        user.avatarUrl?.let { oldUrl ->
+            runCatching { storageService.deleteImage(oldUrl) }
+        }
+
+        val imageUrl = storageService.uploadImage(
+            file = file,
+            fileName = user.firstName,
+            folderName = "avatars"
+        )
+
+        val updatedUser = user.copy(avatarUrl = imageUrl)
+        return userRepository.save(updatedUser)
+    }
+
 
 
     fun updateUser(user: User): User {
