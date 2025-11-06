@@ -8,11 +8,14 @@ import org.shangahi.sellio_backend.api.mapper.toUser
 import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @RestController
@@ -38,4 +41,14 @@ class UserInfoController(
         val response = userService.findById(userId).toResponse()
         return ResponseEntity.ok(response)
     }
+
+    @PostMapping("/{userId}/avatar")
+    fun uploadUserAvatar(
+        @PathVariable userId: UUID,
+        @RequestPart("file") file: MultipartFile
+    ): ResponseEntity<UserInfoResponse> {
+        val updatedUser = userService.uploadUserAvatar(userId, file)
+        return ResponseEntity.ok(updatedUser.toResponse())
+    }
+
 }
