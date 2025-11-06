@@ -1,8 +1,11 @@
 package org.shangahi.sellio_backend.api.controller
 
 import org.shangahi.sellio_backend.api.dto.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.ProductRequest
+import org.shangahi.sellio_backend.api.dto.ProductResponse
 import org.shangahi.sellio_backend.service.ProductService
 import org.springframework.data.domain.Page
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -21,5 +24,11 @@ class ProductController(
         @RequestParam(defaultValue = "20") size: Int
     ): Page<ProductCardResponse> {
         return productService.getStoreProducts(storeId, page, size)
+    }
+
+    @PostMapping("/create")
+    fun create(@RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
+        val saved = productService.create(request)
+        return ResponseEntity.ok(saved)
     }
 }
