@@ -89,7 +89,7 @@ class ProductService(
         val mainImageUploadedUrl = storageService.uploadImage(
             file = mainImage,
             fileName = product.title,
-            folderName = "products/images"
+            folderName = "products/mainImage"
         )
         val mainProductImage = ProductImage(product = product, imageUrl = mainImageUploadedUrl)
         productImageRepository.save(mainProductImage)
@@ -109,6 +109,22 @@ class ProductService(
         }
 
         return uploadedUrls
+    }
+
+    @Transactional
+    fun deleteProductImage(productId: UUID, imageId: UUID, imageUrl: String): Boolean {
+        val productImage = productImageRepository.findById(imageId)
+            .orElseThrow { ProductSavingException() }
+
+        if (productImage.product.id != productId) {
+            throw ProductSavingException()
+        }
+
+        val deleted = storageService.deleteImage(productImage.imageUrl)
+        if (deleted) {
+            productImageRepository.delete(productImage)
+        }
+        return deleted
     }
 
 

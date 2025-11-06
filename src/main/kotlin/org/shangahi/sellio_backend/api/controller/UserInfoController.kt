@@ -45,7 +45,7 @@ class UserInfoController(
     @PostMapping("/{userId}/avatar")
     fun uploadUserAvatar(
         @PathVariable userId: UUID,
-        @RequestPart("file") file: MultipartFile
+        @RequestPart("image") file: MultipartFile
     ): ResponseEntity<UserInfoResponse> {
         val updatedUser = userService.uploadUserAvatar(userId, file)
         return ResponseEntity.ok(updatedUser.toResponse())

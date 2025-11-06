@@ -13,7 +13,7 @@ import java.util.UUID
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    val storageService: StorageService
+    private val storageService: StorageService
 ) {
     fun findUserByPhoneNumber(phoneNumber: String): User? {
         return userRepository.findByPhoneNumber(phoneNumber)
