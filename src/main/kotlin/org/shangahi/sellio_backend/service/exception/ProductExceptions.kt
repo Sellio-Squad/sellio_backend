@@ -19,3 +19,9 @@ class ProductNotFoundException : SellioException(
     code = ErrorCode.PROD_NOT_FOUND,
     message = "Sorry, but this product was not found"
 )
+
+class ProductSavingException : SellioException(
+    httpStatus = HttpStatus.INTERNAL_SERVER_ERROR,
+    code = ErrorCode.PROD_SAVING,
+    message = "Sorry, Error when saving product"
+)

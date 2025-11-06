@@ -36,5 +36,5 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     WHERE p.id = :id
 """
     )
-    fun findByIdWithRelations(@Param("id") id: UUID): Product?
+    fun findByIdWithItems(@Param("id") id: UUID): Product?
 }

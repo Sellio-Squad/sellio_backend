@@ -13,6 +13,8 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.ProductSavingException
+import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -58,7 +60,7 @@ class ProductService(
     @Transactional
     fun create(request: ProductRequest): ProductResponse {
         val store = storeRepository.findById(request.storeId)
-            .orElseThrow { IllegalArgumentException("Store not found with id ${request.storeId}") }
+            .orElseThrow { StoreNotFoundException() }
 
         val product = request.toEntity(store)
         val savedProduct = productRepository.save(product)
@@ -66,8 +68,8 @@ class ProductService(
         createProductImages(request, savedProduct)
         createProductItems(request, savedProduct)
 
-        val fullProduct = productRepository.findByIdWithRelations(savedProduct.id!!)
-            ?: throw IllegalStateException("Product not found after saving")
+        val fullProduct = productRepository.findByIdWithItems(savedProduct.id!!)
+            ?: throw ProductSavingException()
         return fullProduct.toDTO()
     }
 
