@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.CreateStoreRequest
 import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
-import org.shangahi.sellio_backend.api.dto.response.StoreDetailsResponse
+import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDetailsResponse
 import org.shangahi.sellio_backend.entity.Store
@@ -33,10 +33,10 @@ class StoreService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getStoreDetailsById(storeId: UUID): StoreDetailsResponse {
+    fun getStoreDetailsById(storeId: UUID): StoreInfoResponse {
 
-        val store = storeRepository.findById(storeId)
-            .orElseThrow { Exception("Store not found with id: $storeId") }
+        val store = storeRepository.findByIdOrNull(storeId)
+            ?: throw StoreNotFoundException()
         val featuredPageable = PageRequest.of(0, 10)
         val featuredProductsPage = productRepository.findStoreFeaturedProductsByStoreId(storeId, featuredPageable)
         val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse() }
