@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.shangahi.sellio_backend.api.dto.FavoriteToggleRequest
+import org.shangahi.sellio_backend.api.dto.request.FavoriteToggleRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 
@@ -83,7 +84,7 @@ annotation class FavoriteProductDocs {
     @Operation(
         summary = "Toggle favorite product for a user",
         description = "Add or remove a product from user's favorites based on current state",
-        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+        requestBody = RequestBody(
             required = true,
             description = "User ID and Product ID to toggle favorite status",
             content = [

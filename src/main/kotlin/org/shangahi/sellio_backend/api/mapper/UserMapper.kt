@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.UserInsertRequest
-import org.shangahi.sellio_backend.api.dto.UserUpdateRequest
+import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
+import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.entity.User
 
