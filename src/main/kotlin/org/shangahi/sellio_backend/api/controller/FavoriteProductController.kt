@@ -3,8 +3,11 @@ package org.shangahi.sellio_backend.api.controller
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.request.FavoriteToggleRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.swagger.FavoriteProductDocs
 import org.shangahi.sellio_backend.service.FavoriteProductService
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -19,9 +22,10 @@ class FavoriteProductController(
     @FavoriteProductDocs.GetFavorites
     @GetMapping("/{userId}")
     fun findByUserId(
-        @PathVariable userId: UUID
-    ): List<FavoriteProductsResponse> {
-        return favoriteProductService.getFavoriteProductsByUserId(userId)
+        @PathVariable userId: UUID,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable
+    ): PageResponse<FavoriteProductsResponse> {
+        return favoriteProductService.getFavoriteProductsByUserId(userId,pageable)
     }
 
 
