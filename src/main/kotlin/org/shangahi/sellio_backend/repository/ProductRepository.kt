@@ -47,5 +47,5 @@ interface ProductRepository : JpaRepository<Product, UUID> {
         WHERE p.isUsed = true
     """
     )
-    fun findAllUsedProductsWithDetails(): List<Product>
+    fun findAllUsedProductsWithDetails(pageable: Pageable): Page<Product>
 }

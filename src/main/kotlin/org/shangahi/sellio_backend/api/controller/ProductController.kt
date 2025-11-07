@@ -46,8 +46,10 @@ class ProductController(
     }
 
     @GetMapping("/used")
-    fun getUsedProducts(): ResponseEntity<List<ProductResponse>> {
-        val products = productService.getUsedProducts()
-        return ResponseEntity.ok(products)
-    }
+    fun getUsedProducts(
+        @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC)
+        pageable: Pageable
+    ): PageResponse<ProductResponse> = productService.getUsedProducts(pageable)
+
+
 }

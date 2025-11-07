@@ -110,8 +110,8 @@ class ProductService(
     }
 
     @Transactional(readOnly = true)
-    fun getUsedProducts(): List<ProductResponse> {
-        val usedProducts = productRepository.findAllUsedProductsWithDetails()
-        return usedProducts.map { it.toDTO() }
+    fun getUsedProducts(pageable: Pageable): PageResponse<ProductResponse> {
+        val usedProducts = productRepository.findAllUsedProductsWithDetails(pageable)
+        return usedProducts.toPageResponse { it.toDTO() }
     }
 }
