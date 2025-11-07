@@ -6,6 +6,7 @@ import org.shangahi.sellio_backend.service.exception.ErrorCode.GEN_INTERNAL_SERV
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -23,6 +24,30 @@ class SellioExceptionHandler {
         )
         return ResponseEntity(body, ex.httpStatus)
     }
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationExceptions(
+        ex: MethodArgumentNotValidException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> {
+
+        val errorsMap = ex.bindingResult.fieldErrors.associate { error ->
+            error.field to (error.defaultMessage ?: "Invalid value")
+        }
+
+        val generalMessage = "Validation failed for ${errorsMap.size} field(s)"
+
+        val body = ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.reasonPhrase,
+            message = generalMessage,
+            path = request.requestURI,
+            code = ErrorCode.GEN_VALIDATION_ERROR,
+            validationErrors = errorsMap
+        )
+
+        return ResponseEntity(body, HttpStatus.BAD_REQUEST)
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleGenericException(ex: Exception,request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         log.error("Unhandled exception occurred at path: ${request.requestURI}", ex)
