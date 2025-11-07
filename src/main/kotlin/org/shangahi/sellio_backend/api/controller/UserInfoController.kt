@@ -1,40 +1,44 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.UserInsertRequest
-import org.shangahi.sellio_backend.api.dto.UserUpdateRequest
+import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
+import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
-import org.shangahi.sellio_backend.api.mapper.toUser
+import org.shangahi.sellio_backend.api.swagger.GetUserInfo
+import org.shangahi.sellio_backend.api.swagger.InsertUser
+import org.shangahi.sellio_backend.api.swagger.UpdateUser
 import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.net.URI
 import java.util.*
 
 @RestController
 @RequestMapping("/v1/user")
+@Tag(name = "User", description = "Endpoints for managing user operations")
 class UserInfoController(
     private val userService: UserService,
 ) {
 
+    @InsertUser
     @PostMapping("/insert")
-    fun insertUser(@RequestBody request: UserInsertRequest): ResponseEntity<UserInfoResponse> {
-        val savedUser = userService.insertUser(request.toUser())
-        return ResponseEntity.ok(savedUser.toResponse())
+    fun insertUser(@Valid @RequestBody request: UserInsertRequest): ResponseEntity<UserInfoResponse> {
+        val response = userService.insertUser(request)
+        return ResponseEntity.created(URI.create("/v1/users/${response.id}")).body(response)
     }
 
-    @PostMapping("/update")
-    fun updateUser(@RequestBody request: UserUpdateRequest): ResponseEntity<UserInfoResponse> {
-        val updatedUser = userService.updateUser(request.toUser())
-        return ResponseEntity.ok(updatedUser.toResponse())
+    @UpdateUser
+    @PostMapping("/{userId}/update")
+    fun updateUser(@PathVariable userId: UUID, @Valid @RequestBody request: UserUpdateRequest): ResponseEntity<UserInfoResponse> {
+        val updatedUser = userService.updateUser(userId, request)
+        return ResponseEntity.ok(updatedUser)
     }
 
-    @GetMapping("/profile")
-    fun getUserProfile(@RequestParam userId: UUID): ResponseEntity<UserInfoResponse> {
+    @GetUserInfo
+    @GetMapping("/{userId}")
+    fun getUserProfile(@PathVariable userId: UUID): ResponseEntity<UserInfoResponse> {
         val response = userService.findById(userId).toResponse()
         return ResponseEntity.ok(response)
     }
