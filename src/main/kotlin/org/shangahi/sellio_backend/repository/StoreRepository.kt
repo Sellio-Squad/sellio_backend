@@ -1,6 +1,8 @@
 package org.shangahi.sellio_backend.repository
 
 import org.shangahi.sellio_backend.entity.Store
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -14,6 +16,11 @@ interface StoreRepository : JpaRepository<Store, UUID> {
     fun isExistByOwnerId(@Param("ownerId") ownerId: UUID): Boolean
 
     fun existsByTitle(title: String): Boolean
+
+    fun findStoresByTitleIgnoreCase(
+        pageable: Pageable,
+        title: String
+    ): Page<Store>
 
     fun existsByPhoneNumber(phoneNumber: String): Boolean
 
