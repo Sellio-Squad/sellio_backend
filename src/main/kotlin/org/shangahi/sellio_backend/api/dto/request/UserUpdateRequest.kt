@@ -1,15 +1,14 @@
 package org.shangahi.sellio_backend.api.dto.request
 
-import java.util.UUID
+import jakarta.validation.constraints.Email
 
 data class UserUpdateRequest(
-    val id: UUID,
-    val firstName: String,
-    val lastName: String,
-    val phoneNumber: String,
+    val firstName: String?,
+    val lastName: String?,
+    val phoneNumber: String?,
+    @field:Email(message = "Invalid email format")
     val email: String?,
-    val city: String,
-    val country: String,
-    val password: String,
-    val avatarUrl: String?,
+    val city: String?,
+    val country: String?,
+    val avatarUrl: String?
 )
