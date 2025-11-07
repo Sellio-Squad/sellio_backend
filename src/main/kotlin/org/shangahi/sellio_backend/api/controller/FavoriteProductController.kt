@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.shangahi.sellio_backend.api.dto.request.FavoriteToggleRequest
+import org.shangahi.sellio_backend.api.dto.request.FavoriteProductRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.swagger.FavoriteProductDocs
@@ -18,8 +18,7 @@ import java.util.*
 class FavoriteProductController(
     private val favoriteProductService: FavoriteProductService
 ) {
-
-    @FavoriteProductDocs.GetFavorites
+    @FavoriteProductDocs.GetFavoriteProducts
     @GetMapping("/{userId}")
     fun findByUserId(
         @PathVariable userId: UUID,
@@ -29,10 +28,10 @@ class FavoriteProductController(
     }
 
 
-    @FavoriteProductDocs.ToggleFavorite
+    @FavoriteProductDocs.ToggleFavoriteProduct
     @PostMapping("/toggle")
     fun toggleFavorite(
-        @RequestBody request: FavoriteToggleRequest
+        @RequestBody request: FavoriteProductRequest
     ): ResponseEntity<String> {
         val message = favoriteProductService.toggleFavorite(request)
         return ResponseEntity.ok(message)
