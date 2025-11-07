@@ -112,15 +112,15 @@ annotation class SubCategoryDoc {
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Category not found",
+                description = "Store not found",
                 content = [
                     Content(
                         mediaType = "application/json",
                         schema = Schema(implementation = ErrorResponse::class),
                         examples = [
                             ExampleObject(
-                                name = "CategoryNotFoundExample",
-                                value = ErrorResponseExample.CATEG_NOT_FOUND
+                                name = "storeNotFoundExample",
+                                value = ErrorResponseExample.STORE_NOT_FOUND
                             )
                         ]
                     )
