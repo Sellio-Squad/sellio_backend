@@ -6,18 +6,18 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.shangahi.sellio_backend.api.dto.request.FavoriteToggleRequest
+import org.shangahi.sellio_backend.api.dto.request.FavoriteProductRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 
 annotation class FavoriteProductDocs {
     @Operation(
         summary = "Get user's favorite products",
-        description = "Retrieve a list of all favorite products for a specific user by userId",
+        description = "Retrieve a page of all favorite products for a specific user by userId",
         responses = [
             ApiResponse(
                 responseCode = "200",
-                description = "List of favorite products returned successfully",
+                description = "page of favorite products returned successfully",
                 content = [
                     Content(
                         mediaType = "application/json",
@@ -78,7 +78,7 @@ annotation class FavoriteProductDocs {
             )
         ]
     )
-    annotation class GetFavorites
+    annotation class GetFavoriteProducts
 
 
     @Operation(
@@ -90,7 +90,7 @@ annotation class FavoriteProductDocs {
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = FavoriteToggleRequest::class),
+                    schema = Schema(implementation = FavoriteProductRequest::class),
                     examples = [
                         ExampleObject(
                             name = "ToggleFavoriteExample",
@@ -127,9 +127,23 @@ annotation class FavoriteProductDocs {
 
                     )
                 ],
-
-
-                ),
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "MissedFieldErrorExample",
+                                value = ErrorResponseExample.REQUEST_BODY_ERROR
+                            )
+                        ]
+                    )
+                ]
+            ),
             ApiResponse(
                 responseCode = "404",
                 description = "User or product not found",
@@ -152,5 +166,5 @@ annotation class FavoriteProductDocs {
             ),
         ]
     )
-    annotation class ToggleFavorite
+    annotation class ToggleFavoriteProduct
 }
