@@ -8,6 +8,7 @@ import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.service.StoreService
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URI
@@ -32,6 +33,14 @@ class StoreController(
             .body(response)
     }
 
+    @GetMapping("/search")
+    fun searchStoresByTitle(
+        @RequestParam title: String,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable
+    ): PageResponse<StoreResponse> {
+        val storesPage = storeService.searchStoresByTitle(pageable, title)
+        return storesPage.toResponse()
+    }
 
     @GetMapping("/{storeId}")
     fun getStoreDetailsById(@PathVariable storeId: UUID): StoreDetailsResponse {
