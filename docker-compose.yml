@@ -13,7 +13,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U sellio_user -d sellio_db" ]
+        interval: 5s
+        timeout: 5s
+        retries: 5
 
   app:
     build:
@@ -26,8 +30,13 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DB_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DB_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_FLYWAY_ENABLED: false
+      SPRING_SQL_INIT_MODE: always
+      SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: true
+      SPRING_SQL_INIT_DATA_LOCATIONS: classpath:seed.sql
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
