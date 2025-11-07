@@ -3,7 +3,7 @@ package org.shangahi.sellio_backend.api.mapper
 import org.shangahi.sellio_backend.api.dto.response.SubCategoryDTO
 import org.shangahi.sellio_backend.entity.SubCategory
 
-fun SubCategory.toDTO(): SubCategoryDTO {
+fun SubCategory.toResponse(): SubCategoryDTO {
     return SubCategoryDTO(
         id = this.id!!,
         title = this.title,
