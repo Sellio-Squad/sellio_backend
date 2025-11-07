@@ -1,6 +1,8 @@
 package org.shangahi.sellio_backend.repository
 
 import org.shangahi.sellio_backend.entity.FavoriteProduct
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation
@@ -9,7 +11,7 @@ import java.util.UUID
 
 @Repository
 interface FavoriteProductRepository: JpaRepository<FavoriteProduct, UUID>{
-    fun findByUserId(userId: UUID): List<FavoriteProduct>
+    fun findByUserId(userId: UUID,pageable: Pageable): Page<FavoriteProduct>
     fun findByUserIdAndProductId(userId: UUID, productId: UUID): FavoriteProduct?
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun deleteByUserIdAndProductId(userId: UUID, productId: UUID)
