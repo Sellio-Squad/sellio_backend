@@ -10,7 +10,7 @@ import org.shangahi.sellio_backend.api.dto.request.FavoriteProductRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 
-annotation class FavoriteProductDocs {
+annotation class FavoriteProductsDoc {
     @Operation(
         summary = "Get user's favorite products",
         description = "Retrieve a page of all favorite products for a specific user by userId",
