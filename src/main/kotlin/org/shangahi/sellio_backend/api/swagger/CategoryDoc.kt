@@ -53,7 +53,7 @@ annotation class CategoryDoc {
                 content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = CategoryResponse::class),
+                        schema = Schema(implementation = ErrorResponse::class),
                         examples = [
                             ExampleObject(
                                 name = "CategoryNotFoundExample",
