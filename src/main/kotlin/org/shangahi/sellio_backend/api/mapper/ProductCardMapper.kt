@@ -26,7 +26,7 @@ fun ProductRequest.toEntity(store: Store): Product =
         isFeatured = this.isFeatured
     )
 
-fun Product.toDTO(): ProductResponse =
+fun Product.toResponse(): ProductResponse =
     ProductResponse(
         id = this.id!!,
         title = this.title,
@@ -38,10 +38,10 @@ fun Product.toDTO(): ProductResponse =
         isFeatured = this.isFeatured,
         subCategoryIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
         imageUrls = this.images.map { it.imageUrl },
-        items = this.items.map { it.toDTO() }
+        items = this.items.map { it.toResponse() }
     )
 
-fun ProductItem.toDTO(): ProductItemResponse =
+fun ProductItem.toResponse(): ProductItemResponse =
     ProductItemResponse(
         id = this.id!!,
         price = this.price,
