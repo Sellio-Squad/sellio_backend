@@ -99,7 +99,7 @@ object ErrorResponseExample {
     }
 """
 
-    const val STORE_PHONE_NUMBER_ALREADY_EXIST = """
+    const val STORE_PHONE_NUMBER_ALREADY_EXISTS = """
     {
       "timestamp": "2025-11-05T21:50:12.995Z",
       "status": 409,
