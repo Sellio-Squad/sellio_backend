@@ -1,24 +1,26 @@
 package org.shangahi.sellio_backend.api.controller
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.response.StoreRatingResponse
+import org.shangahi.sellio_backend.api.swagger.StoreRatingDoc
 import org.shangahi.sellio_backend.service.StoreRatingService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import java.util.*
 
-//GET http://localhost:8080/v1/stores/storeId/rating
 @RestController
-@RequestMapping("/v1/stores/{storeId}/rating")
+@RequestMapping("/v1/store-rating")
+@Tag(name = "Store rating", description = "Endpoints for managing store Ratings")
 class StoreRatingController(
     private val storeRatingService: StoreRatingService
 ) {
-    @GetMapping
+    @StoreRatingDoc.GetRatingInfo
+    @GetMapping("/{storeId}")
     fun getStoreRatingSummary(
         @PathVariable storeId: UUID
-    ): StoreRatingResponse{
-
+    ): StoreRatingResponse {
         return storeRatingService.getStoreRatingSummary(storeId)
     }
 }
