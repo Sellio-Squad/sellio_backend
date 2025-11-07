@@ -23,6 +23,9 @@ class FavoriteProductService(
 
     @Transactional(readOnly = true)
     fun getFavoriteProductsByUserId(userId: UUID): List<FavoriteProductsResponse> {
+        if (!userRepository.existsById(userId)) {
+            throw UserNotFoundException()
+        }
         return favoriteProductRepository.findByUserId(userId).map { product -> product.toFavoriteProductsResponse() }
     }
 
@@ -39,14 +42,14 @@ class FavoriteProductService(
 
         return if (existingFavorite != null) {
             favoriteProductRepository.deleteByUserIdAndProductId(request.userId, request.productId)
-            "Product removed from favorites."
+            "Product removed from favorites successfully."
         } else {
             val newFavorite = FavoriteProduct(
                 user = user,
                 product = product
             )
             favoriteProductRepository.save(newFavorite)
-            "Product added to favorites."
+            "Product added to favorites successfully."
         }
     }
 }
