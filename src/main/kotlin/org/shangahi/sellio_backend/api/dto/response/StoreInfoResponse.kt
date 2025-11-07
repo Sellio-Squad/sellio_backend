@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.api.dto.response
 
 import java.util.*
 
-data class StoreDetailsResponse(
+data class StoreInfoResponse(
     val id: UUID,
     val ownerId: UUID,
     val title: String,
