@@ -4,18 +4,18 @@ object ErrorResponseExample {
 
 //region General
     const val VALIDATION_ERROR = """
-  {
-    "timestamp": "2025-11-07T12:36:14.368924900Z",
+    {
+    "timestamp": "2025-11-07T13:42:51.484853700Z",
     "status": 400,
     "error": "Bad Request",
     "message": "Validation failed for 1 field(s)",
-    "path": "/v1/user/insert",
+    "path": "/v1/user/e8387af4-0646-403a-9bfb-b718252ce48b/update",
     "code": "GEN_001",
     "validationErrors": {
-        "password": "Password must be at least 8 characters long"
+        "email": "Invalid email format"
+        }
     }
-}
-"""
+    """
 
     const val REQUEST_BODY_ERROR = """
     {
