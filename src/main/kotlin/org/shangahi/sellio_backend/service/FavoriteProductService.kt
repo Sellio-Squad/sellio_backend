@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.request.FavoriteToggleRequest
+import org.shangahi.sellio_backend.api.dto.request.FavoriteProductRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toFavoriteProductsResponse
@@ -34,7 +34,7 @@ class FavoriteProductService(
     }
 
     @Transactional
-    fun toggleFavorite(request: FavoriteToggleRequest): String {
+    fun toggleFavorite(request: FavoriteProductRequest): String {
 
         val user = userRepository.findByIdOrNull(request.userId)
             ?: throw UserNotFoundException()
