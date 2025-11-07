@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.util.*
 
@@ -26,6 +27,7 @@ class StoreService(
     private val productRepository: ProductRepository,
     private val storeRepository: StoreRepository,
     private val userRepository: UserRepository,
+    private val storageService: StorageService
 ) {
 
     @Transactional(readOnly = true)
@@ -67,8 +69,35 @@ class StoreService(
             id = savedStore.id ?: throw StoreNotFoundException(),
             title = savedStore.title,
             ownerId = savedStore.owner.id ?: throw UserNotFoundException(),
-            createdAt = savedStore.createdAt ?: Instant.now(),
+            avatarUrl = savedStore.avatarImageURL.orEmpty(),
+            coverUrl = savedStore.coverImageURL.orEmpty(),
+            createdAt = savedStore.createdAt ?: Instant.now()
         )
+    }
+
+    @Transactional
+    fun uploadStoreImages(
+        storeId: UUID,
+        newAvatar: MultipartFile?,
+        newCover: MultipartFile?
+    ): Store {
+        val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
+
+        var updatedStore = store
+
+        if (newAvatar != null && !newAvatar.isEmpty) {
+            store.avatarImageURL?.let { storageService.deleteImage(it) }
+            val avatarUrl = storageService.uploadImage(newAvatar, store.title, "stores/avatars")
+            updatedStore = updatedStore.copy(avatarImageURL = avatarUrl)
+        }
+
+        if (newCover != null && !newCover.isEmpty) {
+            store.coverImageURL?.let { storageService.deleteImage(it) }
+            val coverUrl = storageService.uploadImage(newCover, store.title, "stores/covers")
+            updatedStore = updatedStore.copy(coverImageURL = coverUrl)
+        }
+
+        return storeRepository.save(updatedStore)
     }
 
     private fun storeCreationValidation(request: CreateStoreRequest) {

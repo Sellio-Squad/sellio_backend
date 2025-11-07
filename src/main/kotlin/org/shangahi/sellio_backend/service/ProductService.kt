@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
@@ -32,7 +33,8 @@ class ProductService(
     private val discountRepository: DiscountRepository,
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
-    private val weightRepository: WeightRepository
+    private val weightRepository: WeightRepository,
+    private val storageService: StorageService
 ) {
     @Transactional(readOnly = true)
     fun getStoreProducts(storeId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
@@ -72,6 +74,59 @@ class ProductService(
             ?: throw ProductSavingException()
         return fullProduct.toResponse()
     }
+
+
+    @Transactional
+    fun uploadProductImage(
+        productId: UUID,
+        mainImage: MultipartFile,
+        images: List<MultipartFile>
+    ): List<String> {
+        val product = productRepository.findById(productId)
+            .orElseThrow { ProductSavingException() }
+
+        val uploadedUrls = mutableListOf<String>()
+        val mainImageUploadedUrl = storageService.uploadImage(
+            file = mainImage,
+            fileName = product.title,
+            folderName = "products/mainImage"
+        )
+        val mainProductImage = ProductImage(product = product, imageUrl = mainImageUploadedUrl)
+        productImageRepository.save(mainProductImage)
+        uploadedUrls.add(mainImageUploadedUrl)
+
+        images.forEach { image ->
+            if (!image.isEmpty) {
+                val uploadedUrl = storageService.uploadImage(
+                    file = image,
+                    fileName = product.title,
+                    folderName = "products/images"
+                )
+                val productImage = ProductImage(product = product, imageUrl = uploadedUrl)
+                productImageRepository.save(productImage)
+                uploadedUrls.add(uploadedUrl)
+            }
+        }
+
+        return uploadedUrls
+    }
+
+    @Transactional
+    fun deleteProductImage(productId: UUID, imageId: UUID, imageUrl: String): Boolean {
+        val productImage = productImageRepository.findById(imageId)
+            .orElseThrow { ProductSavingException() }
+
+        if (productImage.product.id != productId) {
+            throw ProductSavingException()
+        }
+
+        val deleted = storageService.deleteImage(productImage.imageUrl)
+        if (deleted) {
+            productImageRepository.delete(productImage)
+        }
+        return deleted
+    }
+
 
     private fun createProductSubCategories(request: ProductRequest, savedProduct: Product) {
         if (request.subCategoryIds.isNotEmpty()) {

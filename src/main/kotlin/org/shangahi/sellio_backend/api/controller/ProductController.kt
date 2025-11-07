@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 // GET http://localhost:8080/v1/products/store/store_id
@@ -43,6 +44,16 @@ class ProductController(
     fun create(@RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
         val saved = productService.create(request)
         return ResponseEntity.ok(saved)
+    }
+
+    @PostMapping("/{productId}/images")
+    fun uploadProductImages(
+        @PathVariable productId: UUID,
+        @RequestPart("main") mainImage: MultipartFile,
+        @RequestPart("images") images: List<MultipartFile>
+    ): ResponseEntity<List<String>> {
+        val updatedProduct = productService.uploadProductImage(productId, mainImage, images)
+        return ResponseEntity.ok(updatedProduct)
     }
 
     @GetMapping("/used")
