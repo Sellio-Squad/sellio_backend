@@ -6,11 +6,13 @@ import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreDetailsResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
+import org.shangahi.sellio_backend.api.mapper.toStoreResponse
 import org.shangahi.sellio_backend.service.StoreService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.net.URI
 import java.util.*
 
@@ -21,7 +23,7 @@ import java.util.*
 class StoreController(
     private val storeService: StoreService
 ) {
-    @PostMapping
+    @PostMapping("/create")
     fun addStore(@RequestBody request: CreateStoreRequest): ResponseEntity<StoreCreationResponse> {
 
         val response = storeService.createStore(request)
@@ -31,6 +33,17 @@ class StoreController(
         return ResponseEntity
             .created(location)
             .body(response)
+    }
+
+    @PostMapping(value = ["/{storeId}/images"], consumes = ["multipart/form-data"])
+    fun uploadStoreImages(
+        @PathVariable storeId: UUID,
+        @RequestPart("avatarImage", required = false) avatarImage: MultipartFile?,
+        @RequestPart("coverImage", required = false) coverImage: MultipartFile?
+    ): ResponseEntity<StoreResponse> {
+
+        val response = storeService.uploadStoreImages(storeId, avatarImage, coverImage)
+        return ResponseEntity.ok(response.toStoreResponse())
     }
 
     @GetMapping("/search")
@@ -47,7 +60,7 @@ class StoreController(
         return storeService.getStoreDetailsById(storeId)
     }
 
-    @GetMapping("/top")
+    @GetMapping("/top-rating")
     fun getTopStores(
         pageable: Pageable
     ): PageResponse<StoreResponse> {
