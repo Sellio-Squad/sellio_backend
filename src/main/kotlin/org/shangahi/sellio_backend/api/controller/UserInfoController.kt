@@ -6,9 +6,7 @@ import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
-import org.shangahi.sellio_backend.api.swagger.GetUserInfo
-import org.shangahi.sellio_backend.api.swagger.InsertUser
-import org.shangahi.sellio_backend.api.swagger.UpdateUser
+import org.shangahi.sellio_backend.api.swagger.UserDoc
 import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -21,22 +19,27 @@ import java.util.*
 class UserInfoController(
     private val userService: UserService,
 ) {
-
-    @InsertUser
+    @UserDoc.InsertUser
     @PostMapping("/insert")
     fun insertUser(@Valid @RequestBody request: UserInsertRequest): ResponseEntity<UserInfoResponse> {
         val response = userService.insertUser(request)
-        return ResponseEntity.created(URI.create("/v1/users/${response.id}")).body(response)
+        val location = URI.create("/v1/users/${response.id}")
+        return ResponseEntity
+            .created(location)
+            .body(response)
     }
 
-    @UpdateUser
+    @UserDoc.UpdateUser
     @PostMapping("/{userId}/update")
-    fun updateUser(@PathVariable userId: UUID, @Valid @RequestBody request: UserUpdateRequest): ResponseEntity<UserInfoResponse> {
+    fun updateUser(
+        @PathVariable userId: UUID,
+        @Valid @RequestBody request: UserUpdateRequest
+    ): ResponseEntity<UserInfoResponse> {
         val updatedUser = userService.updateUser(userId, request)
         return ResponseEntity.ok(updatedUser)
     }
 
-    @GetUserInfo
+    @UserDoc.GetUserInfo
     @GetMapping("/{userId}")
     fun getUserProfile(@PathVariable userId: UUID): ResponseEntity<UserInfoResponse> {
         val response = userService.findById(userId).toResponse()
