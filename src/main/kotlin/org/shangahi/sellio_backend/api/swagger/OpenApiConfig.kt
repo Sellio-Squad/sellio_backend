@@ -36,7 +36,7 @@ class OpenApiConfig {
             .servers(
                 listOf(
                     Server().url("http://localhost:8080").description("Local Development"),
-                    Server().url("https://api.sellio.com").description("Production")
+                    Server().url("https://sellio.com").description("Production")
                 )
             )
     }
