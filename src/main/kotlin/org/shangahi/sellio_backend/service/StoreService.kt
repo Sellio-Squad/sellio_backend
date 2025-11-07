@@ -44,6 +44,17 @@ class StoreService(
         return storeRatingRepository.findTopStoresByHighestRating(pageable)
     }
 
+    fun searchStoresByTitle(pageable: Pageable, title: String): Page<Store> {
+        val trimmedTitle = title.trim()
+
+        if (trimmedTitle.isBlank()) {
+            val emptyPage: Page<Store> = Page.empty(pageable)
+            return emptyPage
+        }
+
+        return storeRepository.findStoresByTitleIgnoreCase(pageable, title)
+    }
+
     @Transactional
     fun createStore(request: CreateStoreRequest): StoreCreationResponse {
 
