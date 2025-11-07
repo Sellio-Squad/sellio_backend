@@ -108,4 +108,10 @@ class ProductService(
             productItemRepository.saveAll(items)
         }
     }
+
+    @Transactional(readOnly = true)
+    fun getUsedProducts(): List<ProductResponse> {
+        val usedProducts = productRepository.findAllUsedProductsWithDetails()
+        return usedProducts.map { it.toDTO() }
+    }
 }

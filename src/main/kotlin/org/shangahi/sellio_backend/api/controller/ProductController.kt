@@ -44,4 +44,10 @@ class ProductController(
         val saved = productService.create(request)
         return ResponseEntity.ok(saved)
     }
+
+    @GetMapping("/used")
+    fun getUsedProducts(): ResponseEntity<List<ProductResponse>> {
+        val products = productService.getUsedProducts()
+        return ResponseEntity.ok(products)
+    }
 }
