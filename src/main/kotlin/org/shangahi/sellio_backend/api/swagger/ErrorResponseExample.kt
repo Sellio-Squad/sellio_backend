@@ -4,25 +4,29 @@ object ErrorResponseExample {
 
 //region General
     const val VALIDATION_ERROR = """
-    {
-      "timestamp": "2025-11-05T21:50:12.995Z",
-      "status": 400,
-      "error": "Bad Request",
-      "message": "Validation failed for one or more fields",
-      "path": "/v1/<resource>",
-      "code": "GEN_001"
+  {
+    "timestamp": "2025-11-07T12:36:14.368924900Z",
+    "status": 400,
+    "error": "Bad Request",
+    "message": "Validation failed for 1 field(s)",
+    "path": "/v1/user/insert",
+    "code": "GEN_001",
+    "validationErrors": {
+        "password": "Password must be at least 8 characters long"
     }
+}
 """
 
     const val REQUEST_BODY_ERROR = """
     {
-      "timestamp": "2025-11-05T21:50:12.995Z",
-      "status": 400,
-      "error": "Bad Request",
-      "message": "Request body is missing or malformed",
-      "path": "/v1/<resource>",
-      "code": "GEN_002"
-    }
+    "timestamp": "2025-11-07T12:39:23.638971600Z",
+    "status": 400,
+    "error": "Bad Request",
+    "message": "Required field 'phoneNumber' is missing.",
+    "path": "/v1/user/insert",
+    "code": "GEN_002",
+    "validationErrors": null
+}
 """
 
     const val INTERNAL_SERVER_ERROR = """
