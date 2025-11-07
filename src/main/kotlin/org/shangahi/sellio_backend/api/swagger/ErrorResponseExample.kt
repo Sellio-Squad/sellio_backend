@@ -22,7 +22,7 @@ object ErrorResponseExample {
     "timestamp": "2025-11-07T12:39:23.638971600Z",
     "status": 400,
     "error": "Bad Request",
-    "message": "Required field 'phoneNumber' is missing.",
+    "message": "Required field 'field name' is missing.",
     "path": "/v1/user/insert",
     "code": "GEN_002",
     "validationErrors": null
