@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.shangahi.sellio_backend.api.dto.SubCategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
 
@@ -145,4 +147,123 @@ annotation class SubCategoryDoc {
         ]
     )
     annotation class GetSubCategoryByStoreId
+
+    @Operation(
+        summary = "Insert new subcategory",
+        description = "Insert subcategory by providing title and parent category ID",
+        requestBody = RequestBody(
+            required = true,
+            description = "Insert required fields to add new user",
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = SubCategoryRequest::class),
+                    examples = [
+                        ExampleObject(
+                            name = "AddSubCategoryRequestExample",
+                            value = """
+                            {
+                               "title": "PC-Screens",
+                               "categoryId": "44444444-c5c5-d6d6-e7e7-444444444444"
+                            }
+                        """
+                        )
+                    ]
+                )
+            ]
+        ),
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "subCategory Inserted successfully",
+
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = SubCategoryResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "SubCategory info",
+                                value = """
+                           {
+                               "id": "16a44747-ed89-43cc-9a75-1dcae4617e25",
+                               "title": "PC-Screens",
+                               "categoryId": "44444444-c5c5-d6d6-e7e7-444444444444",
+                               "categoryTitle": "Electronics",
+                               "createdAt": "2025-11-09T22:53:51.030604Z",
+                               "updatedAt": "2025-11-09T22:53:51.030604Z"
+                           }
+                        """
+                            )
+                        ],
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Conflict errors",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "SubCategoryTitleAlreadyExistsExample",
+                                value = ErrorResponseExample.SUBCATEG_ALREADY_EXISTS
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "MissedFieldErrorExample",
+                                value = ErrorResponseExample.REQUEST_BODY_ERROR
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not found",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "NotFoundErrorExample",
+                                value = ErrorResponseExample.CATEG_NOT_FOUND
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerErrorExample",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            ),
+        ]
+    )
+    annotation class InsertSubCategory
 }
