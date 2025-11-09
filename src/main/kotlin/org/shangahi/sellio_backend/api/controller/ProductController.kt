@@ -4,6 +4,8 @@ import org.shangahi.sellio_backend.api.dto.ProductRequest
 import org.shangahi.sellio_backend.api.dto.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
+import org.shangahi.sellio_backend.api.mapper.toPageResponse
+import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.service.ProductService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -60,7 +62,7 @@ class ProductController(
     fun getUsedProducts(
         @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC)
         pageable: Pageable
-    ): PageResponse<ProductResponse> = productService.getUsedProducts(pageable)
+    ): PageResponse<ProductResponse> = productService.getUsedProducts(pageable).toPageResponse { it.toResponse() }
 
 
 }
