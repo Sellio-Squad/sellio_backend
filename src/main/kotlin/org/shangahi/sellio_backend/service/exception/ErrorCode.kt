@@ -23,10 +23,17 @@ internal object ErrorCode {
     const val PROD_OUT_OF_STOCK = "PROD_001"
     const val PROD_NOT_ENOUGH_STOCK = "PROD_002"
     const val PROD_NOT_FOUND = "PROD_004"
+    const val PROD_SAVING = "PROD_005"
+
     //CATEG_xxx
     const val CATEG_ALREADY_EXISTS = "CATEG_001"
     const val CATEG_NOT_FOUND = "CATEG_004"
+
     //SUBCATEG_xxx
     const val SUBCATEG_ALREADY_EXISTS = "CATEG_001"
     const val SUBCATEG_NOT_FOUND = "CATEG_004"
+
+    //IMAGE_xxx
+    const val IMAGE_INVALID_FORMAT = "IMAGE_001"
+    const val IMAGE_UPLOAD_FAILED = "IMAGE_002"
 }

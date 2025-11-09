@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.dto.response
 
-import java.util.UUID
+import java.util.*
 
 data class StoreResponse (
     val id: UUID?,

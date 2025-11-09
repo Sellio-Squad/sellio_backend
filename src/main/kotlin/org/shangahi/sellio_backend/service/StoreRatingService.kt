@@ -5,8 +5,7 @@ import org.shangahi.sellio_backend.repository.StoreRatingRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.springframework.stereotype.Service
-import java.util.UUID
-import kotlin.collections.forEach
+import java.util.*
 
 
 @Service

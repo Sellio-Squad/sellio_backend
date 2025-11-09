@@ -1,6 +1,8 @@
 package org.shangahi.sellio_backend.service
 
+import org.shangahi.sellio_backend.api.dto.SubCategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
+import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.repository.CategoryRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
@@ -15,18 +17,27 @@ class SubCategoryService(
     private val subCategoryRepository: SubCategoryRepository,
     private val categoryRepository: CategoryRepository,
     private val storeRepository: StoreRepository
+
 ) {
     fun getSubCategoriesByCategoryId(categoryId: UUID): List<SubCategoryResponse> {
         if (!categoryRepository.existsById(categoryId)) {
             throw CategoryNotFoundException()
         }
-        if (!storeRepository.existsById(categoryId)) {
-            throw StoreNotFoundException()
-        }
+
         return subCategoryRepository.findByCategoryId(categoryId).map { it.toResponse() }
     }
 
     fun getSubCategoriesByStoreId(storeId: UUID): List<SubCategoryResponse> {
+        if (!storeRepository.existsById(storeId)) {
+            throw StoreNotFoundException()
+        }
         return subCategoryRepository.findAllByStoreId(storeId).map { it.toResponse() }
+    }
+
+    fun create(request: SubCategoryRequest): SubCategoryResponse {
+        val category = categoryRepository.findById(request.categoryId)
+            .orElseThrow { RuntimeException("Category not found with id ${request.categoryId}") }
+        val saved = subCategoryRepository.save(request.toEntity(category))
+        return saved.toResponse()
     }
 }

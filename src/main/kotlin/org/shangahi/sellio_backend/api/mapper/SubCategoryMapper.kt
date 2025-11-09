@@ -1,6 +1,8 @@
 package org.shangahi.sellio_backend.api.mapper
 
+import org.shangahi.sellio_backend.api.dto.SubCategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
+import org.shangahi.sellio_backend.entity.Category
 import org.shangahi.sellio_backend.entity.SubCategory
 
 fun SubCategory.toResponse(): SubCategoryResponse {
@@ -11,5 +13,13 @@ fun SubCategory.toResponse(): SubCategoryResponse {
         categoryTitle = this.category.title,
         createdAt = this.createdAt,
         updatedAt = this.updatedAt
+    )
+}
+
+fun SubCategoryRequest.toEntity(category: Category): SubCategory {
+    return SubCategory(
+        title = this.title,
+        category = category,
+        products = emptySet()
     )
 }

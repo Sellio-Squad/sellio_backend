@@ -1,9 +1,8 @@
 package org.shangahi.sellio_backend.service
 
+import jakarta.transaction.Transactional
 import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
-import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
-import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.mapper.toUser
 import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.repository.UserRepository
@@ -12,11 +11,13 @@ import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
+    private val storageService: StorageService
 ) {
 
     fun findById(userId: UUID): User {
@@ -24,7 +25,7 @@ class UserService(
             ?: throw UserNotFoundException()
     }
 
-    fun insertUser(request: UserInsertRequest): UserInfoResponse {
+    fun insertUser(request: UserInsertRequest): User {
         if (userRepository.existsByPhoneNumber(request.phoneNumber)) {
             throw UserPhoneNumberAlreadyExistsException()
         }
@@ -32,12 +33,31 @@ class UserService(
         if (request.email != null && userRepository.existsByEmail(request.email)) {
             throw UserEmailAlreadyExistsException()
         }
-        val savedUser = userRepository.save(request.toUser())
-        return savedUser.toResponse()
+        return userRepository.save(request.toUser())
     }
 
 
-    fun updateUser(userId: UUID, request: UserUpdateRequest): UserInfoResponse {
+    @Transactional
+    fun uploadUserAvatar(userId: UUID, file: MultipartFile): User {
+        val user = findById(userId)
+
+        user.avatarUrl?.let { oldUrl ->
+            runCatching { storageService.deleteImage(oldUrl) }
+        }
+
+        val imageUrl = storageService.uploadImage(
+            file = file,
+            fileName = user.firstName,
+            folderName = "avatars"
+        )
+
+        val updatedUser = user.copy(avatarUrl = imageUrl)
+        return userRepository.save(updatedUser)
+    }
+
+
+
+    fun updateUser(userId: UUID, request: UserUpdateRequest): User {
 
         val existingUser = userRepository.findByIdOrNull(userId)
             ?: throw UserNotFoundException()
@@ -63,7 +83,6 @@ class UserService(
             country = request.country ?: existingUser.country,
             avatarUrl = request.avatarUrl ?: existingUser.avatarUrl
         )
-        val savedUser = userRepository.save(updatedUser)
-        return savedUser.toResponse()
+        return userRepository.save(updatedUser)
     }
 }

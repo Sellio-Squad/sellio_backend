@@ -8,5 +8,5 @@ data class CategoryResponse(
     val title: String,
     val createdAt: Instant?,
     val updatedAt: Instant?,
-    val subCategories: List<SubCategoryDTO> = emptyList()
+    val subCategories: List<SubCategoryResponse> = emptyList()
 )

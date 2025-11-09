@@ -10,6 +10,7 @@ import org.shangahi.sellio_backend.api.swagger.UserDoc
 import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.net.URI
 import java.util.*
 
@@ -26,7 +27,7 @@ class UserInfoController(
         val location = URI.create("/v1/users/${response.id}")
         return ResponseEntity
             .created(location)
-            .body(response)
+            .body(response.toResponse())
     }
 
     @UserDoc.UpdateUser
@@ -36,7 +37,7 @@ class UserInfoController(
         @Valid @RequestBody request: UserUpdateRequest
     ): ResponseEntity<UserInfoResponse> {
         val updatedUser = userService.updateUser(userId, request)
-        return ResponseEntity.ok(updatedUser)
+        return ResponseEntity.ok(updatedUser.toResponse())
     }
 
     @UserDoc.GetUserInfo
@@ -45,4 +46,14 @@ class UserInfoController(
         val response = userService.findById(userId).toResponse()
         return ResponseEntity.ok(response)
     }
+
+    @PostMapping("/{userId}/avatar")
+    fun uploadUserAvatar(
+        @PathVariable userId: UUID,
+        @RequestPart("image") file: MultipartFile
+    ): ResponseEntity<UserInfoResponse> {
+        val updatedUser = userService.uploadUserAvatar(userId, file)
+        return ResponseEntity.ok(updatedUser.toResponse())
+    }
+
 }

@@ -5,14 +5,14 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.UUID
+import java.util.*
 
-    @Repository
-    interface DiscountRepository : JpaRepository<Discount, UUID> {
+@Repository
+interface DiscountRepository : JpaRepository<Discount, UUID> {
 
-        fun findByStoreId(storeId: UUID, pageable: Pageable): Page<Discount>
-        fun findByProductId(id: UUID, pageable: Pageable): Page<Discount>
-        fun findBySubCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
-        fun findByCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
+    fun findByStoreId(storeId: UUID, pageable: Pageable): Page<Discount>
+    fun findByProductId(id: UUID, pageable: Pageable): Page<Discount>
+    fun findBySubCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
+    fun findByCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
 
-    }
+}
