@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.shangahi.sellio_backend.api.dto.CategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 
@@ -143,4 +145,106 @@ annotation class CategoryDoc {
         ]
     )
     annotation class GetAllCategories
+
+
+    @Operation(
+        summary = "Insert new Category",
+        description = "Insert Category by providing title",
+        requestBody = RequestBody(
+            required = true,
+            description = "Insert required fields to add new user",
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = CategoryRequest::class),
+                    examples = [
+                        ExampleObject(
+                            name = "AddCategoryRequestExample",
+                            value = """
+                           {
+                              "title": "PC-Accessory"
+                            }
+                        """
+                        )
+                    ]
+                )
+            ]
+        ),
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Category Inserted successfully",
+
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = CategoryResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "Category info",
+                                value = """
+                           { 
+                               "id": "a67130bb-a1ee-417e-9394-48ed96a25a31",
+                               "title": "PC-Accessory",
+                               "createdAt": "2025-11-09T23:18:09.950667Z",
+                               "updatedAt": "2025-11-09T23:18:09.950667Z",
+                               "subCategories": []
+                           }
+                        """
+                            )
+                        ],
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Conflict errors",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "CategoryTitleAlreadyExistsExample",
+                                value = ErrorResponseExample.CATEG_ALREADY_EXISTS
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "MissedFieldErrorExample",
+                                value = ErrorResponseExample.REQUEST_BODY_ERROR
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerErrorExample",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            ),
+        ]
+    )
+    annotation class InsertCategory
 }
