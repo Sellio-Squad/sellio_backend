@@ -31,7 +31,7 @@ class UserInfoController(
     }
 
     @UserDoc.UpdateUser
-    @PostMapping("/{userId}/update")
+    @PutMapping("/{userId}/update")
     fun updateUser(
         @PathVariable userId: UUID,
         @Valid @RequestBody request: UserUpdateRequest
