@@ -37,4 +37,15 @@ interface ProductRepository : JpaRepository<Product, UUID> {
 """
     )
     fun findByIdWithItems(@Param("id") id: UUID): Product?
+
+    @Query(
+        """
+        SELECT DISTINCT p FROM Product p
+        LEFT JOIN FETCH p.images
+        LEFT JOIN FETCH p.items
+        LEFT JOIN FETCH p.productSubCategories
+        WHERE p.isUsed = true
+    """
+    )
+    fun findAllUsedProductsWithDetails(pageable: Pageable): Page<Product>
 }

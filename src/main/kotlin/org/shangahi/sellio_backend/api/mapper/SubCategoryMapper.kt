@@ -5,7 +5,7 @@ import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
 import org.shangahi.sellio_backend.entity.Category
 import org.shangahi.sellio_backend.entity.SubCategory
 
-fun SubCategory.toDTO(): SubCategoryResponse {
+fun SubCategory.toResponse(): SubCategoryResponse {
     return SubCategoryResponse(
         id = this.id!!,
         title = this.title,
