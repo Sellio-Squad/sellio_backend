@@ -69,6 +69,7 @@ class OpenApiConfig {
             .servers(
                 listOf(
                     Server().url("http://localhost:8080").description("Local Development"),
+                    Server().url("http://127.0.0.1:8080").description("Docker environment"),
                     Server().url("https://sellio.com").description("Production")
                 )
             )
