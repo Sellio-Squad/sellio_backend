@@ -23,6 +23,7 @@ class CategoryController(private val categoryService: CategoryService) {
     @GetMapping("/{id}")
     fun getById(@PathVariable id: UUID): CategoryResponse = categoryService.getCategoryById(id).toResponse()
 
+    @CategoryDoc.InsertCategory
     @PostMapping("/create")
     fun createCategory(@RequestBody request: CategoryRequest): ResponseEntity<CategoryResponse> {
         val saved = categoryService.create(request)
