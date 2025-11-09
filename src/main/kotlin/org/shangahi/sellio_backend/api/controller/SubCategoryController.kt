@@ -26,6 +26,7 @@ class SubCategoryController(private val subCategoryService: SubCategoryService) 
         return subCategoryService.getSubCategoriesByStoreId(storeId)
     }
 
+    @SubCategoryDoc.InsertSubCategory
     @PostMapping("/create")
     fun create(@RequestBody request: SubCategoryRequest): ResponseEntity<SubCategoryResponse> =
         ResponseEntity.ok(subCategoryService.create(request))
