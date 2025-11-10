@@ -6,7 +6,7 @@ import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
-import org.shangahi.sellio_backend.api.swagger.UserDoc
+import org.shangahi.sellio_backend.api.swagger.doc.UserDoc
 import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.shangahi.sellio_backend.api.swagger.CategoryDoc
+import org.shangahi.sellio_backend.api.swagger.doc.CategoryDoc
 import org.shangahi.sellio_backend.api.dto.CategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse

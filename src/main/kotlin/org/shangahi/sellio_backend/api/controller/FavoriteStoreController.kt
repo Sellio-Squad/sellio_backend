@@ -6,7 +6,7 @@ import org.shangahi.sellio_backend.api.dto.response.FavoriteStoreResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
-import org.shangahi.sellio_backend.api.swagger.FavoriteStoresDoc
+import org.shangahi.sellio_backend.api.swagger.doc.FavoriteStoresDoc
 import org.shangahi.sellio_backend.service.FavoriteStoreService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.request.FavoriteProductRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
-import org.shangahi.sellio_backend.api.swagger.FavoriteProductsDoc
+import org.shangahi.sellio_backend.api.swagger.doc.FavoriteProductsDoc
 import org.shangahi.sellio_backend.service.FavoriteProductService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault

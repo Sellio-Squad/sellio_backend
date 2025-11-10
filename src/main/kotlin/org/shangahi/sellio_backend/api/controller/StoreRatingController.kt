@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.response.StoreRatingResponse
-import org.shangahi.sellio_backend.api.swagger.StoreRatingDoc
+import org.shangahi.sellio_backend.api.swagger.doc.StoreRatingDoc
 import org.shangahi.sellio_backend.service.StoreRatingService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

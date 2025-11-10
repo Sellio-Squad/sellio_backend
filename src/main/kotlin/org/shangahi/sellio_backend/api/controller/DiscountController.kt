@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.response.DiscountResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.service.DiscountService
@@ -12,12 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-//  http://localhost:8080/v1/discounts/store/{storeId}
-//  http://localhost:8080/v1/discounts/product/{productId}
-//  http://localhost:8080/v1/discounts/category/{subcategoryId}
-//  http://localhost:8080/v1/discounts/sub-category/{subcategoryId}
-
 @RequestMapping("/v1/discounts")
+@Tag(name = "Discount", description = "Endpoints for managing Discounts")
 class DiscountController(
     private val discountService: DiscountService
 ) {

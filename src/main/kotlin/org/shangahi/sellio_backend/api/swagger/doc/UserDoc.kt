@@ -1,4 +1,4 @@
-package org.shangahi.sellio_backend.api.swagger
+package org.shangahi.sellio_backend.api.swagger.doc
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -10,6 +10,7 @@ import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
+import org.shangahi.sellio_backend.api.swagger.ErrorResponseExample
 
 annotation class UserDoc {
     @Operation(
