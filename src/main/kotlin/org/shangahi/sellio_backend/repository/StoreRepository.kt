@@ -29,7 +29,4 @@ interface StoreRepository : JpaRepository<Store, UUID> {
     ): Page<Store>
 
     fun existsByPhoneNumber(phoneNumber: String): Boolean
-
-    fun findAllByCity(city: String, pageable: Pageable): Page<Store>
-
 }

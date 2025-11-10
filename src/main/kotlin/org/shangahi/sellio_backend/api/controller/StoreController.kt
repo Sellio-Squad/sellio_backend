@@ -68,12 +68,4 @@ class StoreController(
         val storesPage = storeService.getPagedTopStores(pageable)
         return storesPage.toResponse()
     }
-
-    @GetMapping("/search/by-city")
-    fun getStoresByCity(
-        @RequestParam city: String,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
-    ): PageResponse<StoreResponse> {
-        return storeService.getStoresByCity(city, pageable).toResponse()
-    }
 }
