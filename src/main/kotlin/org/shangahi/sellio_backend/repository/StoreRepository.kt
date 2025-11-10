@@ -15,9 +15,9 @@ interface StoreRepository : JpaRepository<Store, UUID> {
     @Query("SELECT CASE WHEN COUNT(s) > 0 THEN TRUE ELSE FALSE END FROM Store s WHERE s.owner.id = :ownerId")
     fun isExistByOwnerId(@Param("ownerId") ownerId: UUID): Boolean
 
-    fun existsByTitle(title: String): Boolean
+    fun existsByTitle(@Param("title")title: String): Boolean
 
-    fun findStoresByTitleIgnoreCase(
+    fun findByTitleContainingIgnoreCase(
         pageable: Pageable,
         title: String
     ): Page<Store>
