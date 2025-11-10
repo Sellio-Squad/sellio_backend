@@ -46,15 +46,16 @@ class StoreService(
         return storeRatingRepository.findTopStoresByHighestRating(pageable)
     }
 
-    fun searchStoresByTitle(pageable: Pageable, title: String): Page<Store> {
+    fun searchStoresByTitle(title: String, city: String?, pageable: Pageable): Page<Store> {
         val trimmedTitle = title.trim()
-
         if (trimmedTitle.isBlank()) {
-            val emptyPage: Page<Store> = Page.empty(pageable)
-            return emptyPage
+            return Page.empty(pageable)
         }
-
-        return storeRepository.findStoresByTitleIgnoreCase(pageable, title)
+        return if (!city.isNullOrBlank()) {
+            storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
+        } else {
+            storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
+        }
     }
 
     @Transactional
