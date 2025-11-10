@@ -64,5 +64,12 @@ class ProductController(
         pageable: Pageable
     ): PageResponse<ProductResponse> = productService.getUsedProducts(pageable).toPageResponse { it.toResponse() }
 
+    @GetMapping("/{productId}")
+    fun getProductById(@PathVariable productId: UUID): ResponseEntity<ProductResponse> {
+        val product = productService.getProductById(productId)
+        return ResponseEntity.ok(product.toResponse())
+
+    }
+
 
 }

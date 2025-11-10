@@ -13,6 +13,7 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductSavingException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.springframework.data.domain.Page
@@ -167,5 +168,11 @@ class ProductService(
     @Transactional(readOnly = true)
     fun getUsedProducts(pageable: Pageable): Page<Product> {
         return productRepository.findAllUsedProductsWithDetails(pageable)
+    }
+
+    @Transactional(readOnly = true)
+    fun getProductById(productId: UUID): Product {
+        val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
+        return product
     }
 }
