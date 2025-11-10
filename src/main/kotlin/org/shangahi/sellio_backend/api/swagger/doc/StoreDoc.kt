@@ -270,8 +270,8 @@ annotation class StoreDoc {
 
 
     @Operation(
-        summary = "Search by store title",
-        description = "Get page of stores related to typed query",
+        summary = "Search by store title and city",
+        description = "Get page of stores related to typed query and provided city",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -286,22 +286,22 @@ annotation class StoreDoc {
                                 name = "search result",
                                 value = """
                                     {
-                                        "data": [
-                                         {
-                                                "id": "57a212fc-e4ac-4f70-90cd-21f95dc600ba",
-                                                "title": "Global Tech Store",
-                                                "city": "Maadi",
-                                                "government": "Cairo",
-                                                "country": "Egypt",
-                                                "avatarImageURL": null,
-                                                "coverImageURL": null
-                                            },
-                                        ],
-                                        "totalElements": 2,
-                                        "page": 0,
-                                        "pageSize": 20,
-                                        "totalPages": 1
-                                    }
+  "data": [
+    {
+      "id": "be136218-f697-4289-85f7-1aaf904f9035",
+      "title": "laptop-store",
+      "city": "cairo",
+      "government": "cairo",
+      "country": "egypt",
+      "avatarImageURL": null,
+      "coverImageURL": null
+    }
+  ],
+  "totalElements": 1,
+  "page": 0,
+  "pageSize": 20,
+  "totalPages": 1
+}
                         
                         """
                             )
