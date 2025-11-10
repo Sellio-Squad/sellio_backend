@@ -15,7 +15,7 @@ import org.shangahi.sellio_backend.api.swagger.ErrorResponseExample
 annotation class UserDoc {
     @Operation(
         summary = "Get User info by user ID",
-        description = "Retrieve a specific user info by storeId",
+        description = "Retrieve a specific user info by userId",
         responses = [
             ApiResponse(
                 responseCode = "200",
