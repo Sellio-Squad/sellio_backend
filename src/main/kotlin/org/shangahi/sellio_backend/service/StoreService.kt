@@ -54,11 +54,15 @@ class StoreService(
             return emptyPage
         }
 
-        return storeRepository.findStoresByTitleIgnoreCase(pageable, title)
+        return storeRepository.findByTitleContainingIgnoreCase(pageable, title)
     }
 
     @Transactional
     fun createStore(request: CreateStoreRequest): StoreCreationResponse {
+        if (storeRepository.existsByTitle(request.title)){
+            throw StoreTitleAlreadyExistException()
+
+        }
 
         val ownerUser = userRepository.findByIdOrNull(request.ownerId) ?: throw UserNotFoundException()
 
