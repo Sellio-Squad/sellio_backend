@@ -95,7 +95,8 @@ object ErrorResponseExample {
       "error": "Conflict",
       "message": "Store email already exists, you should try another one",
       "path": "/v1/stores",
-      "code": "STORE_001"
+      "code": "STORE_001",
+      "validationErrors": null
     }
 """
 
@@ -106,18 +107,20 @@ object ErrorResponseExample {
       "error": "Conflict",
       "message": "Store phone number already exists, you should try another one",
       "path": "/v1/stores",
-      "code": "STORE_002"
+      "code": "STORE_002",
+      "validationErrors": null
     }
 """
 
-    const val STORE_NAME_ALREADY_EXISTS = """
+    const val STORE_TITLE_ALREADY_EXISTS = """
     {
       "timestamp": "2025-11-05T21:50:12.995Z",
       "status": 409,
       "error": "Conflict",
       "message": "Please try different name, Store name already exists",
       "path": "/v1/stores",
-      "code": "STORE_003"
+      "code": "STORE_003",
+      "validationErrors": null
     }
 """
 
@@ -128,7 +131,8 @@ object ErrorResponseExample {
       "error": "Not Found",
       "message": "Sorry, but store not found",
       "path": "/v1/stores",
-      "code": "STORE_004"
+      "code": "STORE_004",
+      "validationErrors": null
     }
 """
 
@@ -148,9 +152,10 @@ object ErrorResponseExample {
       "timestamp": "2025-11-05T21:50:12.995Z",
       "status": 403,
       "error": "Forbidden",
-      "message": "Not an owner of this store",
+      "message": "this owner ID already has a store",
       "path": "/v1/stores",
       "code": "STORE_006"
+      "validationErrors": null
     }
 """
 
