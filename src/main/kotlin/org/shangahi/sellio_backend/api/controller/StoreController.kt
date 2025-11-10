@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.request.CreateStoreRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
@@ -7,6 +8,7 @@ import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreResponse
+import org.shangahi.sellio_backend.api.swagger.doc.StoreDoc
 import org.shangahi.sellio_backend.service.StoreService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
@@ -17,13 +19,13 @@ import org.springframework.web.multipart.MultipartFile
 import java.net.URI
 import java.util.*
 
-// GET http://localhost:8080/v1/stores/store_id
-// POST http://localhost:8080/v1/stores
 @RestController
 @RequestMapping("/v1/stores")
+@Tag(name = "Store", description = "Endpoints for managing Stores")
 class StoreController(
     private val storeService: StoreService
 ) {
+    @StoreDoc.CreateStore
     @PostMapping("/create")
     fun addStore(@RequestBody request: CreateStoreRequest): ResponseEntity<StoreCreationResponse> {
 
@@ -47,6 +49,7 @@ class StoreController(
         return ResponseEntity.ok(response.toStoreResponse())
     }
 
+    @StoreDoc.SearchByStoreTitle
     @GetMapping("/search")
     fun searchStoresByTitle(
         @RequestParam title: String,
@@ -57,14 +60,17 @@ class StoreController(
         return storesPage.toResponse()
     }
 
+    @StoreDoc.GetStoreInfo
     @GetMapping("/{storeId}")
     fun getStoreDetailsById(@PathVariable storeId: UUID): StoreInfoResponse {
         return storeService.getStoreDetailsById(storeId)
     }
 
+    @StoreDoc.TopStores
     @GetMapping("/top-rating")
     fun getTopStores(
-        pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20) pageable: Pageable
     ): PageResponse<StoreResponse> {
         val storesPage = storeService.getPagedTopStores(pageable)
         return storesPage.toResponse()
