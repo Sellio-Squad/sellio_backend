@@ -54,7 +54,7 @@ class StoreService(
         return if (!city.isNullOrBlank()) {
             storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
         } else {
-            storeRepository.findStoresByTitleIgnoreCase(pageable, trimmedTitle)
+            storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
         }
     }
 

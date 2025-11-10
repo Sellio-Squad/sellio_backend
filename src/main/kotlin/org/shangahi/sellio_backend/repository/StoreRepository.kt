@@ -17,7 +17,7 @@ interface StoreRepository : JpaRepository<Store, UUID> {
 
     fun existsByTitle(title: String): Boolean
 
-    fun findStoresByTitleIgnoreCase(
+    fun findStoresByTitleContainingIgnoreCase(
         pageable: Pageable,
         title: String
     ): Page<Store>
