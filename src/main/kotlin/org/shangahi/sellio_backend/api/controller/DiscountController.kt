@@ -5,6 +5,7 @@ import org.shangahi.sellio_backend.api.dto.response.DiscountResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.swagger.doc.DiscountDoc
 import org.shangahi.sellio_backend.service.DiscountService
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,7 +26,9 @@ class DiscountController(
     @GetMapping("/store/{storeId}")
     fun getStoreDiscounts(
         @PathVariable("storeId") storeId: UUID,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20)
+        pageable: Pageable
     ): PageResponse<DiscountResponse> {
         return discountService.getDiscountsByStoreId(storeId, pageable)
     }
@@ -34,7 +37,9 @@ class DiscountController(
     @GetMapping("/product/{productId}")
     fun getProductDiscounts(
         @PathVariable("productId") productId: UUID,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20)
+        pageable: Pageable
     ): PageResponse<DiscountResponse> {
         return discountService.getDiscountsByProductId(productId, pageable)
     }
@@ -43,7 +48,9 @@ class DiscountController(
     @GetMapping("/category/{CategoryId}")
     fun getCategoryDiscounts(
         @PathVariable("CategoryId") categoryId: UUID,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20)
+        pageable: Pageable
     ): PageResponse<DiscountResponse> {
         return discountService.getDiscountsByCategoryId(categoryId, pageable)
     }
@@ -52,7 +59,9 @@ class DiscountController(
     @GetMapping("/sub-category/{subCategoryId}")
     fun getSubCategoryDiscounts(
         @PathVariable("subCategoryId") subCategoryId: UUID,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20)
+        pageable: Pageable
     ): PageResponse<DiscountResponse> {
         return discountService.getDiscountsBySubCategoryId(subCategoryId, pageable)
     }

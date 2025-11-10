@@ -7,6 +7,7 @@ import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.service.ProductService
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -36,7 +37,9 @@ class ProductController(
     @GetMapping("/search")
     fun searchProducts(
         @RequestParam("query", required = true) query: String,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20)
+        pageable: Pageable
     ): PageResponse<ProductCardResponse> {
 
         return productService.searchProductsByTitle(query, pageable)
@@ -60,7 +63,8 @@ class ProductController(
 
     @GetMapping("/used")
     fun getUsedProducts(
-        @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC)
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC)
         pageable: Pageable
     ): PageResponse<ProductResponse> = productService.getUsedProducts(pageable).toPageResponse { it.toResponse() }
 

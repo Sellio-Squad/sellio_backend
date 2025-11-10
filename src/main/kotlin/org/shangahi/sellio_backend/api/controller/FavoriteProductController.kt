@@ -6,6 +6,7 @@ import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.swagger.doc.FavoriteProductsDoc
 import org.shangahi.sellio_backend.service.FavoriteProductService
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
@@ -22,7 +23,9 @@ class FavoriteProductController(
     @GetMapping("/{userId}")
     fun findByUserId(
         @PathVariable userId: UUID,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20)
+        pageable: Pageable
     ): PageResponse<FavoriteProductsResponse> {
         return favoriteProductService.getFavoriteProductsByUserId(userId,pageable)
     }

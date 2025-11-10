@@ -8,6 +8,7 @@ import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreResponse
 import org.shangahi.sellio_backend.service.StoreService
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
@@ -49,7 +50,8 @@ class StoreController(
     @GetMapping("/search")
     fun searchStoresByTitle(
         @RequestParam title: String,
-        @PageableDefault(page = 0, size = 10) pageable: Pageable
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20) pageable: Pageable
     ): PageResponse<StoreResponse> {
         val storesPage = storeService.searchStoresByTitle(pageable, title)
         return storesPage.toResponse()
