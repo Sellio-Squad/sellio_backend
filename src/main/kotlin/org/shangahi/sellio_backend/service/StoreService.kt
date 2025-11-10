@@ -125,4 +125,9 @@ class StoreService(
             throw StorePhoneNumberExistException()
         }
     }
+
+    @Transactional(readOnly = true)
+    fun getStoresByCity(city: String, pageable: Pageable): Page<Store> {
+        return storeRepository.findAllByCity(city, pageable)
+    }
 }
