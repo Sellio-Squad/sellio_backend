@@ -211,3 +211,37 @@ VALUES (gen_random_uuid(),
         NOW(),
         NOW()
        );
+
+INSERT INTO discounts (id, store_id, product_id, category_id, sub_category_id, type, value, start_date, end_date)
+VALUES
+    (gen_random_uuid(),
+     '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
+     '11111111-a1a1-b2b2-c3c3-111111111111',
+     NULL, NULL,
+     'FIXED',
+     200.0,
+     NOW(),
+     NOW() + INTERVAL '15 day');
+
+INSERT INTO discounts (id, store_id, product_id, category_id, sub_category_id, type, value, start_date, end_date)
+VALUES
+    (gen_random_uuid(),
+     '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
+     NULL,
+     '44444444-c5c5-d6d6-e7e7-444444444444',
+     NULL,
+     'PERCENTAGE',
+     5.0,
+     NOW(),
+     NOW() + INTERVAL '7 day');
+
+INSERT INTO discounts (id, store_id, product_id, category_id, sub_category_id, type, value, start_date, end_date)
+VALUES
+    (gen_random_uuid(),
+     '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
+     NULL, NULL,
+     '33333333-d4d4-e5e5-f6f6-333333333333',
+     'PERCENTAGE',
+     15.0,
+     NOW(),
+     NOW() + INTERVAL '3 day');
