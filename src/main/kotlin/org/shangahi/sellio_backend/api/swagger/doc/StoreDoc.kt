@@ -296,15 +296,6 @@ annotation class StoreDoc {
                                                 "avatarImageURL": null,
                                                 "coverImageURL": null
                                             },
-                                            {
-                                                "id": "be136218-f697-4289-85f7-1aaf904f9035",
-                                                "title": "laptop-store",
-                                                "city": "cairo",
-                                                "government": "cairo",
-                                                "country": "egypt",
-                                                "avatarImageURL": null,
-                                                "coverImageURL": null
-                                            }
                                         ],
                                         "totalElements": 2,
                                         "page": 0,
