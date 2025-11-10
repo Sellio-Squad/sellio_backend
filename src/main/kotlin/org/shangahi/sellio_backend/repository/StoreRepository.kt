@@ -22,6 +22,12 @@ interface StoreRepository : JpaRepository<Store, UUID> {
         title: String
     ): Page<Store>
 
+    fun findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(
+        title: String,
+        city: String,
+        pageable: Pageable
+    ): Page<Store>
+
     fun existsByPhoneNumber(phoneNumber: String): Boolean
 
     fun findAllByCity(city: String, pageable: Pageable): Page<Store>
