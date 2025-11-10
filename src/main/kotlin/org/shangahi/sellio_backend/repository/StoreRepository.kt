@@ -17,11 +17,16 @@ interface StoreRepository : JpaRepository<Store, UUID> {
 
     fun existsByTitle(@Param("title")title: String): Boolean
 
-    fun findByTitleContainingIgnoreCase(
+    fun findStoresByTitleContainingIgnoreCase(
         pageable: Pageable,
         title: String
     ): Page<Store>
 
-    fun existsByPhoneNumber(phoneNumber: String): Boolean
+    fun findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(
+        title: String,
+        city: String,
+        pageable: Pageable
+    ): Page<Store>
 
+    fun existsByPhoneNumber(phoneNumber: String): Boolean
 }
