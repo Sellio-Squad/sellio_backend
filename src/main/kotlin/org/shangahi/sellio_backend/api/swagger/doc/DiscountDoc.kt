@@ -102,7 +102,25 @@ annotation class DiscountDoc {
                             ExampleObject(
                                 name = "discount info",
                                 value = """
-                      
+                                    {
+                                        "data": [
+                                            {
+                                                "id": "3fe37f07-9699-490c-9fc6-899413343be1",
+                                                "storeId": "57a212fc-e4ac-4f70-90cd-21f95dc600ba",
+                                                "productId": "11111111-a1a1-b2b2-c3c3-111111111111",
+                                                "subCategoryId": null,
+                                                "type": "FIXED",
+                                                "value": 200.0,
+                                                "startDate": "2025-11-10T15:58:04.580647Z",
+                                                "endDate": "2025-11-25T15:58:04.580647Z"
+                                            }
+                                        ],
+                                        "totalElements": 1,
+                                        "page": 0,
+                                        "pageSize": 10,
+                                        "totalPages": 1
+                                    }
+                                         
                         """
                             )
                         ],
@@ -162,7 +180,24 @@ annotation class DiscountDoc {
                             ExampleObject(
                                 name = "discount info",
                                 value = """
-                       
+                                    {
+                                        "data": [
+                                            {
+                                                "id": "f4df7549-f47e-41a0-a612-8050d95ca9f2",
+                                                "storeId": "57a212fc-e4ac-4f70-90cd-21f95dc600ba",
+                                                "productId": null,
+                                                "subCategoryId": null,
+                                                "type": "PERCENTAGE",
+                                                "value": 5.0,
+                                                "startDate": "2025-11-10T15:58:04.582100Z",
+                                                "endDate": "2025-11-17T15:58:04.582100Z"
+                                            }
+                                        ],
+                                        "totalElements": 1,
+                                        "page": 0,
+                                        "pageSize": 10,
+                                        "totalPages": 1
+                                    }
                         """
                             )
                         ],
@@ -222,7 +257,24 @@ annotation class DiscountDoc {
                             ExampleObject(
                                 name = "discount info",
                                 value = """
-                       
+                                    {
+                                        "data": [
+                                            {
+                                                "id": "d09caa8e-012a-4b53-ab73-56d97396c9d2",
+                                                "storeId": "57a212fc-e4ac-4f70-90cd-21f95dc600ba",
+                                                "productId": null,
+                                                "subCategoryId": "33333333-d4d4-e5e5-f6f6-333333333333",
+                                                "type": "PERCENTAGE",
+                                                "value": 15.0,
+                                                "startDate": "2025-11-10T15:58:04.583749Z",
+                                                "endDate": "2025-11-13T15:58:04.583749Z"
+                                            }
+                                        ],
+                                        "totalElements": 1,
+                                        "page": 0,
+                                        "pageSize": 10,
+                                        "totalPages": 1
+                                    }  
                         """
                             )
                         ],
