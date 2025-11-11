@@ -5,7 +5,6 @@ import java.util.UUID
 data class RegisterRequest(
     val firstName: String,
     val lastName: String,
-    val username: String,
     val phoneNumber: String,
     val password: String,
     val city: String,
