@@ -32,4 +32,6 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
         @Param("status") status: OrderStatus,
         pageable: Pageable
     ): Page<TrendingProduct>
+
+    fun findAllProducts(pageable: Pageable): Page<TrendingProduct>
 }
