@@ -12,6 +12,12 @@ class ProductItemService(
     private val productItemRepository: ProductItemRepository
 ) {
     fun getTrendingProducts(pageable: Pageable): Page<TrendingProduct> {
-        return productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
+        val trendingProducts = productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
+
+        return if (trendingProducts.isEmpty) {
+            productItemRepository.findAllProducts(pageable)
+        } else {
+            trendingProducts
+        }
     }
 }
