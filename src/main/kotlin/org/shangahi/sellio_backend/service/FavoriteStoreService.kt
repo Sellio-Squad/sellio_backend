@@ -39,6 +39,9 @@ class FavoriteStoreService(
     }
 
     fun getFavoriteStoresByUserId(userId: UUID, pageable: Pageable): Page<FavoriteStore> {
+        if (!userRepository.existsById(userId)) {
+            throw UserNotFoundException()
+        }
         return favoriteStoreRepository.findByUserId(userId, pageable)
     }
 }

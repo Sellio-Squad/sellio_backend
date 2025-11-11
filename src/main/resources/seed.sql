@@ -1,18 +1,28 @@
+-- UUIDs:
+-- USER_ID_OWNER:   'f895cdbe-73fc-4e44-b5db-02f396953f64'
+-- USER_ID_CUSTOMER: 'c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0'
+-- STORE_ID:        '57a212fc-e4ac-4f70-90cd-21f95dc600ba'
+-- CAT_ID_ELECTRONICS: '44444444-c5c5-d6d6-e7e7-444444444444'
+-- SUB_CAT_ID_LAPTOPS: '33333333-d4d4-e5e5-f6f6-333333333333'
+-- PRODUCT_ID_GAMING: '11111111-a1a1-b2b2-c3c3-111111111111'
+-- PRODUCT_ID_OFFICE: '22222222-a1a1-b2b2-c3c3-222222222222'
+-- ITEM_ID_1 (Product Item): 'a1a1a1a1-aaaa-aaaa-aaaa-000000000001'
+-- ORDER_ID_1 (Orders):     'b1b1b1b1-bbbb-bbbb-bbbb-000000000001'
+-- CART_ID_1 (Cart):        'c1c1c1c1-cccc-cccc-cccc-000000000001'
+
+
 INSERT INTO color (id, value)
 VALUES (gen_random_uuid(), 'Red');
-
 INSERT INTO color (id, value)
 VALUES (gen_random_uuid(), 'Black');
 
 INSERT INTO sizes (id, value)
 VALUES (gen_random_uuid(), 'Small');
-
 INSERT INTO sizes (id, value)
 VALUES (gen_random_uuid(), 'Medium');
 
 INSERT INTO weight (id, value)
 VALUES (1, 5.0);
-
 INSERT INTO weight (id, value)
 VALUES (2, 1.2);
 
@@ -22,7 +32,7 @@ VALUES ('f895cdbe-73fc-4e44-b5db-02f396953f64',
         'Sayed',
         'ahmed@sellio.com',
         'pass_hash',
-        '01000000000',
+        '01000000001',
         'Cairo',
         'Egypt',
         NOW(),
@@ -33,22 +43,24 @@ VALUES ('f895cdbe-73fc-4e44-b5db-02f396953f64',
         'Anwer',
         'aziz@sellio.com',
         'pass_hash',
-        '01000000000',
+        '01000000002',
         'Samaraa',
         'Iraq',
         NOW(),
-        NOW()),
+        NOW()
+       ),
 
        ('e5e8e9ce-c0c0-c9c0-c8c0-c0c0c0e5c8e9',
         'Karrar',
         'Abbas',
         'karrar@sellio.com',
         'pass_hash',
-        '01000000000',
+        '01000000003',
         'Baghdad',
         'Iraq',
         NOW(),
-        NOW());
+        NOW()
+       );
 
 INSERT INTO store (id, owner_id, title, description, phone_number, city, government, country, created_at, updated_at)
 VALUES ('57a212fc-e4ac-4f70-90cd-21f95dc600ba',
@@ -60,13 +72,16 @@ VALUES ('57a212fc-e4ac-4f70-90cd-21f95dc600ba',
         'Cairo',
         'Egypt',
         NOW(),
-        NOW());
+        NOW()
+       );
 
 INSERT INTO category (id, title, created_at, updated_at)
 VALUES ('44444444-c5c5-d6d6-e7e7-444444444444',
         'Electronics',
         NOW(),
-        NOW());
+        NOW()
+       );
+
 
 INSERT INTO sub_category (id, parent_id, title, created_at, updated_at)
 VALUES ('33333333-d4d4-e5e5-f6f6-333333333333',
@@ -85,7 +100,8 @@ VALUES ('11111111-a1a1-b2b2-c3c3-111111111111',
         FALSE,
         TRUE,
         NOW(),
-        NOW()),
+        NOW()
+       ),
 
        ('22222222-a1a1-b2b2-c3c3-222222222222',
         '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
@@ -95,22 +111,25 @@ VALUES ('11111111-a1a1-b2b2-c3c3-111111111111',
         FALSE,
         FALSE,
         NOW(),
-        NOW());
+        NOW()
+       );
 
 INSERT INTO product_subcategory (id, product_id, sub_category_id, created_at)
 VALUES (gen_random_uuid(),
         '11111111-a1a1-b2b2-c3c3-111111111111',
         '33333333-d4d4-e5e5-f6f6-333333333333',
-        NOW());
+        NOW()
+       );
 
 INSERT INTO product_image (id, product_id, image_url, created_at)
 VALUES (gen_random_uuid(),
         '11111111-a1a1-b2b2-c3c3-111111111111',
         'https://s3.aws/image_a1.jpg',
-        NOW());
+        NOW()
+       );
 
 INSERT INTO product_item (id, product_id, price, stock, weight_id, created_at, updated_at)
-VALUES ('i1111111-i1i1-i1i1-i1i1-i1i1i1i1i1i1',
+VALUES ('a1a1a1a1-aaaa-aaaa-aaaa-000000000001',
         '11111111-a1a1-b2b2-c3c3-111111111111',
         1500.0,
         5,
@@ -125,26 +144,29 @@ VALUES (gen_random_uuid(),
         'c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0',
         5,
         NOW(),
-        NOW()),
-
+        NOW()
+       ),
        (gen_random_uuid(),
         '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
         'f895cdbe-73fc-4e44-b5db-02f396953f64',
         3,
         NOW(),
-        NOW());
+        NOW()
+       );
 
 INSERT INTO favorite_product (id, user_id, product_id, created_at)
 VALUES (gen_random_uuid(),
         'c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0',
         '22222222-a1a1-b2b2-c3c3-222222222222',
-        NOW());
+        NOW()
+       );
 
 INSERT INTO favorite_store (id, user_id, store_id, created_at)
 VALUES (gen_random_uuid(),
         'c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0',
         '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
-        NOW());
+        NOW()
+       );
 
 INSERT INTO discounts (id, store_id, product_id, category_id, sub_category_id, type, value, start_date, end_date)
 VALUES (gen_random_uuid(),
@@ -158,21 +180,23 @@ VALUES (gen_random_uuid(),
         NOW() + INTERVAL '30 day');
 
 INSERT INTO cart (id, user_id, created_at, updated_at)
-VALUES ('b0b0b0b0-b0b0-b0b0-b0b0-b0b0b0b0b0b0',
+VALUES ('c1c1c1c1-cccc-cccc-cccc-000000000001',
         'c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0',
         NOW(),
-        NOW());
+        NOW()
+       );
 
 INSERT INTO cart_item (id, cart_id, product_item_id, quantity, created_at, updated_at)
 VALUES (gen_random_uuid(),
-        'b0b0b0b0-b0b0-b0b0-b0b0-b0b0b0b0b0b0',
-        'i1111111-i1i1-i1i1-i1i1-i1i1i1i1i1i1',
+        'c1c1c1c1-cccc-cccc-cccc-000000000001',
+        'a1a1a1a1-aaaa-aaaa-aaaa-000000000001',
         1,
         NOW(),
-        NOW());
+        NOW()
+       );
 
 INSERT INTO orders (id, user_id, status, created_at, updated_at)
-VALUES ('o0o0o0o0-o0o0-o0o0-o0o0-o0o0o0o0o0o0',
+VALUES ('b1b1b1b1-bbbb-bbbb-bbbb-000000000001',
         'c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0',
         'IN_PROGRESS',
         NOW(),
@@ -180,9 +204,44 @@ VALUES ('o0o0o0o0-o0o0-o0o0-o0o0-o0o0o0o0o0o0',
 
 INSERT INTO order_item (id, product_item_id, order_id, status, quantity, created_at, updated_at)
 VALUES (gen_random_uuid(),
-        'i1111111-i1i1-i1i1-i1i1-i1i1i1i1i1i1',
-        'o0o0o0o0-o0o0-o0o0-o0o0-o0o0o0o0o0o0',
+        'a1a1a1a1-aaaa-aaaa-aaaa-000000000001',
+        'b1b1b1b1-bbbb-bbbb-bbbb-000000000001',
         'IN_PROGRESS',
         1,
         NOW(),
-        NOW());
+        NOW()
+       );
+
+INSERT INTO discounts (id, store_id, product_id, category_id, sub_category_id, type, value, start_date, end_date)
+VALUES
+    (gen_random_uuid(),
+     '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
+     '11111111-a1a1-b2b2-c3c3-111111111111',
+     NULL, NULL,
+     'FIXED',
+     200.0,
+     NOW(),
+     NOW() + INTERVAL '15 day');
+
+INSERT INTO discounts (id, store_id, product_id, category_id, sub_category_id, type, value, start_date, end_date)
+VALUES
+    (gen_random_uuid(),
+     '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
+     NULL,
+     '44444444-c5c5-d6d6-e7e7-444444444444',
+     NULL,
+     'PERCENTAGE',
+     5.0,
+     NOW(),
+     NOW() + INTERVAL '7 day');
+
+INSERT INTO discounts (id, store_id, product_id, category_id, sub_category_id, type, value, start_date, end_date)
+VALUES
+    (gen_random_uuid(),
+     '57a212fc-e4ac-4f70-90cd-21f95dc600ba',
+     NULL, NULL,
+     '33333333-d4d4-e5e5-f6f6-333333333333',
+     'PERCENTAGE',
+     15.0,
+     NOW(),
+     NOW() + INTERVAL '3 day');

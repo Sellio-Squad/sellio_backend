@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.service.exception
 
 import org.springframework.http.HttpStatus
 
-class CategoryAlreadyExist : SellioException(
+class CategoryAlreadyExistException : SellioException(
     httpStatus = HttpStatus.CONFLICT,
     code = ErrorCode.CATEG_ALREADY_EXISTS,
     message = "This Category already exists"
