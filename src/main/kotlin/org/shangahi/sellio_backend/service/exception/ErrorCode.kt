@@ -39,4 +39,5 @@ internal object ErrorCode {
 
     //AUTH_xxx
     const val AUTH_INVALID_CREDENTIALS = "AUTH_001"
+    const val AUTH_INVALID_REFRESH_TOKEN = "AUTH_002"
 }
