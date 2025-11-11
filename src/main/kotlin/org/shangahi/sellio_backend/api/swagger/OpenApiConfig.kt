@@ -19,46 +19,65 @@ class OpenApiConfig {
                     .version("1.0.0")
                     .description(
                         """
-                        Welcome to the **Sellio API Documentation**.
+    <b>Sellio API Documentation</b><br><br>
 
-                        - Built with Spring Boot 3 & Kotlin.
-                        - Handles Products, Users, Stores, Favorites... etc.
-                        - All endpoints are versioned under `/v1/`.
-                        ----------------------------------------------------
-                        - **UUIDs:**
-                            - USER_ID_OWNER: 
-                                - **f895cdbe-73fc-4e44-b5db-02f396953f64**
-                                
-                            - USER_ID_CUSTOMER: 
-                                - **c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0**
-                                
-                            - STORE_ID:
-                                - **57a212fc-e4ac-4f70-90cd-21f95dc600ba**
-                                
-                            - CAT_ID_ELECTRONICS: 
-                                - **44444444-c5c5-d6d6-e7e7-444444444444**
-                                
-                            - SUB_CAT_ID_LAPTOPS: 
-                                - **33333333-d4d4-e5e5-f6f6-333333333333**
-                                
-                            - PRODUCT_ID_GAMING: 
-                                - **11111111-a1a1-b2b2-c3c3-111111111111**
-                                
-                            - PRODUCT_ID_OFFICE: 
-                                - **22222222-a1a1-b2b2-c3c3-222222222222**
-                                
-                            - ITEM_ID_1 (Product Item): 
-                                - **a1a1a1a1-aaaa-aaaa-aaaa-000000000001**
-                                
-                            - ORDER_ID_1 (Orders): 
-                                - **b1b1b1b1-bbbb-bbbb-bbbb-000000000001**
-                                
-                            - CART_ID_1 (Cart): 
-                                - **c1c1c1c1-cccc-cccc-cccc-000000000001**
-                        ----------------------------------------------------
+    - Built with Spring Boot 3 & Kotlin.<br>
+    - Handles Products, Users, Stores, Favorites... etc.<br>
+    - All endpoints are versioned under <code>/v1/</code>.<br>
+    - <b>Google Sheet: 
+    <a href="https://docs.google.com/spreadsheets/d/1GJhx3pVEVLchPsBildQqi80OqWaLbYjN60vOfcVAWp0/edit?usp=sharing" target="_blank">
+      Open Sellio Backend issues Sheet
+    </a>
 
-                        """.trimIndent()
+    <hr>
+
+    <b>UUIDs:</b><br>
+    USER_ID_OWNER: <input type="text" value="f895cdbe-73fc-4e44-b5db-02f396953f64" readonly 
+    style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+    
+    <br>
+    USER_ID_CUSTOMER: <input type="text" value="c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0" readonly
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    STORE_ID: <input type="text" value="57a212fc-e4ac-4f70-90cd-21f95dc600ba" readonly
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    CAT_ID_ELECTRONICS: <input type="text" value="44444444-c5c5-d6d6-e7e7-444444444444" readonly 
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    SUB_CAT_ID_LAPTOPS: <input type="text" value="33333333-d4d4-e5e5-f6f6-333333333333" readonly 
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    PRODUCT_ID_GAMING: <input type="text" value="11111111-a1a1-b2b2-c3c3-111111111111" readonly 
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    PRODUCT_ID_OFFICE: <input type="text" value="22222222-a1a1-b2b2-c3c3-222222222222" readonly 
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    ITEM_ID_1 (Product Item): <input type="text" value="a1a1a1a1-aaaa-aaaa-aaaa-000000000001" readonly 
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    ORDER_ID_1 (Orders): <input type="text" value="b1b1b1b1-bbbb-bbbb-bbbb-000000000001" readonly 
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+     
+     <br>
+    CART_ID_1 (Cart): <input type="text" value="c1c1c1c1-cccc-cccc-cccc-000000000001" readonly 
+     style="border:none;background:#f4f4f4;padding:2px 5px;font-family:monospace;width:350px">
+ 
+     <br>
+    <hr>
+
+    """.trimIndent()
                     )
+
+
 
                     .license(
                         License()
