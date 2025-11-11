@@ -36,4 +36,7 @@ internal object ErrorCode {
     //IMAGE_xxx
     const val IMAGE_INVALID_FORMAT = "IMAGE_001"
     const val IMAGE_UPLOAD_FAILED = "IMAGE_002"
+
+    //AUTH_xxx
+    const val AUTH_INVALID_CREDENTIALS = "AUTH_001"
 }
