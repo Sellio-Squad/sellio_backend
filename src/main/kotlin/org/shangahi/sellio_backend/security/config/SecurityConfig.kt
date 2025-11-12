@@ -22,7 +22,7 @@ class SecurityConfig(
             }.sessionManagement { sessionManagement ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }.authorizeHttpRequests {
-                it.requestMatchers("/auth/**",).permitAll()
+                it.requestMatchers("/v1/auth/**",).permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
