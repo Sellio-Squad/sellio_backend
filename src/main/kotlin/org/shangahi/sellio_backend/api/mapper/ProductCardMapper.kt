@@ -49,5 +49,6 @@ fun ProductItem.toResponse(): ProductItemResponse =
         colorId = this.color?.id,
         sizeId = this.size?.id,
         weightId = this.weight?.id,
-        stock = this.stock
+        stock = this.stock,
+        variationImageUrl = this.variationImageUrl,
     )

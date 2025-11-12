@@ -17,9 +17,10 @@ data class ProductRequest(
 
 data class ProductItemRequest(
     val price: Double,
-    val discountId: UUID?,
-    val colorId: UUID?,
-    val sizeId: UUID?,
-    val weightId: Int?,
-    val stock: Int
+    val discountId: UUID? = null,
+    val colorId: UUID? = null,
+    val sizeId: UUID? = null,
+    val weightId: Int? = null,
+    val stock: Int,
+    val variationImageUrl: String? = null
 )
