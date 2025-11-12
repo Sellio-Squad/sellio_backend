@@ -8,6 +8,7 @@ import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
+import org.shangahi.sellio_backend.api.util.SELLIO_STORE_ID
 import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
@@ -177,6 +178,18 @@ class ProductService(
     fun getProductById(productId: UUID): Product {
         val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
         return product
+    }
+
+    @Transactional(readOnly = true)
+    fun getCustomProductsByCategory(categoryId: UUID, pageable: Pageable): PageResponse<ProductResponse> {
+
+        val productPage = productRepository.findCustomProductsByStoreAndCategory(
+            SELLIO_STORE_ID,
+            categoryId,
+            pageable
+        )
+
+        return productPage.toPageResponse { it.toResponse() }
     }
 
     private fun checkSubCategoryIsExist(subCategoryIds: List<UUID>) {
