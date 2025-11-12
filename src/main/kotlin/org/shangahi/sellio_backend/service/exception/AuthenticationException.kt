@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.service.exception
 
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_CREDENTIALS
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_REFRESH_TOKEN
+import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
 import org.springframework.http.HttpStatus
 
 class InvalidCredentialsException : SellioException (
@@ -14,4 +15,10 @@ class InvalidRefreshTokenException : SellioException (
     message = "Invalid refresh token",
     httpStatus = HttpStatus.UNAUTHORIZED,
     code = AUTH_INVALID_REFRESH_TOKEN
+)
+
+class InvalidPhoneNumberException : SellioException (
+    message = "Invalid phone number",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = INVALID_PHONE_NUMBER
 )
