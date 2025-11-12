@@ -40,7 +40,12 @@ internal object ErrorCode {
     //AUTH_xxx
     const val AUTH_INVALID_CREDENTIALS = "AUTH_001"
     const val AUTH_INVALID_REFRESH_TOKEN = "AUTH_002"
+    const val AUTH_UNAUTHORIZED = "AUTH_003"
 
     //PHONE_xxx
     const val INVALID_PHONE_NUMBER = "PHONE_001"
+
+    //OTP_xxx
+    const val OTP_EXPIRED = "OTP_001"
+    const val OTP_INVALID = "OTP_002"
 }
