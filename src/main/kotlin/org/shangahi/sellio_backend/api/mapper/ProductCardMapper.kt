@@ -1,8 +1,8 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.ProductItemResponse
-import org.shangahi.sellio_backend.api.dto.ProductRequest
-import org.shangahi.sellio_backend.api.dto.ProductResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductItemResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductItem

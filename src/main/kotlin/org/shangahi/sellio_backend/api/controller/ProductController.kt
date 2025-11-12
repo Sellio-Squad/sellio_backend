@@ -1,8 +1,8 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.shangahi.sellio_backend.api.dto.ProductRequest
-import org.shangahi.sellio_backend.api.dto.ProductResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse

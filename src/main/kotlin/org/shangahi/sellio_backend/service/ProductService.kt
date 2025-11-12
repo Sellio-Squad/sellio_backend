@@ -1,7 +1,7 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.ProductRequest
-import org.shangahi.sellio_backend.api.dto.ProductResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity

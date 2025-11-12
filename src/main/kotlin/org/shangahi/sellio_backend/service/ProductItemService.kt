@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.ProductItemRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.model.OrderStatus
 import org.shangahi.sellio_backend.model.TrendingProduct

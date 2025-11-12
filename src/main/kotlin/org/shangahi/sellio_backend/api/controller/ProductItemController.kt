@@ -1,8 +1,8 @@
 package org.shangahi.sellio_backend.api.controller
 
 import jakarta.validation.Valid
-import org.shangahi.sellio_backend.api.dto.ProductItemRequest
-import org.shangahi.sellio_backend.api.dto.ProductItemResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.TrendingProductResponse
 import org.shangahi.sellio_backend.api.mapper.toPagedResponse
