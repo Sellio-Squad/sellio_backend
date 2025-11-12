@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.api.mapper
 
 import org.shangahi.sellio_backend.api.dto.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.UserUpdateRequest
-import org.shangahi.sellio_backend.api.dto.request.RegisterRequest
+import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.model.RegisterUserModel
@@ -73,7 +73,7 @@ fun RegisterUserModel.toUser(): User {
     )
 }
 
-fun RegisterRequest.toRegisterUserModel(): RegisterUserModel {
+fun CreateUserRequest.toRegisterUserModel(): RegisterUserModel {
     return RegisterUserModel(
         phoneNumber = phoneNumber,
         firstName = firstName,

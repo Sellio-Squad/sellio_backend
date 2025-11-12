@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.api.dto.request
 
 import java.util.UUID
 
-data class RegisterRequest(
+data class CreateUserRequest(
     val firstName: String,
     val lastName: String,
     val phoneNumber: String,
