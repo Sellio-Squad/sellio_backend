@@ -11,5 +11,5 @@ data class RegisterRequest(
     val country: String,
     val avatarUrl: String?,
     val email: String?,
-    val sessionId: UUID?
+    val sessionId: UUID?,
 )
