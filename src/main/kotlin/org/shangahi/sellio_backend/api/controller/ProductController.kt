@@ -85,4 +85,12 @@ class ProductController(
         return ResponseEntity.ok(product.toResponse())
 
     }
+
+    @GetMapping("/{categoryId}/custom")
+    fun getCustomProductsByCategory(
+        @PathVariable categoryId: UUID,
+        @ParameterObject @PageableDefault(size = 20) pageable: Pageable
+    ): PageResponse<ProductResponse> {
+        return productService.getCustomProductsByCategory(categoryId, pageable)
+    }
 }
