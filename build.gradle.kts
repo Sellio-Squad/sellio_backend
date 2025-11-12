@@ -28,6 +28,15 @@ dependencies {
     implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation ("org.flywaydb:flyway-core")
 
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.13.40")
+    testImplementation("org.springframework.security:spring-security-test")
+
+
     implementation(platform("software.amazon.awssdk:bom:2.25.20"))
     implementation("software.amazon.awssdk:s3")
 
