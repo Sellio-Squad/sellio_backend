@@ -245,3 +245,153 @@ VALUES
      15.0,
      NOW(),
      NOW() + INTERVAL '3 day');
+
+
+INSERT INTO color (id, value)
+VALUES ('c010c010-0001-0001-0001-000000000003', 'White'),
+       ('c010c010-0001-0001-0001-000000000004', 'Green'),
+       ('c010c010-0001-0001-0001-000000000005', 'Pink');
+
+INSERT INTO sizes (id, value)
+VALUES ('512e0000-0001-0001-0001-000000000003', 'Large'),
+       ('512e0000-0001-0001-0001-000000000004', 'XL'),
+       ('512e0000-0001-0001-0001-000000000005', '2XL');
+
+
+INSERT INTO weight (id, value)
+VALUES (3, 0.5),
+       (4, 0.8);
+
+
+INSERT INTO users (id, first_name, last_name, email, password, phone_number, city, country, created_at, updated_at)
+VALUES ('00000000-0000-0000-0000-000000000001',
+        'Sellio',
+        'Admin',
+        'admin@sellio.com',
+        'admin_pass_hash',
+        '01010101010',
+        'Cairo',
+        'Egypt',
+        NOW(),
+        NOW());
+
+INSERT INTO store (id, owner_id, title, description, phone_number, city, government, country, created_at, updated_at)
+VALUES ('00000000-0000-0000-0000-000000000002',
+        '00000000-0000-0000-0000-000000000001',
+        'Sellio Customize',
+        'Official store for customizable products.',
+        '01515151515',
+        'Cairo',
+        'Cairo',
+        'Egypt',
+        NOW(),
+        NOW());
+
+INSERT INTO category (id, title, created_at, updated_at)
+VALUES ('a0a0a0a0-0001-0001-0001-000000000001',
+        'Apparel',
+        NOW(),
+        NOW()),
+       ('a0a0a0a0-0001-0001-0001-000000000002',
+        'Drinkware',
+        NOW(),
+        NOW());
+
+INSERT INTO sub_category (id, parent_id, title, created_at, updated_at)
+VALUES ('b0b0b0b0-0001-0001-0001-000000000001',
+        'a0a0a0a0-0001-0001-0001-000000000001',
+        'T-Shirts',
+        NOW(),
+        NOW()),
+       ('b0b0b0b0-0001-0001-0001-000000000002',
+        'a0a0a0a0-0001-0001-0001-000000000002',
+        'Mugs',
+        NOW(),
+        NOW());
+
+INSERT INTO product (id, store_id, title, description, price, is_used, is_featured, created_at, updated_at)
+VALUES
+    ('90909090-0001-0001-0001-000000000001',
+     '00000000-0000-0000-0000-000000000002',
+     'Customizable T-Shirt',
+     'Base t-shirt',
+     250.0,
+     FALSE,
+     TRUE,
+     NOW(),
+     NOW()),
+    ('90909090-0001-0001-0001-000000000002',
+     '00000000-0000-0000-0000-000000000002',
+     'Customizable Mug',
+     'White ceramic mug',
+     150.0,
+     FALSE,
+     TRUE,
+     NOW(),
+     NOW());
+
+INSERT INTO product_subcategory (id, product_id, sub_category_id, created_at)
+VALUES (gen_random_uuid(),
+        '90909090-0001-0001-0001-000000000001',
+        'b0b0b0b0-0001-0001-0001-000000000001',
+        NOW()),
+       (gen_random_uuid(),
+        '90909090-0001-0001-0001-000000000002',
+        'b0b0b0b0-0001-0001-0001-000000000002',
+        NOW());
+
+INSERT INTO product_item (id, product_id, price, stock, weight_id, color_id, size_id, variation_image_url, created_at, updated_at)
+VALUES
+    (gen_random_uuid(),
+     '90909090-0001-0001-0001-000000000001',
+     250.0,
+     100,
+     3,
+     'c010c010-0001-0001-0001-000000000003',
+     '512e0000-0001-0001-0001-000000000002',
+     'https://s3.aws/tshirt-white.jpg',
+     NOW(),
+     NOW()),
+
+    (gen_random_uuid(),
+     '90909090-0001-0001-0001-000000000001',
+     250.0, 100,
+     3,
+     'c010c010-0001-0001-0001-000000000003',
+     '512e0000-0001-0001-0001-000000000003',
+     'https://s3.aws/tshirt-white.jpg',
+     NOW(),
+     NOW()),
+
+    (gen_random_uuid(),
+     '90909090-0001-0001-0001-000000000001',
+     250.0,
+     100,
+     3,
+     'c010c010-0001-0001-0001-000000000002',
+     '512e0000-0001-0001-0001-000000000002',
+     'https://s3.aws/tshirt-black.jpg',
+     NOW(),
+     NOW()),
+
+    (gen_random_uuid(),
+     '90909090-0001-0001-0001-000000000001',
+     250.0,
+     100,
+     3,
+     'c010c010-0001-0001-0001-000000000002',
+     '512e0000-0001-0001-0001-000000000003',
+     'https://s3.aws/tshirt-black.jpg',
+     NOW(),
+     NOW()),
+
+    ('a1a1a1a1-aaaa-aaaa-aaaa-000000000002',
+     '90909090-0001-0001-0001-000000000002',
+     150.0,
+     100,
+     4,
+     'c010c010-0001-0001-0001-000000000003',
+     NULL,
+     'https://s3.aws/mug-white.jpg',
+     NOW(),
+     NOW());

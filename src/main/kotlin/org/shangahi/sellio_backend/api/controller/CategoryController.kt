@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("v1/category")
+@RequestMapping("/v1/category")
 @Tag(name = "Category", description = "Endpoints for managing Category")
 class CategoryController(private val categoryService: CategoryService) {
 
@@ -29,4 +29,10 @@ class CategoryController(private val categoryService: CategoryService) {
         val saved = categoryService.create(request)
         return ResponseEntity.ok(saved)
     }
+
+    @GetMapping("/custom")
+    fun getCustomProductCategories(): List<CategoryResponse> {
+        return categoryService.getCustomProductCategories()
+    }
+
 }
