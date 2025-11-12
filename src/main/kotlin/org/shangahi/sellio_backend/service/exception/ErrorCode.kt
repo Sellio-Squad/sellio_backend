@@ -44,6 +44,7 @@ internal object ErrorCode {
 
     //PHONE_xxx
     const val INVALID_PHONE_NUMBER = "PHONE_001"
+    const val INVALID_PHONE_NUMBER_REGION = "PHONE_002"
 
     //OTP_xxx
     const val OTP_EXPIRED = "OTP_001"

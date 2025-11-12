@@ -4,6 +4,7 @@ import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_CRED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_REFRESH_TOKEN
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_UNAUTHORIZED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
+import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER_REGION
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_EXPIRED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_INVALID
 import org.springframework.http.HttpStatus
@@ -24,6 +25,12 @@ class InvalidPhoneNumberException : SellioException (
     message = "Invalid phone number",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = INVALID_PHONE_NUMBER
+)
+
+class InvalidPhoneNumberRegionException : SellioException (
+    message = "Invalid phone number region",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = INVALID_PHONE_NUMBER_REGION
 )
 
 class UnauthorizedException : SellioException (
