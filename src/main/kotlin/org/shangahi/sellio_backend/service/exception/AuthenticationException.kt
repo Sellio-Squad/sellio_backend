@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.service.exception
 
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_CREDENTIALS
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_REFRESH_TOKEN
+import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_SESSION_ID_NOT_FOUND
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_UNAUTHORIZED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER_REGION
@@ -50,4 +51,11 @@ class OtpExpiredException : SellioException (
     httpStatus = HttpStatus.BAD_REQUEST,
     code = OTP_EXPIRED
 )
+
+class SessionIdNotFoundException : SellioException (
+    message = "Session ID not found",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = AUTH_SESSION_ID_NOT_FOUND
+)
+
 
