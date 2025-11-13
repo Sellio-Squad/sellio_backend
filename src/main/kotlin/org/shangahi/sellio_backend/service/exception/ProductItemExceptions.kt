@@ -25,21 +25,3 @@ class ProductItemSavingException : SellioException(
     code = ErrorCode.PROD_SAVING,
     message = "Sorry, Error when saving product"
 )
-
-class ProductItemColorNotFoundException : SellioException(
-    httpStatus = HttpStatus.NOT_FOUND,
-    code = ErrorCode.ITEM_COLOR,
-    message = "Sorry, but this product Color was not found"
-)
-
-class ProductItemSizeNotFoundException : SellioException(
-    httpStatus = HttpStatus.NOT_FOUND,
-    code = ErrorCode.ITEM_SIZE,
-    message = "Sorry, but this product Size was not found"
-)
-
-class ProductItemWeightNotFoundException : SellioException(
-    httpStatus = HttpStatus.NOT_FOUND,
-    code = ErrorCode.ITEM_WEIGHT,
-    message = "Sorry, but this product Weight was not found"
-)
