@@ -96,10 +96,11 @@ class ProductController(
     ): PageResponse<ProductResponse> {
         return productService.getCustomProductsByCategory(categoryId, pageable)
     }
-    @PostMapping("/image")
+
+    @PostMapping("/custom-design")
     fun uploadCustomizationImage(
         @RequestParam("file") file: MultipartFile
-    ): ResponseEntity<Map<String, String>> {
+    ): ResponseEntity<String> {
 
         val fileName = UUID.randomUUID().toString()
         val imageUrl = storageService.uploadImage(
@@ -107,7 +108,6 @@ class ProductController(
             fileName = fileName,
             folderName = "custom"
         )
-
-        return ResponseEntity.ok(mapOf("url" to imageUrl))
+        return ResponseEntity.ok(imageUrl)
     }
 }
