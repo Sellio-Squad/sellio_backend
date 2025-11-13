@@ -25,3 +25,9 @@ class ProductSavingException : SellioException(
     code = ErrorCode.PROD_SAVING,
     message = "Sorry, Error when saving product"
 )
+
+class ProductAlreadyExistException : SellioException(
+    httpStatus = HttpStatus.CONFLICT,
+    code = ErrorCode.PROD_TITLE_ALREADY_EXISTS,
+    message = "This Product title already exists"
+)
