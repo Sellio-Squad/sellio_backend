@@ -25,6 +25,15 @@ internal object ErrorCode {
     const val PROD_NOT_FOUND = "PROD_004"
     const val PROD_SAVING = "PROD_005"
 
+    //ITEM_xxx
+    const val ITEM_OUT_OF_STOCK = "ITEM_001"
+    const val ITEM_NOT_ENOUGH_STOCK = "ITEM_002"
+    const val ITEM_NOT_FOUND = "ITEM_004"
+    const val ITEM_SAVING = "ITEM_005"
+    const val ITEM_COLOR = "ITEM_006"
+    const val ITEM_SIZE = "ITEM_007"
+    const val ITEM_WEIGHT = "ITEM_008"
+
     //CATEG_xxx
     const val CATEG_ALREADY_EXISTS = "CATEG_001"
     const val CATEG_NOT_FOUND = "CATEG_004"
