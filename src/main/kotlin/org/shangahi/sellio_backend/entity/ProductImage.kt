@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.entity
 
 import jakarta.persistence.*
+import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
 import java.util.*
@@ -22,4 +23,18 @@ data class ProductImage(
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant? = null,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as ProductImage
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return "ProductImage(id=$id, imageUrl='$imageUrl')"
+    }
+}
