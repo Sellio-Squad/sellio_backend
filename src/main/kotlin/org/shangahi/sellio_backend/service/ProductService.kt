@@ -16,12 +16,14 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.ProductAlreadyExistException
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductSavingException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.shangahi.sellio_backend.service.exception.SubCategoryNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -69,6 +71,9 @@ class ProductService(
 
     @Transactional
     fun create(request: ProductRequest): ProductResponse {
+        if (productRepository.existsByTitle(request.title)){
+            throw ProductAlreadyExistException()
+        }
         checkSubCategoryIsExist(request.subCategoryIds)
         val store = storeRepository.findById(request.storeId)
             .orElseThrow { StoreNotFoundException() }
@@ -87,11 +92,18 @@ class ProductService(
     @Transactional
     fun updateProduct(productId: UUID, request: ProductUpdateRequest): Product {
 
-        val existingProduct = productRepository.findByIdWithItems(productId)
-            ?: throw ProductNotFoundException()
 
+        val existingProduct = productRepository.findByIdOrNull(productId)
+            ?: throw ProductNotFoundException()
+        var titleToUpdate = existingProduct.title
+        if (request.title != null && request.title != existingProduct.title) {
+            if (productRepository.existsByTitleAndIdNot(request.title, existingProduct.id!!)) {
+                throw ProductAlreadyExistException()
+            }
+            titleToUpdate = request.title
+        }
         val productToUpdate = existingProduct.copy(
-            title = request.title ?: existingProduct.title,
+            title = titleToUpdate,
             description = request.description ?: existingProduct.description,
             mainImageURL = request.mainImageURL ?: existingProduct.mainImageURL,
             price = request.price ?: existingProduct.price,
