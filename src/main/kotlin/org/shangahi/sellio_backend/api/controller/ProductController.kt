@@ -85,4 +85,19 @@ class ProductController(
         return ResponseEntity.ok(product.toResponse())
 
     }
+
+    @GetMapping("/store/{storeId}/subcategory/{subCategoryId}")
+    fun getProductsBySubcategoryAndStore(
+        @PathVariable storeId: UUID,
+        @PathVariable subCategoryId: UUID,
+        @PageableDefault(
+            page = 0,
+            size = 10,
+            direction = Sort.Direction.DESC
+        )
+        pageable: Pageable,
+    ): PageResponse<ProductResponse> {
+        val productsPage = productService.getProductsBySubCategoryAndStore(subCategoryId, storeId, pageable)
+        return productsPage.toPageResponse { it.toResponse() }
+    }
 }
