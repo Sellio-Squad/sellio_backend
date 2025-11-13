@@ -4,6 +4,7 @@ import org.shangahi.sellio_backend.api.dto.request.*
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
 import org.shangahi.sellio_backend.api.mapper.toRegisterUserModel
+import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
 import org.shangahi.sellio_backend.service.AuthenticationService
 import org.shangahi.sellio_backend.service.RegisterService
 import org.springframework.http.ResponseEntity
@@ -20,6 +21,7 @@ class AccountController(
 ) {
 
     @PostMapping("/login")
+    @AccountDoc.Login
     fun login(
         @RequestBody request: LoginRequest
     ): AuthResponse {
@@ -27,6 +29,7 @@ class AccountController(
     }
 
     @PostMapping("/create")
+    @AccountDoc.CreateUser
     fun create(
         @RequestBody user: CreateUserRequest
     ): AuthResponse {
@@ -34,6 +37,7 @@ class AccountController(
     }
 
     @PostMapping("/create/request-otp")
+    @AccountDoc.RequestOtp
     fun requestRegisterOtp(
         @RequestBody request: RequestOtpRequest
     ): ResponseEntity<OtpRequestResponse> {
@@ -45,6 +49,7 @@ class AccountController(
     }
 
     @PostMapping("/create/verify-otp")
+    @AccountDoc.VerifyOtp
     fun verifyRegisterOtp(
         @RequestBody request: VerifyOtpRequest
     ): ResponseEntity<Unit> {
@@ -56,6 +61,7 @@ class AccountController(
     }
 
     @PostMapping("/refresh-token")
+    @AccountDoc.RefreshToken
     fun refreshToken(
         @RequestBody request: RefreshTokenRequest
     ): AuthResponse {
