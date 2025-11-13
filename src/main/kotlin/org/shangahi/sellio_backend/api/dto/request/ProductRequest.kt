@@ -22,8 +22,8 @@ data class ProductItemRequest(
     @field:Positive(message = "Price must be greater than zero")
     val price: Double,
     val discountId: UUID? = null,
-    val colorId: UUID? = null,
-    val sizeId: UUID? = null,
+    val colorId: Int? = null,
+    val sizeId: Int? = null,
     @field:Positive(message = "weight must be greater than zero")
     val weightId: Int? = null,
     @field:NotNull(message = "stock is required for an item")

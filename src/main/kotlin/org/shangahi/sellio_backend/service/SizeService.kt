@@ -24,7 +24,7 @@ class SizeService(
     }
 
     @Transactional(readOnly = true)
-    fun getSizeById(sizeId: UUID): Size {
+    fun getSizeById(sizeId: Int): Size {
         val size = sizeRepository.findByIdOrNull(sizeId)
             ?: throw SizeNotFoundException()
         return size
@@ -42,7 +42,7 @@ class SizeService(
     }
 
     @Transactional
-    fun updateSize(sizeId: UUID, request: SizeRequest): Size {
+    fun updateSize(sizeId: Int, request: SizeRequest): Size {
         val existingSize = sizeRepository.findByIdOrNull(sizeId) ?: throw SizeNotFoundException()
         if (sizeRepository.existsByValue(request.value)) {
             throw SizeAlreadyExistException()
@@ -55,7 +55,7 @@ class SizeService(
     }
 
     @Transactional
-    fun deleteSize(sizeId: UUID): String {
+    fun deleteSize(sizeId: Int): String {
         if (!sizeRepository.existsById(sizeId)) {
             throw SizeNotFoundException()
         }

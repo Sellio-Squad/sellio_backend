@@ -4,6 +4,6 @@ import org.shangahi.sellio_backend.entity.Color
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
-interface ColorRepository : JpaRepository<Color, UUID>{
+interface ColorRepository : JpaRepository<Color, Int>{
     fun existsByValue(value: String): Boolean
 }

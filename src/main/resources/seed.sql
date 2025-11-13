@@ -12,14 +12,14 @@
 
 
 INSERT INTO color (id, value)
-VALUES (gen_random_uuid(), 'Red');
+VALUES (1, 'Red');
 INSERT INTO color (id, value)
-VALUES (gen_random_uuid(), 'Black');
+VALUES (2, 'Black');
 
 INSERT INTO sizes (id, value)
-VALUES (gen_random_uuid(), 'Small');
+VALUES (1, 'Small');
 INSERT INTO sizes (id, value)
-VALUES (gen_random_uuid(), 'Medium');
+VALUES (2, 'Medium');
 
 INSERT INTO weight (id, value)
 VALUES (1, 5.0);
@@ -248,14 +248,14 @@ VALUES
 
 
 INSERT INTO color (id, value)
-VALUES ('c010c010-0001-0001-0001-000000000003', 'White'),
-       ('c010c010-0001-0001-0001-000000000004', 'Green'),
-       ('c010c010-0001-0001-0001-000000000005', 'Pink');
+VALUES (3, 'White'),
+       (4, 'Green'),
+       (5, 'Pink');
 
 INSERT INTO sizes (id, value)
-VALUES ('512e0000-0001-0001-0001-000000000003', 'Large'),
-       ('512e0000-0001-0001-0001-000000000004', 'XL'),
-       ('512e0000-0001-0001-0001-000000000005', '2XL');
+VALUES (4, 'Large'),
+       (5, 'XL'),
+       (6, '2XL');
 
 
 INSERT INTO weight (id, value)
@@ -347,8 +347,8 @@ VALUES
      250.0,
      100,
      3,
-     'c010c010-0001-0001-0001-000000000003',
-     '512e0000-0001-0001-0001-000000000002',
+     1,
+     2,
      'https://s3.aws/tshirt-white.jpg',
      NOW(),
      NOW()),

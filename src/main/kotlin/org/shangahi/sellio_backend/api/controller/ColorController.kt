@@ -23,7 +23,7 @@ class ColorController(private val colorService: ColorService) {
     }
 
     @GetMapping("/{id}")
-    fun getColorById(@PathVariable id: UUID): ColorResponse {
+    fun getColorById(@PathVariable id: Int): ColorResponse {
         return colorService.getColorById(id).toResponse()
     }
 
@@ -35,14 +35,14 @@ class ColorController(private val colorService: ColorService) {
     }
 
     @PutMapping("/{id}")
-    fun updateColor(@Valid @RequestBody request: ColorRequest, @PathVariable id: UUID): ResponseEntity<ColorResponse> {
+    fun updateColor(@Valid @RequestBody request: ColorRequest, @PathVariable id: Int): ResponseEntity<ColorResponse> {
         val updateColor = colorService.updateColor(id, request)
         return ResponseEntity.ok(updateColor.toResponse())
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteColor(@PathVariable id: UUID): ResponseEntity<String> {
+    fun deleteColor(@PathVariable id: Int): ResponseEntity<String> {
         val message = colorService.deleteColor(id)
         return ResponseEntity.ok(message)
     }

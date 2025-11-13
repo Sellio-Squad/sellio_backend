@@ -23,7 +23,7 @@ class SizeController(private val sizeService: SizeService) {
     }
 
     @GetMapping("/{id}")
-    fun getSizeById(@PathVariable id: UUID): SizeResponse {
+    fun getSizeById(@PathVariable id: Int): SizeResponse {
         return sizeService.getSizeById(id).toResponse()
     }
 
@@ -35,14 +35,14 @@ class SizeController(private val sizeService: SizeService) {
     }
 
     @PutMapping("/{id}")
-    fun updateSize(@Valid @RequestBody request: SizeRequest, @PathVariable id: UUID): ResponseEntity<SizeResponse> {
+    fun updateSize(@Valid @RequestBody request: SizeRequest, @PathVariable id: Int): ResponseEntity<SizeResponse> {
         val updateSize = sizeService.updateSize(id, request)
         return ResponseEntity.ok(updateSize.toResponse())
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteSize(@PathVariable id: UUID): ResponseEntity<String> {
+    fun deleteSize(@PathVariable id: Int): ResponseEntity<String> {
         val message = sizeService.deleteSize(id)
         return ResponseEntity.ok(message)
     }

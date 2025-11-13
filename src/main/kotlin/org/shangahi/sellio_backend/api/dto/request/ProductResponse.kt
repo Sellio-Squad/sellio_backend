@@ -21,8 +21,8 @@ data class ProductItemResponse(
     val price: Double,
     val discountId: UUID?,
     val variationImageUrl: String?,
-    val colorId: UUID?,
-    val sizeId: UUID?,
+    val colorId: Int?,
+    val sizeId: Int?,
     val weightId: Int?,
     val stock: Int
 )

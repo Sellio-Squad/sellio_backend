@@ -24,7 +24,7 @@ class ColorService(
     }
 
     @Transactional(readOnly = true)
-    fun getColorById(colorId: UUID): Color {
+    fun getColorById(colorId: Int): Color {
         val color = colorRepository.findByIdOrNull(colorId)
             ?: throw ColorNotFoundException()
         return color
@@ -42,7 +42,7 @@ class ColorService(
     }
 
     @Transactional
-    fun updateColor(colorId: UUID, request: ColorRequest): Color {
+    fun updateColor(colorId: Int, request: ColorRequest): Color {
         val existingColor = colorRepository.findByIdOrNull(colorId) ?: throw ColorNotFoundException()
         if (colorRepository.existsByValue(request.value)) {
             throw ColorAlreadyExistException()
@@ -55,7 +55,7 @@ class ColorService(
     }
 
     @Transactional
-    fun deleteColor(colorId: UUID): String {
+    fun deleteColor(colorId: Int): String {
         if (!colorRepository.existsById(colorId)) {
             throw ColorNotFoundException()
         }
