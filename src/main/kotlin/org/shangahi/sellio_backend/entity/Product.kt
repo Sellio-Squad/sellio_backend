@@ -9,7 +9,7 @@ import java.util.*
 
 @Table(name = "product")
 @Entity
-class Product(
+data class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,

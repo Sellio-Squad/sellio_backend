@@ -1,8 +1,10 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.ProductRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
@@ -58,9 +60,18 @@ class ProductController(
 
     @ProductDoc.CreateProduct
     @PostMapping("/create")
-    fun create(@RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
+    fun create(@Valid @RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
         val saved = productService.create(request)
         return ResponseEntity.ok(saved)
+    }
+
+    @PutMapping("/{id}")
+    fun updateProduct(
+        @PathVariable id: UUID,
+        @Valid @RequestBody request: ProductUpdateRequest
+    ): ResponseEntity<ProductResponse> {
+        val saved = productService.updateProduct(id, request)
+        return ResponseEntity.ok(saved.toResponse())
     }
 
     @PostMapping("/{productId}/images")
