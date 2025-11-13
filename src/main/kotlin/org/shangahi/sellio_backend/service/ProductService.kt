@@ -13,8 +13,10 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductSavingException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
+import org.shangahi.sellio_backend.service.exception.SubCategoryNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -38,6 +40,9 @@ class ProductService(
 ) {
     @Transactional(readOnly = true)
     fun getStoreProducts(storeId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
+        if (!storeRepository.existsById(storeId)) {
+            throw StoreNotFoundException()
+        }
 
         val productPage = productRepository.findAllByStoreId(storeId, pageable)
 
@@ -61,9 +66,9 @@ class ProductService(
 
     @Transactional
     fun create(request: ProductRequest): ProductResponse {
+       checkSubCategoryIsExist(request.subCategoryIds)
         val store = storeRepository.findById(request.storeId)
             .orElseThrow { StoreNotFoundException() }
-
         val product = request.toEntity(store)
         val savedProduct = productRepository.save(product)
         createProductSubCategories(request, savedProduct)
@@ -74,7 +79,6 @@ class ProductService(
             ?: throw ProductSavingException()
         return fullProduct.toResponse()
     }
-
 
     @Transactional
     fun uploadProductImage(
@@ -167,5 +171,19 @@ class ProductService(
     @Transactional(readOnly = true)
     fun getUsedProducts(pageable: Pageable): Page<Product> {
         return productRepository.findAllUsedProductsWithDetails(pageable)
+    }
+
+    @Transactional(readOnly = true)
+    fun getProductById(productId: UUID): Product {
+        val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
+        return product
+    }
+
+    private fun checkSubCategoryIsExist(subCategoryIds: List<UUID>) {
+        subCategoryIds.forEach { subCategoryId->
+            if (!subCategoryRepository.existsById(subCategoryId)){
+                throw SubCategoryNotFoundException()
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ class StoreInActiveException : SellioException(
 class StoreNotOwnerException : SellioException(
     httpStatus = HttpStatus.FORBIDDEN,
     code = ErrorCode.STORE_NOT_OWNER,
-    message = "Not an owner of this store"
+    message = "this owner ID already has a store"
 )
 
 class StoreAlreadyFavoriteException : SellioException(

@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.CreateStoreRequest
 import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
-import org.shangahi.sellio_backend.api.dto.response.StoreDetailsResponse
+import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDetailsResponse
 import org.shangahi.sellio_backend.entity.Store
@@ -31,10 +31,10 @@ class StoreService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getStoreDetailsById(storeId: UUID): StoreDetailsResponse {
+    fun getStoreDetailsById(storeId: UUID): StoreInfoResponse {
 
-        val store = storeRepository.findById(storeId)
-            .orElseThrow { Exception("Store not found with id: $storeId") }
+        val store = storeRepository.findByIdOrNull(storeId)
+            ?: throw StoreNotFoundException()
         val featuredPageable = PageRequest.of(0, 10)
         val featuredProductsPage = productRepository.findStoreFeaturedProductsByStoreId(storeId, featuredPageable)
         val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse() }
@@ -46,19 +46,24 @@ class StoreService(
         return storeRatingRepository.findTopStoresByHighestRating(pageable)
     }
 
-    fun searchStoresByTitle(pageable: Pageable, title: String): Page<Store> {
+    fun searchStoresByTitle(title: String, city: String?, pageable: Pageable): Page<Store> {
         val trimmedTitle = title.trim()
-
         if (trimmedTitle.isBlank()) {
-            val emptyPage: Page<Store> = Page.empty(pageable)
-            return emptyPage
+            return Page.empty(pageable)
         }
-
-        return storeRepository.findStoresByTitleIgnoreCase(pageable, title)
+        return if (!city.isNullOrBlank()) {
+            storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
+        } else {
+            storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
+        }
     }
 
     @Transactional
     fun createStore(request: CreateStoreRequest): StoreCreationResponse {
+        if (storeRepository.existsByTitle(request.title)){
+            throw StoreTitleAlreadyExistException()
+
+        }
 
         val ownerUser = userRepository.findByIdOrNull(request.ownerId) ?: throw UserNotFoundException()
 

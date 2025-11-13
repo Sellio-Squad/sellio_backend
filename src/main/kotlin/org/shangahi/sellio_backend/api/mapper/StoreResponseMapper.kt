@@ -2,12 +2,12 @@ package org.shangahi.sellio_backend.api.mapper
 
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
-import org.shangahi.sellio_backend.api.dto.response.StoreDetailsResponse
+import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.entity.Store
 import org.springframework.data.domain.Page
 
-fun Store.toStoreDetailsResponse(featuredProducts: List<ProductCardResponse>) = StoreDetailsResponse(
+fun Store.toStoreDetailsResponse(featuredProducts: List<ProductCardResponse>) = StoreInfoResponse(
     id = this.id ?: throw IllegalStateException("Store ID was null for Store ${this.title}"),
     ownerId = this.owner.id ?: throw IllegalStateException("Store owner ID was null for Store ${this.title}"),
     title = this.title,

@@ -32,4 +32,19 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
         @Param("status") status: OrderStatus,
         pageable: Pageable
     ): Page<TrendingProduct>
+
+    @Query(
+        """
+    SELECT new org.shangahi.sellio_backend.model.TrendingProduct(
+        p.id,
+        p.title,
+        p.description,
+        p.store.id,
+        0L
+    )
+    FROM Product p
+    ORDER BY p.createdAt DESC
+    """
+    )
+    fun findAllProducts(pageable: Pageable): Page<TrendingProduct>
 }

@@ -4,4 +4,6 @@ import org.shangahi.sellio_backend.entity.Category
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
-interface CategoryRepository : JpaRepository<Category, UUID>
+interface CategoryRepository : JpaRepository<Category, UUID>{
+    fun existsByTitle(name: String): Boolean
+}
