@@ -62,4 +62,8 @@ interface ProductRepository : JpaRepository<Product, UUID> {
         @Param("categoryId") categoryId: UUID,
         pageable: Pageable
     ): Page<Product>
+
+    fun existsByTitleAndIdNot(title: String, id: UUID): Boolean
+    fun existsByTitle(title: String): Boolean
+
 }
