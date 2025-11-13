@@ -2,7 +2,6 @@ package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
@@ -11,7 +10,6 @@ import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.net.URI
 import java.util.*
 
 @RestController
@@ -20,15 +18,6 @@ import java.util.*
 class UserInfoController(
     private val userService: UserService,
 ) {
-    @UserDoc.InsertUser
-    @PostMapping("/insert")
-    fun insertUser(@Valid @RequestBody request: UserInsertRequest): ResponseEntity<UserInfoResponse> {
-        val response = userService.insertUser(request)
-        val location = URI.create("/v1/users/${response.id}")
-        return ResponseEntity
-            .created(location)
-            .body(response.toResponse())
-    }
 
     @UserDoc.UpdateUser
     @PutMapping("/{userId}/update")

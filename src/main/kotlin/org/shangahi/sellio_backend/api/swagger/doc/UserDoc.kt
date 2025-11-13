@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
@@ -80,124 +79,6 @@ annotation class UserDoc {
         ]
     )
     annotation class GetUserInfo
-
-
-    @Operation(
-        summary = "Insert new user",
-        description = "Insert new user info and make suer to use unique phone number and email address ",
-        requestBody = RequestBody(
-            required = true,
-            description = "Insert required fields to add new user",
-            content = [
-                Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = CreateUserRequest::class),
-                    examples = [
-                        ExampleObject(
-                            name = "AddUserRequestExample",
-                            value = """
-                            {
-                                "firstName": "Ahmed",
-                                "lastName": "Sayed",
-                                "city": "Cairo",
-                                "country":"Egypt",
-                                "phoneNumber":"01111111111",
-                                "password":"12345678"
-                             }
-                        """
-                        )
-                    ]
-                )
-            ]
-        ),
-        responses = [
-            ApiResponse(
-                responseCode = "201",
-                description = "User Inserted successfully",
-
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = UserInfoResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "User info",
-                                value = """
-                           {
-                                "id": "e8387af4-0646-403a-9bfb-b718252ce48b",
-                                "firstName": "Ahmed",
-                                "lastName": "Sayed",
-                                "email": null,
-                                "phoneNumber": "01111111111",
-                                "city": "Cairo",
-                                "country": "Egypt",
-                                "avatarUrl": null
-                            }
-                        """
-                            )
-                        ],
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "409",
-                description = "Conflict errors",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "PhoneNumberAlreadyExistErrorExample",
-                                value = ErrorResponseExample.USER_PHONE_NUMBER_ALREADY_EXISTS
-                            ),
-                            ExampleObject(
-                                name = "EmailAlreadyExistErrorExample",
-                                value = ErrorResponseExample.USER_EMAIL_ALREADY_EXISTS
-                            ),
-                        ]
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "ValidationErrorExample",
-                                value = ErrorResponseExample.VALIDATION_ERROR
-                            ),
-                            ExampleObject(
-                                name = "MissedFieldErrorExample",
-                                value = ErrorResponseExample.REQUEST_BODY_ERROR
-                            )
-                        ]
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal server error",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "InternalServerErrorExample",
-                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
-                            )
-                        ]
-                    )
-                ]
-            ),
-        ]
-    )
-    annotation class InsertUser
 
 
     @Operation(
