@@ -1,7 +1,9 @@
 package org.shangahi.sellio_backend.service
 
+import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity
@@ -67,18 +69,50 @@ class ProductService(
 
     @Transactional
     fun create(request: ProductRequest): ProductResponse {
-       checkSubCategoryIsExist(request.subCategoryIds)
+        checkSubCategoryIsExist(request.subCategoryIds)
         val store = storeRepository.findById(request.storeId)
             .orElseThrow { StoreNotFoundException() }
         val product = request.toEntity(store)
         val savedProduct = productRepository.save(product)
-        createProductSubCategories(request, savedProduct)
-        createProductImages(request, savedProduct)
-        createProductItems(request, savedProduct)
+        createProductSubCategories(request.subCategoryIds, savedProduct)
+        createProductImages(request.imageUrls, savedProduct)
+        createProductItems(request.items, savedProduct)
 
         val fullProduct = productRepository.findByIdWithItems(savedProduct.id!!)
             ?: throw ProductSavingException()
         return fullProduct.toResponse()
+    }
+
+
+    @Transactional
+    fun updateProduct(productId: UUID, request: ProductUpdateRequest): Product {
+
+        val existingProduct = productRepository.findByIdWithItems(productId)
+            ?: throw ProductNotFoundException()
+
+        val productToUpdate = existingProduct.copy(
+            title = request.title ?: existingProduct.title,
+            description = request.description ?: existingProduct.description,
+            mainImageURL = request.mainImageURL ?: existingProduct.mainImageURL,
+            price = request.price ?: existingProduct.price,
+            isUsed = request.isUsed ?: existingProduct.isUsed,
+            isFeatured = request.isFeatured ?: existingProduct.isFeatured
+        )
+
+        val savedProduct = productRepository.save(productToUpdate)
+
+        if (request.items != null) {
+            productItemRepository.deleteAll(existingProduct.items)
+            createProductItems(request.items, savedProduct)
+        }
+
+        if (request.subCategoryIds != null) {
+            productSubcategoryRepository.deleteAll(existingProduct.productSubCategories)
+            createProductSubCategories(request.subCategoryIds, savedProduct)
+        }
+        val product = productRepository.findByIdWithItems(savedProduct.id!!)
+            ?: throw ProductSavingException()
+        return product
     }
 
     @Transactional
@@ -133,9 +167,9 @@ class ProductService(
     }
 
 
-    private fun createProductSubCategories(request: ProductRequest, savedProduct: Product) {
-        if (request.subCategoryIds.isNotEmpty()) {
-            val subCategories = subCategoryRepository.findAllById(request.subCategoryIds)
+    private fun createProductSubCategories(subCategoryIds: List<UUID>, savedProduct: Product) {
+        if (subCategoryIds.isNotEmpty()) {
+            val subCategories = subCategoryRepository.findAllById(subCategoryIds)
             val productSubCategories = subCategories.map { sub ->
                 ProductSubCategory(product = savedProduct, subCategory = sub)
             }
@@ -143,18 +177,18 @@ class ProductService(
         }
     }
 
-    private fun createProductImages(request: ProductRequest, savedProduct: Product) {
-        if (request.imageUrls.isNotEmpty()) {
-            val images = request.imageUrls.map { url ->
+    private fun createProductImages(imageUrls: List<String>, savedProduct: Product) {
+        if (imageUrls.isNotEmpty()) {
+            val images = imageUrls.map { url ->
                 ProductImage(product = savedProduct, imageUrl = url)
             }
             productImageRepository.saveAll(images)
         }
     }
 
-    private fun createProductItems(request: ProductRequest, savedProduct: Product) {
-        if (request.items.isNotEmpty()) {
-            val items = request.items.map { item ->
+    private fun createProductItems(items: List<ProductItemRequest>, savedProduct: Product) {
+        if (items.isNotEmpty()) {
+            val items = items.map { item ->
                 ProductItem(
                     product = savedProduct,
                     price = item.price,
@@ -193,8 +227,8 @@ class ProductService(
     }
 
     private fun checkSubCategoryIsExist(subCategoryIds: List<UUID>) {
-        subCategoryIds.forEach { subCategoryId->
-            if (!subCategoryRepository.existsById(subCategoryId)){
+        subCategoryIds.forEach { subCategoryId ->
+            if (!subCategoryRepository.existsById(subCategoryId)) {
                 throw SubCategoryNotFoundException()
             }
         }
