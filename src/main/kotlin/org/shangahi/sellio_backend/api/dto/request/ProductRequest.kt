@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.dto.request
 
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
 import java.util.*
@@ -9,9 +10,11 @@ data class ProductRequest(
     val description: String?,
     val mainImageURL: String?,
     val storeId: UUID,
+    @field:NotEmpty(message = "Product must have at least one sub-category")
     val subCategoryIds: List<UUID> = emptyList(),
     val imageUrls: List<String> = emptyList(),
     val items: List<ProductItemRequest> = emptyList(),
+    @field:Positive(message = "Price must be greater than zero")
     val price: Double,
     val isUsed: Boolean = false,
     val isFeatured: Boolean = false
