@@ -9,6 +9,7 @@ import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.ProductDoc
 import org.shangahi.sellio_backend.service.ProductService
+import org.shangahi.sellio_backend.service.StorageService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -22,7 +23,9 @@ import java.util.*
 @RequestMapping("/v1/products")
 @Tag(name = "Product", description = "Endpoints for managing products")
 class ProductController(
-    private val productService: ProductService
+    private val productService: ProductService,
+    private val storageService: StorageService
+
 ) {
 
     @ProductDoc.GetProductByStoreId
@@ -92,5 +95,19 @@ class ProductController(
         @ParameterObject @PageableDefault(size = 20) pageable: Pageable
     ): PageResponse<ProductResponse> {
         return productService.getCustomProductsByCategory(categoryId, pageable)
+    }
+    @PostMapping("/image")
+    fun uploadCustomizationImage(
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<Map<String, String>> {
+
+        val fileName = UUID.randomUUID().toString()
+        val imageUrl = storageService.uploadImage(
+            file = file,
+            fileName = fileName,
+            folderName = "custom"
+        )
+
+        return ResponseEntity.ok(mapOf("url" to imageUrl))
     }
 }
