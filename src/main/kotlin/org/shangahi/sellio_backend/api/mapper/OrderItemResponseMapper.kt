@@ -6,11 +6,12 @@ import org.shangahi.sellio_backend.entity.OrderItem
 import org.springframework.data.domain.Page
 
 fun OrderItem.toResponse(): OrderItemResponse {
+    val price = productItem.price ?: productItem.product.price
     return OrderItemResponse(
         id = id,
         productId = productItem.id,
         quantity = quantity,
-        price = productItem.price,
+        price = price,
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt

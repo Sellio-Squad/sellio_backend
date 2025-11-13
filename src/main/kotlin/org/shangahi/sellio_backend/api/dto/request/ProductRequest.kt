@@ -23,7 +23,7 @@ data class ProductRequest(
 data class ProductItemRequest(
     @field:NotNull(message = "Price is required for an item")
     @field:Positive(message = "Price must be greater than zero")
-    val price: Double,
+    val price: Double? = null,
     val discountId: UUID? = null,
     val colorId: Int? = null,
     val sizeId: Int? = null,
