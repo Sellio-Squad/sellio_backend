@@ -1,9 +1,11 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.request.*
+import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
+import org.shangahi.sellio_backend.api.dto.request.LoginRequest
+import org.shangahi.sellio_backend.api.dto.request.RefreshTokenRequest
+import org.shangahi.sellio_backend.api.dto.request.VerifyOtpRequest
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
-import org.shangahi.sellio_backend.api.mapper.toRegisterUserModel
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
 import org.shangahi.sellio_backend.service.AuthenticationService
 import org.shangahi.sellio_backend.service.RegisterService
@@ -30,34 +32,15 @@ class AccountController(
 
     @PostMapping("/create")
     @AccountDoc.CreateUser
-    fun create(
-        @RequestBody user: CreateUserRequest
-    ): AuthResponse {
-        return registerService.createUser(user.toRegisterUserModel())
-    }
-
-    @PostMapping("/create/request-otp")
-    @AccountDoc.RequestOtp
-    fun requestRegisterOtp(
-        @RequestBody request: RequestOtpRequest
-    ): ResponseEntity<OtpRequestResponse> {
-        val response = registerService.requestOtp(
-            phoneNumber = request.phoneNumber,
-            defaultRegion = request.defaultRegion
-        )
+    fun create(@RequestBody request: CreateUserRequest): ResponseEntity<OtpRequestResponse> {
+        val response = registerService.prepareRegistration(request)
         return ResponseEntity.ok(response)
     }
 
     @PostMapping("/create/verify-otp")
     @AccountDoc.VerifyOtp
-    fun verifyRegisterOtp(
-        @RequestBody request: VerifyOtpRequest
-    ): ResponseEntity<Unit> {
-        val response = registerService.verifyOtp(
-            otp = request.otp,
-            sessionId = request.sessionId
-        )
-        return ResponseEntity.ok(response)
+    fun verifyOtp(@RequestBody request: VerifyOtpRequest): AuthResponse {
+        return registerService.verifyOtpAndCreateUser(request.sessionId, request.otp)
     }
 
     @PostMapping("/refresh-token")

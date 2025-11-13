@@ -97,22 +97,28 @@ annotation class AccountDoc {
     annotation class Login
 
     @Operation(
-        summary = "Request OTP for user registration",
-        description = "Send an OTP to the phone number before creating a user",
+        summary = "Prepare signup and request OTP",
+        description = "Collect user information, validate phone number, store pending signup, and send OTP",
         requestBody = RequestBody(
             required = true,
-            description = "Phone number and default region",
+            description = "User registration data including phone and region",
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = RequestOtpRequest::class),
+                    schema = Schema(implementation = CreateUserRequest::class),
                     examples = [
                         ExampleObject(
-                            name = "RequestOtpExample",
+                            name = "PrepareSignupExample",
                             value = """
                             {
+                              "firstName": "Aziz",
+                              "lastName": "Anwer",
                               "phoneNumber": "07712345678",
-                              "defaultRegion": "IQ"
+                              "password": "12345678",
+                              "city": "Samarra",
+                              "country": "Iraq",
+                              "email": "aziz@example.com",
+                              "region": "IQ"
                             }
                         """
                         )
@@ -195,98 +201,24 @@ annotation class AccountDoc {
             )
         ]
     )
-    annotation class RequestOtp
+    annotation class CreateUser
 
     @Operation(
-        summary = "Verify OTP for registration",
-        description = "Verify the OTP sent to the phone number to allow user creation",
+        summary = "Verify OTP and create user",
+        description = "Verify the OTP sent to the phone number and create a user account. Deletes pending signup after successful creation.",
         requestBody = RequestBody(
             required = true,
-            description = "OTP and session ID received from request-otp",
+            description = "OTP and session ID from prepare signup",
             content = [
                 Content(
                     mediaType = "application/json",
                     schema = Schema(implementation = VerifyOtpRequest::class),
                     examples = [
                         ExampleObject(
-                            name = "VerifyOtpRequestExample",
+                            name = "VerifyOtpAndCreateUserExample",
                             value = """
                             {
                               "otp": "1234",
-                              "sessionId": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-                            }
-                        """
-                        )
-                    ]
-                )
-            ]
-        ),
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OTP verified successfully"
-            ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Invalid OTP",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "InvalidOtpExample",
-                                value = ErrorResponseExample.OTP_INVALID
-                            ),
-                            ExampleObject(
-                                name = "OtpExpiredExample",
-                                value = ErrorResponseExample.OTP_EXPIRED
-                            )
-                        ]
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal server error",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "InternalServerErrorExample",
-                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
-                            )
-                        ]
-                    )
-                ]
-            )
-        ]
-    )
-    annotation class VerifyOtp
-
-    @Operation(
-        summary = "Create user after OTP verification",
-        description = "Create a new user account. Requires OTP verification first",
-        requestBody = RequestBody(
-            required = true,
-            description = "User registration data along with verified session ID",
-            content = [
-                Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = CreateUserRequest::class),
-                    examples = [
-                        ExampleObject(
-                            name = "CreateUserRequestExample",
-                            value = """
-                            {
-                              "firstName": "Aziz",
-                              "lastName": "Anwer",
-                              "city": "Samarra",
-                              "country": "Iraq",
-                              "phoneNumber": "07712345678",
-                              "password": "12345678",
                               "sessionId": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
                             }
                         """
@@ -319,7 +251,7 @@ annotation class AccountDoc {
             ),
             ApiResponse(
                 responseCode = "400",
-                description = "Invalid OTP or missing session",
+                description = "Invalid OTP or expired session",
                 content = [
                     Content(
                         mediaType = "application/json",
@@ -371,7 +303,7 @@ annotation class AccountDoc {
             )
         ]
     )
-    annotation class CreateUser
+    annotation class VerifyOtp
 
     @Operation(
         summary = "Refresh access token using refresh token",
