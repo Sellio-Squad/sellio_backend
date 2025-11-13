@@ -45,16 +45,4 @@ fun RegisterUserModel.toUser(): User {
     )
 }
 
-fun CreateUserRequest.toRegisterUserModel(): RegisterUserModel {
-    return RegisterUserModel(
-        phoneNumber = phoneNumber,
-        firstName = firstName,
-        lastName = lastName,
-        password = password,
-        sessionId = sessionId,
-        city = city,
-        country = country,
-        avatarUrl = null,
-        email = null
-    )
-}
+

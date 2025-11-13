@@ -23,9 +23,10 @@ data class CreateUserRequest(
 
     @field:NotBlank(message = "Country is required")
     val country: String,
-    val avatarUrl: String?,
-    val email: String?,
 
-    @field:NotBlank(message = "Session ID is required")
-    val sessionId: UUID?,
+    @field:NotBlank(message = "Region is required")
+    val region: String,
+    val avatarUrl: String?,
+    @field:NotBlank(message = "Email is required")
+    val email: String?
 )
