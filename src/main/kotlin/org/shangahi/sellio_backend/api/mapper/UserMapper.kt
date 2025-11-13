@@ -1,9 +1,6 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.UserInsertRequest
-import org.shangahi.sellio_backend.api.dto.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
-import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
 import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.model.RegisterUserModel
@@ -21,36 +18,10 @@ fun User.toResponse(cdnEndpoint: String): UserInfoResponse {
     )
 }
 
-fun UserInsertRequest.toUser(): User {
-    return User(
-        firstName = firstName,
-        lastName = lastName,
-        phoneNumber = phoneNumber,
-        email = email,
-        city = city,
-        country = country,
-        password = password,
-        avatarUrl = avatarUrl
-    )
-}
-
-fun UserUpdateRequest.toUser(): User {
-    return User(
-        id = id,
-        firstName = firstName,
-        lastName = lastName,
-        phoneNumber = phoneNumber,
-        email = email,
-        city = city,
-        country = country,
-        password = password,
-        avatarUrl = avatarUrl
-    )
-}
 
 fun User.toResponse(): UserInfoResponse {
     return UserInfoResponse(
-        id = id!!,
+        id = id,
         firstName = firstName,
         lastName = lastName,
         email = email,

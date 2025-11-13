@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
+import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
@@ -91,7 +91,7 @@ annotation class UserDoc {
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = UserInsertRequest::class),
+                    schema = Schema(implementation = CreateUserRequest::class),
                     examples = [
                         ExampleObject(
                             name = "AddUserRequestExample",
