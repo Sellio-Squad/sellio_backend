@@ -47,4 +47,5 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
     """
     )
     fun findAllProducts(pageable: Pageable): Page<TrendingProduct>
+    fun existsByColorId(colorId: UUID): Boolean
 }
