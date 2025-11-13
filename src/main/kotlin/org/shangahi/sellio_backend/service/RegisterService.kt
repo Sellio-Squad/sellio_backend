@@ -57,7 +57,7 @@ class RegisterService(
             country = registerUserModel.country,
             email = registerUserModel.email
             )
-        val savedUser = userService.insertUser(user)
+        val savedUser = userService.createUser(user)
 
         otpService.expireOtpBySessionId(sessionId)
 

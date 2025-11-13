@@ -2,9 +2,10 @@ package org.shangahi.sellio_backend.repository
 
 import org.shangahi.sellio_backend.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
-import java.util.UUID
+import java.util.*
 
-interface  UserRepository: JpaRepository<User, UUID> {
+interface UserRepository : JpaRepository<User, UUID> {
+    fun findByPhoneNumber(phoneNumber: String): User?
     fun existsByPhoneNumber(phoneNumber: String): Boolean
     fun existsByEmail(email: String): Boolean
 }
