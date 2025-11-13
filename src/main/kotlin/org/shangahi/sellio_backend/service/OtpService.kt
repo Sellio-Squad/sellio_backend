@@ -6,7 +6,6 @@ import org.shangahi.sellio_backend.security.service.otp.OtpGenerator
 import org.shangahi.sellio_backend.service.exception.InvalidOtpException
 import org.shangahi.sellio_backend.service.exception.OtpExpiredException
 import org.shangahi.sellio_backend.service.exception.UnauthorizedException
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -17,12 +16,13 @@ class OtpService(
     private val otpGenerator: OtpGenerator,
     private val otpLogRepository: OtpLogRepository
 ) {
-    fun createOtp(phoneNumber: String): OtpLog {
+    fun createOtp(phoneNumber: String, sessionId: UUID): OtpLog {
         val otp = otpGenerator.generateOtp()
         val otpLog = OtpLog(
             phoneNumber = phoneNumber,
             otp = otp,
-            expireAt = Instant.now().plusSeconds(OTP_EXPIRY_SECONDS)
+            expireAt = Instant.now().plusSeconds(OTP_EXPIRY_SECONDS),
+            sessionId = sessionId
         )
         return otpLogRepository.save(otpLog)
     }
