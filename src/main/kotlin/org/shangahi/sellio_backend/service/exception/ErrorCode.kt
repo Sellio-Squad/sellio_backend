@@ -36,4 +36,18 @@ internal object ErrorCode {
     //IMAGE_xxx
     const val IMAGE_INVALID_FORMAT = "IMAGE_001"
     const val IMAGE_UPLOAD_FAILED = "IMAGE_002"
+
+    //AUTH_xxx
+    const val AUTH_INVALID_CREDENTIALS = "AUTH_001"
+    const val AUTH_INVALID_REFRESH_TOKEN = "AUTH_002"
+    const val AUTH_UNAUTHORIZED = "AUTH_003"
+    const val AUTH_SESSION_ID_NOT_FOUND = "AUTH_004"
+
+    //PHONE_xxx
+    const val INVALID_PHONE_NUMBER = "PHONE_001"
+    const val INVALID_PHONE_NUMBER_REGION = "PHONE_002"
+
+    //OTP_xxx
+    const val OTP_EXPIRED = "OTP_001"
+    const val OTP_INVALID = "OTP_002"
 }
