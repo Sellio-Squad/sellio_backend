@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.api.swagger
 
 object ErrorResponseExample {
 
-//region General
+    //region General
     const val VALIDATION_ERROR = """
     {
     "timestamp": "2025-11-07T13:42:51.484853700Z",
@@ -41,7 +41,7 @@ object ErrorResponseExample {
 """
 //endregion
 
-//region User
+    //region User
     const val USER_EMAIL_ALREADY_EXISTS = """
     {
       "timestamp": "2025-11-05T21:50:12.995Z",
@@ -87,7 +87,7 @@ object ErrorResponseExample {
 """
 //endregion
 
-//region Store
+    //region Store
     const val STORE_EMAIL_ALREADY_EXISTS = """
     {
       "timestamp": "2025-11-05T21:50:12.995Z",
@@ -171,7 +171,7 @@ object ErrorResponseExample {
 """
 //endregion
 
-//region Product
+    //region Product
     const val PROD_OUT_OF_STOCK = """
     {
       "timestamp": "2025-11-05T21:50:12.995Z",
@@ -206,7 +206,7 @@ object ErrorResponseExample {
 """
 //endregion
 
-//region Category
+    //region Category
     const val CATEG_ALREADY_EXISTS = """
     {
       "timestamp": "2025-11-05T21:50:12.995Z",
@@ -254,6 +254,31 @@ object ErrorResponseExample {
       "code": "CATEG_004"
     }
 """
+//endregion
+
+    //region Size
+    const val SIZE_NOT_FOUND = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 404,
+      "error": "Not Found",
+      "message": "Sorry, but this Size was not found",
+      "path": "/v1/size",
+      "code": "ITEM_004"
+    }
+    """
+
+    const val SIZE_ALREADY_EXISTS = """
+    {
+    "timestamp": "2025-11-14T13:35:31.382915600Z",
+    "status": 409,
+    "error": "Conflict",
+    "message": "Size value already exists",
+    "path": "/v1/size",
+    "code": "ITEM_007",
+    "validationErrors": null
+    }
+    """
 //endregion
 
 }
