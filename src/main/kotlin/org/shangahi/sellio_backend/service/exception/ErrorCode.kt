@@ -34,7 +34,6 @@ internal object ErrorCode {
     const val ITEM_SAVING = "ITEM_005"
     const val ITEM_COLOR = "ITEM_006"
     const val ITEM_SIZE = "ITEM_007"
-    const val ITEM_WEIGHT = "ITEM_008"
 
     //CATEG_xxx
     const val CATEG_ALREADY_EXISTS = "CATEG_001"
