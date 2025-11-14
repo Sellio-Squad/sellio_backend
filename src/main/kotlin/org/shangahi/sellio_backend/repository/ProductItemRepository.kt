@@ -50,4 +50,14 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
     fun existsByColorId(colorId: Int): Boolean
     fun existsBySizeId(sizeId: Int): Boolean
     fun existsByWeightId(sizeId: Int): Boolean
+
+    @Query("""
+        SELECT pi FROM ProductItem pi
+        LEFT JOIN FETCH pi.color
+        LEFT JOIN FETCH pi.size
+        LEFT JOIN FETCH pi.weight
+        LEFT JOIN FETCH pi.discount
+        WHERE pi.product.id = :productId
+    """)
+    fun findAllByProductIdWithDetails(@Param("productId") productId: UUID): List<ProductItem>
 }
