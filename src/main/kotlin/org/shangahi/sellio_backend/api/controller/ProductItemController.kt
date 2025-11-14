@@ -58,4 +58,13 @@ class ProductItemController(
             .status(HttpStatus.CREATED)
             .body(responses.map { it.toResponse() })
     }
+
+    @DeleteMapping("/{productId}/items/{itemId}")
+    fun deleteProductItem(
+        @PathVariable productId: UUID,
+        @PathVariable itemId: UUID
+    ): ResponseEntity<String> {
+        val message = productItemService.deleteProductItem(productId, itemId)
+        return ResponseEntity.ok(message)
+    }
 }
