@@ -5,6 +5,8 @@ import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.model.OrderStatus
 import org.shangahi.sellio_backend.model.TrendingProduct
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.ProductItemInUseException
+import org.shangahi.sellio_backend.service.exception.ProductItemNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,7 +22,9 @@ class ProductItemService(
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
     private val weightRepository: WeightRepository,
-    private val discountRepository: DiscountRepository
+    private val discountRepository: DiscountRepository,
+    private val cartItemRepository: CartItemRepository,
+    private val orderItemRepository: OrderItemRepository
 ) {
     fun getTrendingProducts(pageable: Pageable): Page<TrendingProduct> {
         val trendingProducts = productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
@@ -108,5 +112,27 @@ class ProductItemService(
         }
 
         return productItemRepository.saveAll(newItems)
+    }
+
+    @Transactional
+    fun deleteProductItem(productId: UUID, itemId: UUID): String {
+
+        val item = productItemRepository.findByIdOrNull(itemId)
+            ?: throw ProductItemNotFoundException()
+
+        if (item.product.id != productId) {
+            throw ProductItemNotFoundException()
+        }
+
+        if (cartItemRepository.existsByProductItemId(itemId)) {
+            throw ProductItemInUseException()
+        }
+
+        if (orderItemRepository.existsByProductItemId(itemId)) {
+            throw ProductItemInUseException()
+        }
+
+        productItemRepository.delete(item)
+        return "Item deleted successfully"
     }
 }
