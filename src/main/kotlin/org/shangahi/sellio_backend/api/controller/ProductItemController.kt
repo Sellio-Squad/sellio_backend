@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.api.controller
 
 import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductItemUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.ProductItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.TrendingProductResponse
@@ -57,6 +58,16 @@ class ProductItemController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(responses.map { it.toResponse() })
+    }
+
+    @PutMapping("/{productId}/items/{itemId}")
+    fun updateProductItem(
+        @PathVariable productId: UUID,
+        @PathVariable itemId: UUID,
+        @Valid @RequestBody request: ProductItemUpdateRequest
+    ): ProductItemResponse {
+        val updatedItem = productItemService.updateProductItem(productId, itemId, request)
+        return updatedItem.toResponse()
     }
 
     @DeleteMapping("/{productId}/items/{itemId}")
