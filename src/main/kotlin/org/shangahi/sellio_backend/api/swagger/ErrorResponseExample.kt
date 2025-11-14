@@ -204,6 +204,16 @@ object ErrorResponseExample {
       "code": "PROD_004"
     }
 """
+    const val PROD_ALREADY_EXIST = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+     "status": 409,
+      "error": "Conflict",
+      "message": "This Product already exists",
+      "path": "/v1/product-items",
+      "code": "PROD_003"
+    }
+    """
 //endregion
 
     //region Product Item

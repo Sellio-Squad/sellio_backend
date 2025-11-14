@@ -265,24 +265,23 @@ annotation class CategoryDoc {
                                 name = "Custom Categories List",
                                 value = """
                                    [
-   
-    {
-        "id": "a0a0a0a0-0001-0001-0001-000000000001",
-        "title": "Apparel",
-        "createdAt": "2025-11-13T02:00:56.997798Z",
-        "updatedAt": "2025-11-13T02:00:56.997798Z",
-        "subCategories": [
-            {
-                "id": "b0b0b0b0-0001-0001-0001-000000000001",
-                "title": "T-Shirts",
-                "categoryId": "a0a0a0a0-0001-0001-0001-000000000001",
-                "categoryTitle": "Apparel",
-                "createdAt": "2025-11-13T02:00:56.998885Z",
-                "updatedAt": "2025-11-13T02:00:56.998885Z"
-            }
-        ]
-    },
-]
+                                    {
+                                        "id": "a0a0a0a0-0001-0001-0001-000000000001",
+                                        "title": "Apparel",
+                                        "createdAt": "2025-11-13T02:00:56.997798Z",
+                                        "updatedAt": "2025-11-13T02:00:56.997798Z",
+                                        "subCategories": [
+                                            {
+                                                "id": "b0b0b0b0-0001-0001-0001-000000000001",
+                                                "title": "T-Shirts",
+                                                "categoryId": "a0a0a0a0-0001-0001-0001-000000000001",
+                                                "categoryTitle": "Apparel",
+                                                "createdAt": "2025-11-13T02:00:56.998885Z",
+                                                "updatedAt": "2025-11-13T02:00:56.998885Z"
+                                            }
+                                                        ]
+                                    }
+                                ]
                                 """
                             )
                         ]

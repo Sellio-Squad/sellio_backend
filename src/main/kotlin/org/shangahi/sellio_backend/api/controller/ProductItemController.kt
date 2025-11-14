@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductItemUpdateRequest
@@ -20,6 +21,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/v1/product-items")
+@Tag(name = "ProductItem", description = "Endpoints for managing product Items")
 class ProductItemController(
     private val productItemService: ProductItemService
 ) {

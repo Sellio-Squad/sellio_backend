@@ -65,6 +65,7 @@ class ProductController(
         return ResponseEntity.ok(saved)
     }
 
+    @ProductDoc.UpdateProduct
     @PutMapping("/{id}")
     fun updateProduct(
         @PathVariable id: UUID,
