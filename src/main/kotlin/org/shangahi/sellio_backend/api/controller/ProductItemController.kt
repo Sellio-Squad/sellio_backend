@@ -21,6 +21,13 @@ import java.util.*
 class ProductItemController(
     private val productItemService: ProductItemService
 ) {
+    @GetMapping("/{productId}/items")
+    fun getProductItems(
+        @PathVariable productId: UUID,): List<ProductItemResponse>{
+        val productItems = productItemService.getProductItems(productId)
+        return productItems.map { it.toResponse() }
+    }
+
     @GetMapping("/trending")
     fun getTrendingProducts(
         @ParameterObject
@@ -40,5 +47,15 @@ class ProductItemController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(response.toResponse())
+    }
+    @PostMapping("/{productId}/items")
+    fun addProductItems(
+        @PathVariable productId: UUID,
+        @Valid @RequestBody requests: List<ProductItemRequest>
+    ): ResponseEntity<List<ProductItemResponse>> {
+        val responses = productItemService.addProductItems(productId, requests)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(responses.map { it.toResponse() })
     }
 }
