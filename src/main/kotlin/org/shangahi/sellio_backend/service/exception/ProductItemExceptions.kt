@@ -25,3 +25,9 @@ class ProductItemSavingException : SellioException(
     code = ErrorCode.PROD_SAVING,
     message = "Sorry, Error when saving product"
 )
+
+class ProductItemInUseException: SellioException(
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = ErrorCode.ITEM_IN_USE,
+    message = "this item already in use"
+)

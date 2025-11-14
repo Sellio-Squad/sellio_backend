@@ -29,6 +29,7 @@ internal object ErrorCode {
     //ITEM_xxx
     const val ITEM_OUT_OF_STOCK = "ITEM_001"
     const val ITEM_NOT_ENOUGH_STOCK = "ITEM_002"
+    const val ITEM_IN_USE = "ITEM_003"
     const val ITEM_NOT_FOUND = "ITEM_004"
     const val ITEM_SAVING = "ITEM_005"
     const val ITEM_COLOR = "ITEM_006"
