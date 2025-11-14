@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -30,7 +31,18 @@ class ProductItemService(
             trendingProducts
         }
     }
-    fun insertProductItem(request: ProductItemRequest,productId: UUID): ProductItem {
+
+    fun getProductItems(productId: UUID): List<ProductItem> {
+        if (!productRepository.existsById(productId)) {
+            throw ProductNotFoundException()
+        }
+        val productItems = productItemRepository.findAllByProductIdWithDetails(productId)
+
+        return productItems
+    }
+
+    @Transactional
+    fun insertProductItem(request: ProductItemRequest, productId: UUID): ProductItem {
 
         val product = productRepository.findByIdOrNull(productId)
             ?: throw ProductNotFoundException()
@@ -60,5 +72,41 @@ class ProductItemService(
         )
 
         return productItemRepository.save(productItem)
+    }
+
+    @Transactional
+    fun addProductItems(productId: UUID, requests: List<ProductItemRequest>): List<ProductItem> {
+
+        val product = productRepository.findByIdOrNull(productId)
+            ?: throw ProductNotFoundException()
+
+        val newItems = requests.map { request ->
+            val color = request.colorId?.let {
+                colorRepository.findByIdOrNull(it)
+            }
+            val size = request.sizeId?.let {
+                sizeRepository.findByIdOrNull(it)
+            }
+            val weight = request.weightId?.let {
+                weightRepository.findByIdOrNull(it)
+            }
+
+            val discount = request.discountId?.let {
+                discountRepository.findByIdOrNull(it)
+            }
+
+            ProductItem(
+                product = product,
+                price = request.price,
+                stock = request.stock,
+                color = color,
+                size = size,
+                weight = weight,
+                discount = discount,
+                variationImageUrl = request.variationImageUrl
+            )
+        }
+
+        return productItemRepository.saveAll(newItems)
     }
 }
