@@ -8,6 +8,7 @@ import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.TrendingProductResponse
 import org.shangahi.sellio_backend.api.mapper.toPagedResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
+import org.shangahi.sellio_backend.api.swagger.doc.ProductItemDoc
 import org.shangahi.sellio_backend.service.ProductItemService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
@@ -22,6 +23,7 @@ import java.util.*
 class ProductItemController(
     private val productItemService: ProductItemService
 ) {
+    @ProductItemDoc.GetProductItems
     @GetMapping("/{productId}/items")
     fun getProductItems(
         @PathVariable productId: UUID,): List<ProductItemResponse>{
@@ -29,6 +31,7 @@ class ProductItemController(
         return productItems.map { it.toResponse() }
     }
 
+    @ProductItemDoc.GetTrendingProducts
     @GetMapping("/trending")
     fun getTrendingProducts(
         @ParameterObject
@@ -39,6 +42,7 @@ class ProductItemController(
         return trendingProducts.toPagedResponse()
     }
 
+    @ProductItemDoc.InsertProductItem
     @PostMapping("/{productId}/insert")
     fun insertProductItem(
         @PathVariable productId: UUID,
@@ -49,6 +53,8 @@ class ProductItemController(
             .status(HttpStatus.CREATED)
             .body(response.toResponse())
     }
+
+    @ProductItemDoc.AddProductItems
     @PostMapping("/{productId}/items")
     fun addProductItems(
         @PathVariable productId: UUID,
@@ -60,6 +66,7 @@ class ProductItemController(
             .body(responses.map { it.toResponse() })
     }
 
+    @ProductItemDoc.UpdateProductItem
     @PutMapping("/{productId}/items/{itemId}")
     fun updateProductItem(
         @PathVariable productId: UUID,
@@ -70,6 +77,7 @@ class ProductItemController(
         return updatedItem.toResponse()
     }
 
+    @ProductItemDoc.DeleteProductItem
     @DeleteMapping("/{productId}/items/{itemId}")
     fun deleteProductItem(
         @PathVariable productId: UUID,
