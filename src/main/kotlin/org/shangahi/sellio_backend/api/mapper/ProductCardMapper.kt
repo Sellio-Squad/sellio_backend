@@ -41,10 +41,11 @@ fun Product.toResponse(): ProductResponse =
         items = this.items.map { it.toResponse() }
     )
 
-fun ProductItem.toResponse(): ProductItemResponse =
-    ProductItemResponse(
+fun ProductItem.toResponse(): ProductItemResponse {
+    val price = this.price ?: this.product.price
+    return ProductItemResponse(
         id = this.id!!,
-        price = this.price,
+        price = price,
         discountId = this.discount?.id,
         colorId = this.color?.id,
         sizeId = this.size?.id,
@@ -52,3 +53,4 @@ fun ProductItem.toResponse(): ProductItemResponse =
         stock = this.stock,
         variationImageUrl = this.variationImageUrl,
     )
+}
