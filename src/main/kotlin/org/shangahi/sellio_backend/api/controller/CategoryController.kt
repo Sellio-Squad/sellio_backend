@@ -30,9 +30,9 @@ class CategoryController(private val categoryService: CategoryService) {
         return ResponseEntity.ok(saved)
     }
 
+    @CategoryDoc.GetCustom
     @GetMapping("/custom")
     fun getCustomProductCategories(): List<CategoryResponse> {
         return categoryService.getCustomProductCategories()
     }
-
 }

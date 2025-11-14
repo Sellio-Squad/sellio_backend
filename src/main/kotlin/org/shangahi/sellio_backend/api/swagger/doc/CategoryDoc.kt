@@ -248,4 +248,64 @@ annotation class CategoryDoc {
         ]
     )
     annotation class InsertCategory
+
+    @Operation(
+        summary = "Get Custom Product Categories",
+        description = "Retrieves a list of all main categories that contain customizable products. These are linked to the official 'Sellio Customize' store.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Categories retrieved successfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = CategoryResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "Custom Categories List",
+                                value = """
+                                   [
+   
+    {
+        "id": "a0a0a0a0-0001-0001-0001-000000000001",
+        "title": "Apparel",
+        "createdAt": "2025-11-13T02:00:56.997798Z",
+        "updatedAt": "2025-11-13T02:00:56.997798Z",
+        "subCategories": [
+            {
+                "id": "b0b0b0b0-0001-0001-0001-000000000001",
+                "title": "T-Shirts",
+                "categoryId": "a0a0a0a0-0001-0001-0001-000000000001",
+                "categoryTitle": "Apparel",
+                "createdAt": "2025-11-13T02:00:56.998885Z",
+                "updatedAt": "2025-11-13T02:00:56.998885Z"
+            }
+        ]
+    },
+]
+                                """
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerErrorExample",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+    annotation class GetCustom
 }
