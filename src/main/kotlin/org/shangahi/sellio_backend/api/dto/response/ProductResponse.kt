@@ -23,6 +23,5 @@ data class ProductItemResponse(
     val variationImageUrl: String?,
     val colorId: Int?,
     val sizeId: Int?,
-    val weightId: Int?,
     val stock: Int
 )
