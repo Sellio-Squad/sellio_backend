@@ -256,6 +256,33 @@ object ErrorResponseExample {
 """
 //endregion
 
+
+    //region Color
+    const val COLOR_NOT_FOUND = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 404,
+      "error": "Not Found",
+      "message": "Sorry, but this Color was not found",
+      "path": "/v1/size",
+      "code": "ITEM_006"
+    }
+    """
+
+    const val COLOR_ALREADY_EXISTS = """
+    {
+    "timestamp": "2025-11-14T13:35:31.382915600Z",
+    "status": 409,
+    "error": "Conflict",
+    "message": "Color value already exists",
+    "path": "/v1/size",
+    "code": "ITEM_006",
+    "validationErrors": null
+    }
+    """
+//endregion
+
+
     //region Size
     const val SIZE_NOT_FOUND = """
     {
@@ -264,7 +291,7 @@ object ErrorResponseExample {
       "error": "Not Found",
       "message": "Sorry, but this Size was not found",
       "path": "/v1/size",
-      "code": "ITEM_004"
+      "code": "ITEM_007"
     }
     """
 
@@ -280,6 +307,5 @@ object ErrorResponseExample {
     }
     """
 //endregion
-
 }
 
