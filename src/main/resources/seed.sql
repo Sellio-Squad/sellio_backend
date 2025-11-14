@@ -21,11 +21,6 @@ VALUES (1, 'Small');
 INSERT INTO sizes (id, value)
 VALUES (2, 'Medium');
 
-INSERT INTO weight (id, value)
-VALUES (1, 5.0);
-INSERT INTO weight (id, value)
-VALUES (2, 1.2);
-
 INSERT INTO users (id, first_name, last_name, email, password, phone_number, city, country, created_at, updated_at)
 VALUES ('f895cdbe-73fc-4e44-b5db-02f396953f64',
         'Ahmed',
@@ -128,12 +123,11 @@ VALUES (gen_random_uuid(),
         NOW()
        );
 
-INSERT INTO product_item (id, product_id, price, stock, weight_id, created_at, updated_at)
+INSERT INTO product_item (id, product_id, price, stock, created_at, updated_at)
 VALUES ('a1a1a1a1-aaaa-aaaa-aaaa-000000000001',
         '11111111-a1a1-b2b2-c3c3-111111111111',
         1500.0,
         5,
-        2,
         NOW(),
         NOW());
 
@@ -258,9 +252,6 @@ VALUES (4, 'Large'),
        (6, '2XL');
 
 
-INSERT INTO weight (id, value)
-VALUES (3, 0.5),
-       (4, 0.8);
 
 
 INSERT INTO users (id, first_name, last_name, email, password, phone_number, city, country, created_at, updated_at)
@@ -340,13 +331,12 @@ VALUES (gen_random_uuid(),
         'b0b0b0b0-0001-0001-0001-000000000002',
         NOW());
 
-INSERT INTO product_item (id, product_id, price, stock, weight_id, color_id, size_id, variation_image_url, created_at, updated_at)
+INSERT INTO product_item (id, product_id, price, stock, color_id, size_id, variation_image_url, created_at, updated_at)
 VALUES
     (gen_random_uuid(),
      '90909090-0001-0001-0001-000000000001',
      250.0,
      100,
-     3,
      1,
      2,
      'https://s3.aws/tshirt-white.jpg',
@@ -356,7 +346,6 @@ VALUES
     (gen_random_uuid(),
      '90909090-0001-0001-0001-000000000001',
      250.0, 100,
-     3,
      'c010c010-0001-0001-0001-000000000003',
      '512e0000-0001-0001-0001-000000000003',
      'https://s3.aws/tshirt-white.jpg',
@@ -367,7 +356,6 @@ VALUES
      '90909090-0001-0001-0001-000000000001',
      250.0,
      100,
-     3,
      'c010c010-0001-0001-0001-000000000002',
      '512e0000-0001-0001-0001-000000000002',
      'https://s3.aws/tshirt-black.jpg',
@@ -378,7 +366,6 @@ VALUES
      '90909090-0001-0001-0001-000000000001',
      250.0,
      100,
-     3,
      'c010c010-0001-0001-0001-000000000002',
      '512e0000-0001-0001-0001-000000000003',
      'https://s3.aws/tshirt-black.jpg',
@@ -389,7 +376,6 @@ VALUES
      '90909090-0001-0001-0001-000000000002',
      150.0,
      100,
-     4,
      'c010c010-0001-0001-0001-000000000003',
      NULL,
      'https://s3.aws/mug-white.jpg',
