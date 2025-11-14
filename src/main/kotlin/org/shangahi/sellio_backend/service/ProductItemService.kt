@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductItemUpdateRequest
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.model.OrderStatus
 import org.shangahi.sellio_backend.model.TrendingProduct
@@ -91,9 +92,6 @@ class ProductItemService(
             val size = request.sizeId?.let {
                 sizeRepository.findByIdOrNull(it)
             }
-            val weight = request.weightId?.let {
-                weightRepository.findByIdOrNull(it)
-            }
 
             val discount = request.discountId?.let {
                 discountRepository.findByIdOrNull(it)
@@ -105,7 +103,6 @@ class ProductItemService(
                 stock = request.stock,
                 color = color,
                 size = size,
-                weight = weight,
                 discount = discount,
                 variationImageUrl = request.variationImageUrl
             )
@@ -134,5 +131,43 @@ class ProductItemService(
 
         productItemRepository.delete(item)
         return "Item deleted successfully"
+    }
+
+    @Transactional
+    fun updateProductItem(
+        productId: UUID,
+        itemId: UUID,
+        request: ProductItemUpdateRequest
+    ): ProductItem {
+
+        val item = productItemRepository.findByIdOrNull(itemId)
+            ?: throw ProductItemNotFoundException()
+
+        if (item.product.id != productId) {
+            throw ProductItemNotFoundException()
+        }
+
+        val color = request.colorId?.let {
+            colorRepository.findByIdOrNull(it)
+        }
+        val size = request.sizeId?.let {
+            sizeRepository.findByIdOrNull(it)
+        }
+
+        val discount = request.discountId?.let {
+            discountRepository.findByIdOrNull(it)
+        }
+
+        val updatedItem = item.copy(
+            price = request.price ?: item.price,
+            stock = request.stock ?: item.stock,
+            variationImageUrl = request.variationImageUrl ?: item.variationImageUrl,
+            color = color,
+            size = size,
+            discount = discount
+        )
+
+        val savedItem = productItemRepository.save(updatedItem)
+        return savedItem
     }
 }
