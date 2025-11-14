@@ -66,4 +66,18 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     fun existsByTitleAndIdNot(title: String, id: UUID): Boolean
     fun existsByTitle(title: String): Boolean
 
+
+    @Query(
+        """
+        SELECT DISTINCT p FROM Product p
+        JOIN p.productSubCategories psc
+        WHERE psc.subCategory.id = :subCategoryId
+          AND p.store.id = :storeId
+    """
+    )
+    fun findBySubCategoryAndStore(
+        @Param("subCategoryId") subCategoryId: UUID,
+        @Param("storeId") storeId: UUID,
+        pageable: Pageable
+    ): Page<Product>
 }

@@ -1,9 +1,7 @@
 package org.shangahi.sellio_backend.service
 
 import jakarta.transaction.Transactional
-import org.shangahi.sellio_backend.api.dto.request.UserInsertRequest
 import org.shangahi.sellio_backend.api.dto.request.UserUpdateRequest
-import org.shangahi.sellio_backend.api.mapper.toUser
 import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.repository.UserRepository
 import org.shangahi.sellio_backend.service.exception.UserEmailAlreadyExistsException
@@ -20,12 +18,16 @@ class UserService(
     private val storageService: StorageService
 ) {
 
+    fun findUserByPhoneNumber(phoneNumber: String): User? {
+        return userRepository.findByPhoneNumber(phoneNumber)
+    }
+
     fun findById(userId: UUID): User {
         return userRepository.findByIdOrNull(userId)
             ?: throw UserNotFoundException()
     }
 
-    fun insertUser(request: UserInsertRequest): User {
+    fun createUser(request: User): User {
         if (userRepository.existsByPhoneNumber(request.phoneNumber)) {
             throw UserPhoneNumberAlreadyExistsException()
         }
@@ -33,12 +35,14 @@ class UserService(
         if (request.email != null && userRepository.existsByEmail(request.email)) {
             throw UserEmailAlreadyExistsException()
         }
-        return userRepository.save(request.toUser())
+        return userRepository.save(request)
     }
 
-
     @Transactional
-    fun uploadUserAvatar(userId: UUID, file: MultipartFile): User {
+    fun uploadUserAvatar(
+        userId: UUID,
+        file: MultipartFile
+    ): User {
         val user = findById(userId)
 
         user.avatarUrl?.let { oldUrl ->
@@ -56,19 +60,23 @@ class UserService(
     }
 
 
-
-    fun updateUser(userId: UUID, request: UserUpdateRequest): User {
+    fun updateUser(
+        userId: UUID,
+        request: UserUpdateRequest
+    ): User {
 
         val existingUser = userRepository.findByIdOrNull(userId)
             ?: throw UserNotFoundException()
 
-        if (request.phoneNumber != null &&
+        if (
+            request.phoneNumber != null &&
             request.phoneNumber != existingUser.phoneNumber &&
             userRepository.existsByPhoneNumber(request.phoneNumber)
         ) {
             throw UserPhoneNumberAlreadyExistsException()
         }
-        if (request.email != null &&
+        if (
+            request.email != null &&
             request.email != existingUser.email &&
             userRepository.existsByEmail(request.email)
         ) {

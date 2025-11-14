@@ -245,4 +245,12 @@ class ProductService(
             }
         }
     }
+
+    fun getProductsBySubCategoryAndStore(
+        subCategoryId: UUID,
+        storeId: UUID,
+        pageable: Pageable
+    ): Page<Product> {
+        return productRepository.findBySubCategoryAndStore(subCategoryId, storeId, pageable)
+    }
 }

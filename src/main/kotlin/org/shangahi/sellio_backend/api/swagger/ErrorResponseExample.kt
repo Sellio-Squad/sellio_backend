@@ -302,7 +302,84 @@ object ErrorResponseExample {
       "code": "CATEG_004"
     }
 """
-//endregion
+
+    //endregion
+    //region authentication
+
+    const val PHONE_NUMBER_ALREADY_EXISTS = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 409,
+      "error": "Conflict",
+      "message": "This phone number is already registered",
+      "path": "/v1/users",
+      "code": "USER_002"
+    }
+"""
+
+    const val AUTH_INVALID_CREDENTIALS = """
+    {
+    "timestamp": "2025-11-11T13:53:24.370685400Z",
+    "status": 401,
+    "error": "Unauthorized",
+    "message": "Invalid phone number or password",
+    "path": "/auth/login",
+    "code": "AUTH_001"
+   }
+"""
+    const val UNVALID_PHONE_NUMBER = """
+    {
+    "timestamp": "2025-11-11T13:53:24.370685400Z",
+    "status": 400,
+    "error": "Bad Request",
+    "message": "Invalid phone number",
+    "path": "/auth/login",
+    "code": "PHONE_001"
+   }
+"""
+    const val INVALID_PHONE_NUMBER_REGION = """
+    {
+        "timestamp": "2025-11-11T14:12:20.123456700Z",
+        "status": 400,
+        "error": "Bad Request",
+        "message": "Invalid phone number region",
+        "path": "/v1/auth/create/request-otp",
+        "code": "PHONE_002"
+    }
+    """
+    const val OTP_EXPIRED = """
+    {
+        "timestamp": "2025-11-11T14:15:30.123456700Z",
+        "status": 400,
+        "error": "Bad Request",
+        "message": "OTP expired",
+        "path": "/v1/auth/create/verify-otp",
+        "code": "OTP_001"
+    }
+    """
+
+    const val OTP_INVALID = """
+    {
+        "timestamp": "2025-11-11T14:18:40.123456700Z",
+        "status": 400,
+        "error": "Bad Request",
+        "message": "Invalid OTP",
+        "path": "/v1/auth/create/verify-otp",
+        "code": "OTP_002"
+    }
+    """
+    const val AUTH_INVALID_REFRESH_TOKEN = """
+    {
+        "timestamp": "2025-11-11T14:00:00.123456700Z",
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid refresh token",
+        "path": "/v1/auth/refresh-token",
+        "code": "AUTH_002"
+    }
+    """
+
+    //endregion
 
 
     //region Color
