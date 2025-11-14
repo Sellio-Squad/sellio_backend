@@ -188,7 +188,7 @@ object ErrorResponseExample {
       "timestamp": "2025-11-05T21:50:12.995Z",
       "status": 400,
       "error": "Bad Request",
-      "message": "Not enough stock. You requested 10, but only 5 are available",
+      "message": "Not enough stock.",
       "path": "/v1/products",
       "code": "PROD_002"
     }
@@ -202,6 +202,54 @@ object ErrorResponseExample {
       "message": "Sorry, but this product was not found",
       "path": "/v1/products",
       "code": "PROD_004"
+    }
+"""
+//endregion
+
+    //region Product Item
+    const val ITEM_OUT_OF_STOCK =
+        """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 400,
+      "error": "Bad Request",
+      "message": "This product is currently out of stock",
+      "path": "/v1/product-items",
+      "code": "ITEM_001"
+    }
+"""
+
+    const val ITEM_NOT_ENOUGH_STOCK =
+        """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 400,
+      "error": "Bad Request",
+      "message": "Not enough stock.",
+      "path": "/v1/product-items",
+      "code": "ITEM_002"
+    }
+"""
+
+    const val ITEM_NOT_FOUND = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 404,
+      "error": "Not Found",
+      "message": "Sorry, but this ITEM was not found",
+      "path": "/v1/product-items",
+      "code": "ITEM_004"
+    }
+"""
+
+    const val ITEM_IN_USE = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+     "status": 409,
+      "error": "Conflict",
+      "message": "This Product title already exists",
+      "path": "/v1/product-items",
+      "code": "ITEM_003"
     }
 """
 //endregion
