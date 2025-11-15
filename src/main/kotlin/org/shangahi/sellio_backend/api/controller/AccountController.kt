@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import org.shangahi.sellio_backend.api.dto.request.ResetPasswordRequest
 import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
 import org.shangahi.sellio_backend.api.dto.request.LoginRequest
 import org.shangahi.sellio_backend.api.dto.request.RefreshTokenRequest
@@ -9,17 +10,21 @@ import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
 import org.shangahi.sellio_backend.service.AuthenticationService
 import org.shangahi.sellio_backend.service.RegisterService
+import org.shangahi.sellio_backend.service.ResetPasswordService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/v1/auth")
 class AccountController(
     private val authenticationService: AuthenticationService,
-    private val registerService: RegisterService
+    private val registerService: RegisterService,
+    private val resetPasswordService: ResetPasswordService
 ) {
 
     @PostMapping("/login")
@@ -49,5 +54,13 @@ class AccountController(
         @RequestBody request: RefreshTokenRequest
     ): AuthResponse {
         return authenticationService.refreshToken(request.refreshToken)
+    }
+
+    @PostMapping("/reset-password")
+    fun resetPassword(
+        @RequestBody request: ResetPasswordRequest,
+        @AuthenticationPrincipal userId: UUID
+    ) {
+        return resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword, request.confirmPassword)
     }
 }
