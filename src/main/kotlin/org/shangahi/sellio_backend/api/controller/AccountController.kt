@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import org.shangahi.sellio_backend.api.dto.request.ChangePasswordRequest
 import org.shangahi.sellio_backend.api.dto.request.ResetPasswordRequest
 import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
 import org.shangahi.sellio_backend.api.dto.request.LoginRequest
@@ -58,7 +59,7 @@ class AccountController(
 
     @PostMapping("/reset-password")
     fun resetPassword(
-        @RequestBody request: ResetPasswordRequest,
+        @RequestBody request: ChangePasswordRequest,
         @AuthenticationPrincipal userId: UUID
     ) {
         return resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword, request.confirmPassword)
