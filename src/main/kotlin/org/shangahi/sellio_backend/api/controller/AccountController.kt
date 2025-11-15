@@ -58,6 +58,7 @@ class AccountController(
     }
 
     @PostMapping("/reset-password")
+    @AccountDoc.ChangePassword
     fun resetPassword(
         @RequestBody request: ChangePasswordRequest,
         @AuthenticationPrincipal userId: UUID
