@@ -20,8 +20,7 @@ class ColorController(private val colorService: ColorService) {
     @ColorDoc.GetAllColors
     @GetMapping
     fun getAllColors(): List<ColorResponse> {
-        val response = colorService.getAllColors().map { it.toResponse() }
-        return response
+        return colorService.getAllColors().map { it.toResponse() }
     }
 
     @ColorDoc.GetColor

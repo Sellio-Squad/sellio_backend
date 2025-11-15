@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductItemUpdateRequest
+import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.model.OrderStatus
 import org.shangahi.sellio_backend.model.TrendingProduct
@@ -52,29 +53,7 @@ class ProductItemService(
         val product = productRepository.findByIdOrNull(productId)
             ?: throw ProductNotFoundException()
 
-        val color = request.colorId?.let {
-            colorRepository.findByIdOrNull(it)
-        }
-        val size = request.sizeId?.let {
-            sizeRepository.findByIdOrNull(it)
-        }
-        val weight = request.weightId?.let {
-            weightRepository.findByIdOrNull(it)
-        }
-
-        val discount = request.discountId?.let {
-            discountRepository.findByIdOrNull(it)
-        }
-        val productItem = ProductItem(
-            product = product,
-            price = request.price,
-            discount = discount,
-            color = color,
-            size = size,
-            weight = weight,
-            stock = request.stock,
-            variationImageUrl = request.variationImageUrl,
-        )
+        val productItem = mapToProductItem(request, product)
 
         return productItemRepository.save(productItem)
     }
@@ -86,29 +65,33 @@ class ProductItemService(
             ?: throw ProductNotFoundException()
 
         val newItems = requests.map { request ->
-            val color = request.colorId?.let {
-                colorRepository.findByIdOrNull(it)
-            }
-            val size = request.sizeId?.let {
-                sizeRepository.findByIdOrNull(it)
-            }
-
-            val discount = request.discountId?.let {
-                discountRepository.findByIdOrNull(it)
-            }
-
-            ProductItem(
-                product = product,
-                price = request.price,
-                stock = request.stock,
-                color = color,
-                size = size,
-                discount = discount,
-                variationImageUrl = request.variationImageUrl
-            )
+            mapToProductItem(request, product)
         }
 
         return productItemRepository.saveAll(newItems)
+    }
+
+    private fun mapToProductItem(request: ProductItemRequest, product: Product): ProductItem {
+        val color = request.colorId?.let {
+            colorRepository.findByIdOrNull(it)
+        }
+        val size = request.sizeId?.let {
+            sizeRepository.findByIdOrNull(it)
+        }
+
+        val discount = request.discountId?.let {
+            discountRepository.findByIdOrNull(it)
+        }
+        return ProductItem(
+            product = product,
+            price = request.price,
+            discount = discount,
+            color = color,
+            size = size,
+            stock = request.stock,
+            variationImageUrl = request.variationImageUrl,
+        )
+
     }
 
     @Transactional
