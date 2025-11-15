@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.entity
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
+import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
@@ -9,7 +10,7 @@ import java.util.*
 
 @Table(name = "product")
 @Entity
-class Product(
+data class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
@@ -53,4 +54,16 @@ class Product(
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = true)
     val updatedAt: Instant? = null,
-)
+){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Product
+        return id != null && id == other.id
+    }
+    override fun hashCode(): Int = javaClass.hashCode()
+    @Override
+    override fun toString(): String {
+        return "Product(id=$id, title='$title', price=$price)"
+    }
+}

@@ -1,4 +1,4 @@
-package org.shangahi.sellio_backend.api.dto
+package org.shangahi.sellio_backend.api.dto.response
 
 import java.util.*
 
@@ -18,10 +18,10 @@ data class ProductResponse(
 
 data class ProductItemResponse(
     val id: UUID,
-    val price: Double,
+    val price: Double?,
     val discountId: UUID?,
-    val colorId: UUID?,
-    val sizeId: UUID?,
-    val weightId: Int?,
+    val variationImageUrl: String?,
+    val colorId: Int?,
+    val sizeId: Int?,
     val stock: Int
 )

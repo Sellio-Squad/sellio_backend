@@ -6,8 +6,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.shangahi.sellio_backend.api.dto.ProductRequest
-import org.shangahi.sellio_backend.api.dto.ProductResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductRequest
+import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
+import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.swagger.ErrorResponseExample
 
@@ -464,6 +465,109 @@ annotation class ProductDoc {
         ]
     )
     annotation class GetProductByStoreId
+
+    @Operation(
+        summary = "Update Product Details (Partial)",
+        description = "Updates specific fields of an existing product. Only send the fields you want to change.",
+        requestBody = RequestBody(
+            required = true,
+            description = "JSON object with the fields to be updated. All fields are optional.",
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ProductUpdateRequest::class),
+                    examples = [
+                        ExampleObject(
+                            name = "Update Price and Title Example",
+                            value = """
+                                {
+                                  "title": "New Updated Title",
+                                  "price": 199.99
+                                }
+                            """
+                        )
+                    ]
+                )
+            ]
+        ),
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Product updated successfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ProductResponse::class)
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad Request (Validation Error or Malformed JSON)",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "ValidationErrorExample",
+                                value = ErrorResponseExample.VALIDATION_ERROR
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not Found",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "ProductNotFound",
+                                value = ErrorResponseExample.PROD_NOT_FOUND
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Conflict (e.g., Title already exists)",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "ProductAlreadyExist",
+                                value = ErrorResponseExample.PROD_ALREADY_EXIST
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerErrorExample",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+    annotation class UpdateProduct
 
 
 }

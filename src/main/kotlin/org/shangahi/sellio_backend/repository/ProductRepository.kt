@@ -49,6 +49,24 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     )
     fun findAllUsedProductsWithDetails(pageable: Pageable): Page<Product>
 
+    @Query("""
+        SELECT p FROM Product p
+        LEFT JOIN FETCH p.productSubCategories psc
+        LEFT JOIN FETCH psc.subCategory sc
+        LEFT JOIN FETCH p.images
+        LEFT JOIN FETCH p.items
+        WHERE p.store.id = :storeId AND sc.category.id = :categoryId
+    """)
+    fun findCustomProductsByStoreAndCategory(
+        @Param("storeId") storeId: UUID,
+        @Param("categoryId") categoryId: UUID,
+        pageable: Pageable
+    ): Page<Product>
+
+    fun existsByTitleAndIdNot(title: String, id: UUID): Boolean
+    fun existsByTitle(title: String): Boolean
+
+
     @Query(
         """
         SELECT DISTINCT p FROM Product p

@@ -7,8 +7,8 @@ import java.util.*
 @Entity
 data class Color(
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID? = null,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int? = null,
 
     @Column(name = "value", nullable = false)
     val value: String

@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.swagger.doc.CategoryDoc
-import org.shangahi.sellio_backend.api.dto.CategoryRequest
+import org.shangahi.sellio_backend.api.dto.request.CategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.service.CategoryService
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("v1/category")
+@RequestMapping("/v1/category")
 @Tag(name = "Category", description = "Endpoints for managing Category")
 class CategoryController(private val categoryService: CategoryService) {
 
@@ -28,5 +28,11 @@ class CategoryController(private val categoryService: CategoryService) {
     fun createCategory(@RequestBody request: CategoryRequest): ResponseEntity<CategoryResponse> {
         val saved = categoryService.create(request)
         return ResponseEntity.ok(saved)
+    }
+
+    @CategoryDoc.GetCustom
+    @GetMapping("/custom")
+    fun getCustomProductCategories(): List<CategoryResponse> {
+        return categoryService.getCustomProductCategories()
     }
 }

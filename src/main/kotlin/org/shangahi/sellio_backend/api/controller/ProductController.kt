@@ -1,14 +1,17 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.shangahi.sellio_backend.api.dto.ProductRequest
-import org.shangahi.sellio_backend.api.dto.ProductResponse
+import jakarta.validation.Valid
+import org.shangahi.sellio_backend.api.dto.request.ProductRequest
+import org.shangahi.sellio_backend.api.dto.response.ProductResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.ProductDoc
 import org.shangahi.sellio_backend.service.ProductService
+import org.shangahi.sellio_backend.service.StorageService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -22,7 +25,9 @@ import java.util.*
 @RequestMapping("/v1/products")
 @Tag(name = "Product", description = "Endpoints for managing products")
 class ProductController(
-    private val productService: ProductService
+    private val productService: ProductService,
+    private val storageService: StorageService
+
 ) {
 
     @ProductDoc.GetProductByStoreId
@@ -55,9 +60,19 @@ class ProductController(
 
     @ProductDoc.CreateProduct
     @PostMapping("/create")
-    fun create(@RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
+    fun create(@Valid @RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
         val saved = productService.create(request)
         return ResponseEntity.ok(saved)
+    }
+
+    @ProductDoc.UpdateProduct
+    @PutMapping("/{id}")
+    fun updateProduct(
+        @PathVariable id: UUID,
+        @Valid @RequestBody request: ProductUpdateRequest
+    ): ResponseEntity<ProductResponse> {
+        val saved = productService.updateProduct(id, request)
+        return ResponseEntity.ok(saved.toResponse())
     }
 
     @PostMapping("/{productId}/images")
@@ -84,6 +99,28 @@ class ProductController(
         val product = productService.getProductById(productId)
         return ResponseEntity.ok(product.toResponse())
 
+    }
+
+    @GetMapping("/{categoryId}/custom")
+    fun getCustomProductsByCategory(
+        @PathVariable categoryId: UUID,
+        @ParameterObject @PageableDefault(size = 20) pageable: Pageable
+    ): PageResponse<ProductResponse> {
+        return productService.getCustomProductsByCategory(categoryId, pageable)
+    }
+
+    @PostMapping("/custom-design")
+    fun uploadCustomizationImage(
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<String> {
+
+        val fileName = UUID.randomUUID().toString()
+        val imageUrl = storageService.uploadImage(
+            file = file,
+            fileName = fileName,
+            folderName = "custom"
+        )
+        return ResponseEntity.ok(imageUrl)
     }
 
     @GetMapping("/store/{storeId}/subcategory/{subCategoryId}")

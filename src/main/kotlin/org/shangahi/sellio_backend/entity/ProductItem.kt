@@ -18,7 +18,7 @@ data class ProductItem(
     val product: Product,
 
     @Column(name = "price")
-    val price: Double,
+    val price: Double? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "discount_id", nullable = true)
@@ -38,6 +38,9 @@ data class ProductItem(
 
     @Column(name = "stock")
     val stock: Int,
+
+    @Column(name = "variation_image_url", nullable = true)
+    val variationImageUrl: String? = null,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

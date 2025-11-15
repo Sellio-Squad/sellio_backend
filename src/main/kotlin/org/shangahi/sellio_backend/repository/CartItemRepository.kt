@@ -1,17 +1,12 @@
 package org.shangahi.sellio_backend.repository
 
 import org.shangahi.sellio_backend.entity.OrderItem
-import org.shangahi.sellio_backend.model.OrderStatus
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface OrderItemRepository : JpaRepository<OrderItem, UUID> {
+interface CartItemRepository : JpaRepository<OrderItem, UUID> {
 
-    fun findAllByStatus(status: OrderStatus, pageable: Pageable): Page<OrderItem>
     fun existsByProductItemId(productItemId: UUID): Boolean
-
 }

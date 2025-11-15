@@ -1,6 +1,6 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.CategoryRequest
+import org.shangahi.sellio_backend.api.dto.request.CategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.entity.Category
 

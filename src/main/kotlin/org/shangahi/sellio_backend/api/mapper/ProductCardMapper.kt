@@ -1,8 +1,8 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.ProductItemResponse
-import org.shangahi.sellio_backend.api.dto.ProductRequest
-import org.shangahi.sellio_backend.api.dto.ProductResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductItemResponse
+import org.shangahi.sellio_backend.api.dto.request.ProductRequest
+import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductItem
@@ -41,13 +41,15 @@ fun Product.toResponse(): ProductResponse =
         items = this.items.map { it.toResponse() }
     )
 
-fun ProductItem.toResponse(): ProductItemResponse =
-    ProductItemResponse(
+fun ProductItem.toResponse(): ProductItemResponse {
+    val price = this.price ?: this.product.price
+    return ProductItemResponse(
         id = this.id!!,
-        price = this.price,
+        price = price,
         discountId = this.discount?.id,
         colorId = this.color?.id,
         sizeId = this.size?.id,
-        weightId = this.weight?.id,
-        stock = this.stock
+        stock = this.stock,
+        variationImageUrl = this.variationImageUrl,
     )
+}

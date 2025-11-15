@@ -24,6 +24,9 @@ data class CartItem(
     @Column(name = "quantity", nullable = false)
     val quantity: Int,
 
+    @Column(name = "customization_image_url", nullable = true)
+    val customizationImageUrl: String? = null,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Instant? = null,
