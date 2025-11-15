@@ -29,7 +29,7 @@ annotation class AccountDoc {
                             name = "LoginRequestExample",
                             value = """
                             {
-                              "phoneNumber": "07712345678",
+                              "phoneNumber": "+96407712345678",
                               "password": "12345678"
                             }
                         """
@@ -218,7 +218,7 @@ annotation class AccountDoc {
                             name = "VerifyOtpAndCreateUserExample",
                             value = """
                             {
-                              "otp": "1234",
+                              "otp": "9999",
                               "sessionId": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
                             }
                         """

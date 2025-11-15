@@ -7,7 +7,7 @@ import org.shangahi.sellio_backend.service.ForgotPasswordService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/v1/auth/forgot-password")
+@RequestMapping("/v1/forgot-password")
 class ForgotPasswordController(
     private val forgotPasswordService: ForgotPasswordService
 ) {
