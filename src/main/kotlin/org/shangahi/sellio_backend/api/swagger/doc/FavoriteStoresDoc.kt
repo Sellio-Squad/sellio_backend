@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.shangahi.sellio_backend.api.dto.request.FavouriteStoreRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.api.swagger.ErrorResponseExample
@@ -95,13 +94,11 @@ annotation class FavoriteStoresDoc {
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = FavouriteStoreRequest::class),
                     examples = [
                         ExampleObject(
                             name = "ToggleFavoriteExample",
                             value = """
                             {
-                              "userId": "f895cdbe-73fc-4e44-b5db-02f396953f64",
                               "storeId": "57a212fc-e4ac-4f70-90cd-21f95dc600ba"
                             }
                         """

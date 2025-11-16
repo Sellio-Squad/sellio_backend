@@ -1,6 +1,5 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.request.FavouriteStoreRequest
 import org.shangahi.sellio_backend.entity.FavoriteStore
 import org.shangahi.sellio_backend.repository.FavoriteStoreRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
@@ -20,18 +19,20 @@ class FavoriteStoreService(
     private val storeRepository: StoreRepository
 ) {
     @Transactional
-    fun toggleFavoriteStore(request: FavouriteStoreRequest): FavoriteStore {
-        val user = userRepository.findById(request.userId)
+    fun toggleFavoriteStore(
+        userId: UUID,
+        storeId: UUID
+    ): FavoriteStore {
+        val user = userRepository.findById(userId)
             .orElseThrow { UserNotFoundException() }
-        val store = storeRepository.findById(request.storeId)
+        val store = storeRepository.findById(storeId)
             .orElseThrow { StoreNotFoundException() }
 
-        val existingStoreFavorite =
-            favoriteStoreRepository.findFavoriteStoresByUserIdAndStoreId(request.userId, request.storeId)
+        val existingStoreFavorite = favoriteStoreRepository.findFavoriteStoresByUserIdAndStoreId(userId, storeId)
 
         return if (existingStoreFavorite != null) {
 
-            favoriteStoreRepository.deleteFavoriteStoreByUserIdAndStoreId(request.userId, request.storeId)
+            favoriteStoreRepository.deleteFavoriteStoreByUserIdAndStoreId(userId, storeId)
             existingStoreFavorite
         } else {
             favoriteStoreRepository.save(FavoriteStore(user = user, store = store))
