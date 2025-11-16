@@ -1,6 +1,5 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.request.FavoriteProductRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteProductsResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toFavoriteProductsResponse
@@ -34,18 +33,21 @@ class FavoriteProductService(
     }
 
     @Transactional
-    fun toggleFavorite(request: FavoriteProductRequest): String {
+    fun toggleFavorite(
+        productId: UUID,
+        userId: UUID
+    ): String {
 
-        val user = userRepository.findByIdOrNull(request.userId)
+        val user = userRepository.findByIdOrNull(userId)
             ?: throw UserNotFoundException()
 
-        val product = productRepository.findByIdOrNull(request.productId)
+        val product = productRepository.findByIdOrNull(productId)
             ?: throw ProductNotFoundException()
 
-        val existingFavorite = favoriteProductRepository.findByUserIdAndProductId(request.userId, request.productId)
+        val existingFavorite = favoriteProductRepository.findByUserIdAndProductId(userId, productId)
 
         return if (existingFavorite != null) {
-            favoriteProductRepository.deleteByUserIdAndProductId(request.userId, request.productId)
+            favoriteProductRepository.deleteByUserIdAndProductId(userId, productId)
             "Product removed from favorites successfully."
         } else {
             val newFavorite = FavoriteProduct(
