@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.service.exception
 
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_CREDENTIALS
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_REFRESH_TOKEN
+import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_PASSWORD_NOT_MATCH
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_SESSION_ID_NOT_FOUND
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_UNAUTHORIZED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
@@ -38,6 +39,12 @@ class UnauthorizedException : SellioException (
     message = "Unauthorized",
     httpStatus = HttpStatus.UNAUTHORIZED,
     code = AUTH_UNAUTHORIZED
+)
+
+class PasswordNotMatchException : SellioException (
+    message = "Password not match",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = AUTH_PASSWORD_NOT_MATCH
 )
 
 class InvalidOtpException : SellioException (

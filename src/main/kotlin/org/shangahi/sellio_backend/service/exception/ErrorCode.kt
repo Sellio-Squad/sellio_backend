@@ -52,6 +52,7 @@ internal object ErrorCode {
     const val AUTH_INVALID_REFRESH_TOKEN = "AUTH_002"
     const val AUTH_UNAUTHORIZED = "AUTH_003"
     const val AUTH_SESSION_ID_NOT_FOUND = "AUTH_004"
+    const val AUTH_PASSWORD_NOT_MATCH = "AUTH_005"
 
     //PHONE_xxx
     const val INVALID_PHONE_NUMBER = "PHONE_001"

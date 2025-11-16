@@ -29,7 +29,7 @@ annotation class AccountDoc {
                             name = "LoginRequestExample",
                             value = """
                             {
-                              "phoneNumber": "07712345678",
+                              "phoneNumber": "+96407712345678",
                               "password": "12345678"
                             }
                         """
@@ -218,7 +218,7 @@ annotation class AccountDoc {
                             name = "VerifyOtpAndCreateUserExample",
                             value = """
                             {
-                              "otp": "1234",
+                              "otp": "9999",
                               "sessionId": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
                             }
                         """
@@ -385,4 +385,79 @@ annotation class AccountDoc {
         ]
     )
     annotation class RefreshToken
+
+
+    @Operation(
+        summary = "Change password for logged-in user",
+        description = "User must be authenticated. Requires current password and new password.",
+        requestBody = RequestBody(
+            required = true,
+            description = "Current + new passwords",
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ChangePasswordRequest::class),
+                    examples = [
+                        ExampleObject(
+                            name = "ChangePasswordExample",
+                            value = """
+                            {
+                              "currentPassword": "OldPassword123!",
+                              "newPassword": "NewPassword123!",
+                              "confirmPassword": "NewPassword123!"
+                            }
+                            """
+                        )
+                    ]
+                )
+            ]
+        ),
+        responses = [
+            ApiResponse(responseCode = "200", description = "Password updated successfully"),
+            ApiResponse(
+                responseCode = "401",
+                description = "Invalid current password",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InvalidCurrentPassword",
+                                value = ErrorResponseExample.AUTH_INVALID_CREDENTIALS
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "New password mismatch or validation error",
+                content = [
+                    Content(
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(name = "PasswordMismatch", value = ErrorResponseExample.REQUEST_BODY_ERROR)
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerError",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+    annotation class ChangePassword
 }

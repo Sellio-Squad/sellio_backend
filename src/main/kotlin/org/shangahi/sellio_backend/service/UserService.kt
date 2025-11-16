@@ -38,6 +38,10 @@ class UserService(
         return userRepository.save(request)
     }
 
+    fun saveUser(user: User): User {
+        return userRepository.save(user)
+    }
+
     @Transactional
     fun uploadUserAvatar(
         userId: UUID,
