@@ -1,9 +1,6 @@
 package org.shangahi.sellio_backend.api.dto.request
 
-import java.util.*
-
 data class CreateStoreRequest(
-    val ownerId: UUID,
     val title: String,
     val description: String,
     val phoneNumber: String?,

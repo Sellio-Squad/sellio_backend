@@ -14,6 +14,7 @@ import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.net.URI
@@ -27,9 +28,12 @@ class StoreController(
 ) {
     @StoreDoc.CreateStore
     @PostMapping("/create")
-    fun addStore(@RequestBody request: CreateStoreRequest): ResponseEntity<StoreCreationResponse> {
+    fun addStore(
+        @RequestBody request: CreateStoreRequest,
+        @AuthenticationPrincipal ownerId: UUID
+    ): ResponseEntity<StoreCreationResponse> {
 
-        val response = storeService.createStore(request)
+        val response = storeService.createStore(ownerId,request)
 
         val location = URI.create("/v1/stores/${response.id}")
 
