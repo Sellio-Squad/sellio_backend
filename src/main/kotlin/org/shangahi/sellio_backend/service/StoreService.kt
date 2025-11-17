@@ -5,11 +5,9 @@ import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDetailsResponse
+import org.shangahi.sellio_backend.api.mapper.toStoreDiscountResponse
 import org.shangahi.sellio_backend.entity.Store
-import org.shangahi.sellio_backend.repository.ProductRepository
-import org.shangahi.sellio_backend.repository.StoreRatingRepository
-import org.shangahi.sellio_backend.repository.StoreRepository
-import org.shangahi.sellio_backend.repository.UserRepository
+import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -27,7 +25,8 @@ class StoreService(
     private val productRepository: ProductRepository,
     private val storeRepository: StoreRepository,
     private val userRepository: UserRepository,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    private val discountRepository: DiscountRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -38,8 +37,16 @@ class StoreService(
         val featuredPageable = PageRequest.of(0, 10)
         val featuredProductsPage = productRepository.findStoreFeaturedProductsByStoreId(storeId, featuredPageable)
         val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse() }
-
-        return store.toStoreDetailsResponse(featuredProducts)
+        val storeRating = storeRatingRepository.getRatingStats(storeId)
+        val activeStoreDiscounts =
+            discountRepository
+                .findActiveStoreDiscounts(storeId)
+                .map { it.toStoreDiscountResponse() }
+        return store.toStoreDetailsResponse(
+            featuredProducts,
+            storeRating.averageRating,
+            activeStoreDiscounts
+        )
     }
 
     fun getPagedTopStores(pageable: Pageable): Page<Store> {
@@ -60,7 +67,7 @@ class StoreService(
 
     @Transactional
     fun createStore(request: CreateStoreRequest): StoreCreationResponse {
-        if (storeRepository.existsByTitle(request.title)){
+        if (storeRepository.existsByTitle(request.title)) {
             throw StoreTitleAlreadyExistException()
 
         }
