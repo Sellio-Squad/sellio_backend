@@ -78,7 +78,7 @@ annotation class UserDoc {
             )
         ]
     )
-    annotation class GetUserInfo
+    annotation class GetUserProfile
 
 
     @Operation(

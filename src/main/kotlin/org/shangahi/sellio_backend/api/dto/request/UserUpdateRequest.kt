@@ -10,5 +10,5 @@ data class UserUpdateRequest(
     val email: String?,
     val city: String?,
     val country: String?,
-    val avatarUrl: String?
+    val avatarUrl: String?,
 )

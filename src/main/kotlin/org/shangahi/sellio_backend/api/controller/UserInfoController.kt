@@ -8,6 +8,7 @@ import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.UserDoc
 import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -20,25 +21,25 @@ class UserInfoController(
 ) {
 
     @UserDoc.UpdateUser
-    @PutMapping("/{userId}/update")
+    @PutMapping("/update")
     fun updateUser(
-        @PathVariable userId: UUID,
-        @Valid @RequestBody request: UserUpdateRequest
+        @AuthenticationPrincipal userId: UUID,
+        @Valid @RequestBody request: UserUpdateRequest,
     ): ResponseEntity<UserInfoResponse> {
         val updatedUser = userService.updateUser(userId, request)
         return ResponseEntity.ok(updatedUser.toResponse())
     }
 
-    @UserDoc.GetUserInfo
-    @GetMapping("/{userId}")
-    fun getUserProfile(@PathVariable userId: UUID): ResponseEntity<UserInfoResponse> {
+    @UserDoc.GetUserProfile
+    @GetMapping("/profile")
+    fun getUserProfile(@AuthenticationPrincipal userId: UUID): ResponseEntity<UserInfoResponse> {
         val response = userService.findById(userId).toResponse()
         return ResponseEntity.ok(response)
     }
 
-    @PostMapping("/{userId}/avatar")
+    @PostMapping("/avatar")
     fun uploadUserAvatar(
-        @PathVariable userId: UUID,
+        @AuthenticationPrincipal userId: UUID,
         @RequestPart("image") file: MultipartFile
     ): ResponseEntity<UserInfoResponse> {
         val updatedUser = userService.uploadUserAvatar(userId, file)
