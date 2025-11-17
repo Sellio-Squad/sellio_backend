@@ -1,12 +1,12 @@
 package org.shangahi.sellio_backend.api.mapper
 
 import org.shangahi.sellio_backend.api.dto.response.DiscountResponse
+import org.shangahi.sellio_backend.api.dto.response.StoreDiscountResponse
 import org.shangahi.sellio_backend.entity.Discount
-import org.shangahi.sellio_backend.service.exception.InternalServerErrorException
 
 fun Discount.toDiscountResponse(): DiscountResponse {
     return DiscountResponse(
-        id = this.id ?: throw InternalServerErrorException("Discount ID was null during mapping for entity."),
+        id = this.id!!,
         storeId = this.store?.id,
         productId = this.product?.id,
         subCategoryId = this.subCategory?.id,
@@ -14,5 +14,14 @@ fun Discount.toDiscountResponse(): DiscountResponse {
         value = this.value,
         startDate = this.startDate,
         endDate = this.endDate
+    )
+}
+
+fun Discount.toStoreDiscountResponse(): StoreDiscountResponse {
+    return StoreDiscountResponse(
+        id = this.id!!,
+        type = this.type,
+        value = this.value,
+        endDate = this.endDate,
     )
 }

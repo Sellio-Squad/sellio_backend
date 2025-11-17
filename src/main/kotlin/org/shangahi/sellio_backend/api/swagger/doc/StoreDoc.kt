@@ -29,26 +29,35 @@ annotation class StoreDoc {
                             ExampleObject(
                                 name = "Store info",
                                 value = """
-                            {
-                               "id": "57a212fc-e4ac-4f70-90cd-21f95dc600ba",
-                               "ownerId": "f895cdbe-73fc-4e44-b5db-02f396953f64",
-                               "title": "Global Tech Store",
-                               "description": "High-end electronics store for developers.",
-                               "avatarImageURL": null,
-                               "coverImageURL": null,
-                               "phoneNumber": "01212121212",
-                               "city": "Maadi",
-                               "government": "Cairo",
-                               "country": "Egypt",
-                               "featuredProducts": [
-                                   {
-                                       "id": "11111111-a1a1-b2b2-c3c3-111111111111",
-                                       "title": "Razer Gaming Laptop",
-                                       "price": 1500.0,
-                                       "mainImageUrl": null
-                                   }
-                               ]
-                           }
+                           {
+    "id": "57a212fc-e4ac-4f70-90cd-21f95dc600ba",
+    "ownerId": "f895cdbe-73fc-4e44-b5db-02f396953f64",
+    "title": "Global Tech Store",
+    "description": "High-end electronics store for developers.",
+    "avatarImageURL": null,
+    "coverImageURL": null,
+    "phoneNumber": "01212121212",
+    "city": "Maadi",
+    "government": "Cairo",
+    "country": "Egypt",
+    "featuredProducts": [
+        {
+            "id": "11111111-a1a1-b2b2-c3c3-111111111111",
+            "title": "Razer Gaming Laptop",
+            "price": 1500.0,
+            "mainImageUrl": null
+        }
+    ],
+    "avgRating": 4.0,
+    "activeStoreDiscounts": [
+        {
+            "id": "d53bae1d-ef71-4f72-8916-952a2663c6d4",
+            "type": "PERCENTAGE",
+            "value": 10.0,
+            "endDate": "2025-12-13T02:00:56.975107Z"
+        }
+    ]
+}
                         """
                             )
                         ],
