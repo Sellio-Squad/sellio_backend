@@ -66,15 +66,18 @@ class StoreService(
     }
 
     @Transactional
-    fun createStore(request: CreateStoreRequest): StoreCreationResponse {
-        if (storeRepository.existsByTitle(request.title)) {
+    fun createStore(
+        ownerId: UUID,
+        request: CreateStoreRequest
+    ): StoreCreationResponse {
+        if (storeRepository.existsByTitle(request.title)){
             throw StoreTitleAlreadyExistException()
 
         }
 
-        val ownerUser = userRepository.findByIdOrNull(request.ownerId) ?: throw UserNotFoundException()
+        val ownerUser = userRepository.findByIdOrNull(ownerId) ?: throw UserNotFoundException()
 
-        storeCreationValidation(request)
+        storeCreationValidation(ownerId,request)
 
         val newStore = Store(
             owner = ownerUser,
@@ -123,9 +126,12 @@ class StoreService(
         return storeRepository.save(updatedStore)
     }
 
-    private fun storeCreationValidation(request: CreateStoreRequest) {
+    private fun storeCreationValidation(
+        ownerId: UUID,
+        request: CreateStoreRequest
+    ) {
 
-        if (storeRepository.isExistByOwnerId(request.ownerId)) {
+        if (storeRepository.isExistByOwnerId(ownerId)) {
             throw StoreNotOwnerException()
         }
 

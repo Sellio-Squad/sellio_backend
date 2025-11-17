@@ -1,7 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.shangahi.sellio_backend.api.dto.request.FavouriteStoreRequest
 import org.shangahi.sellio_backend.api.dto.response.FavoriteStoreResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
@@ -11,6 +10,7 @@ import org.shangahi.sellio_backend.service.FavoriteStoreService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -21,17 +21,18 @@ class FavoriteStoreController(
     private val favoriteStoreService: FavoriteStoreService
 ) {
     @FavoriteStoresDoc.ToggleFavoriteStores
-    @PostMapping("/toggle")
+    @PostMapping("/toggle/{storeId}")
     fun toggleFavoriteStore(
-        @RequestBody request: FavouriteStoreRequest
+        @PathVariable storeId: UUID,
+        @AuthenticationPrincipal userId: UUID
     ): FavoriteStoreResponse {
-        return favoriteStoreService.toggleFavoriteStore(request).toResponse()
+        return favoriteStoreService.toggleFavoriteStore(userId, storeId).toResponse()
     }
 
     @FavoriteStoresDoc.GetFavoriteStores
-    @GetMapping("/{userId}")
+    @GetMapping
     fun getFavoriteStoresByUserId(
-        @PathVariable userId: UUID,
+        @AuthenticationPrincipal userId: UUID,
         @ParameterObject
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
