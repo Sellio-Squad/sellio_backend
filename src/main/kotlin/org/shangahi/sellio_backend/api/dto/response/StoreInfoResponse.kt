@@ -14,4 +14,6 @@ data class StoreInfoResponse(
     val government: String,
     val country: String,
     val featuredProducts: List<ProductCardResponse>,
+    val avgRating: Double,
+    val activeStoreDiscounts : List<StoreDiscountResponse>
 )
