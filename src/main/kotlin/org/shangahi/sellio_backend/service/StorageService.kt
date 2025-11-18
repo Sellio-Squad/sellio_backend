@@ -40,7 +40,7 @@ class StorageService(
             throw ImageUploadFailedException()
         }
 
-        return "${props.cdnEndpoint}/$key"
+        return "${props.cdnEndpoint}/${props.bucket}/$key"
     }
 
     fun deleteImage(imageUrl: String): Boolean {
