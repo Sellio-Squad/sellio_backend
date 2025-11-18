@@ -5,5 +5,7 @@ import java.util.UUID
 data class TrendingProductResponse(
     val id: UUID,
     val title: String,
-    val sold: Long
+    val sold: Long,
+    val price: Double,
+    val image: String?
 )

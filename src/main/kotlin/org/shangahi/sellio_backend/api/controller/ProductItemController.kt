@@ -28,7 +28,8 @@ class ProductItemController(
     @ProductItemDoc.GetProductItems
     @GetMapping("/{productId}/items")
     fun getProductItems(
-        @PathVariable productId: UUID,): List<ProductItemResponse>{
+        @PathVariable productId: UUID
+    ): List<ProductItemResponse> {
         val productItems = productItemService.getProductItems(productId)
         return productItems.map { it.toResponse() }
     }

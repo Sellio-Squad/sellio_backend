@@ -15,13 +15,3 @@ data class ProductResponse(
     val imageUrls: List<String>,
     val items: List<ProductItemResponse>
 )
-
-data class ProductItemResponse(
-    val id: UUID,
-    val price: Double?,
-    val discountId: UUID?,
-    val variationImageUrl: String?,
-    val colorId: Int?,
-    val sizeId: Int?,
-    val stock: Int
-)
