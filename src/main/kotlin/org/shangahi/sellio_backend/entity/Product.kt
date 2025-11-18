@@ -38,7 +38,7 @@ data class Product(
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     val images: Set<ProductImage> = emptySet(),
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     val price: Double,
 
     @Column(name = "is_used", nullable = false)
