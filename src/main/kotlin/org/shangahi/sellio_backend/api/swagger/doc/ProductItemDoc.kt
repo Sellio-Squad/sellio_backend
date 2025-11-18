@@ -106,7 +106,9 @@ annotation class ProductItemDoc {
                                             {
                                                 "id": "15eceee7-b54b-4af5-85fd-dd233d4312f6",
                                                 "title": "tablet",
-                                                "sold": 0
+                                                "sold": 0,
+                                                "price": 1500.0,
+                                                "image": "https://s3.aws/tablet.jpg"
                                             }
                                         ],
                                         "totalElements": 1,

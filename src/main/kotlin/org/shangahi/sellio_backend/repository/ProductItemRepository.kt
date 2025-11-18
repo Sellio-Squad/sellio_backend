@@ -20,7 +20,9 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
             p.title,
             p.description,
             p.store.id,
-            SUM(oi.quantity)
+            SUM(oi.quantity), 
+            p.price,           
+            p.mainImageURL
         )
         FROM OrderItem oi
         JOIN oi.productItem pi
@@ -42,7 +44,9 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
         p.title,
         p.description,
         p.store.id,
-        0L
+        0L,
+        p.price,
+        p.mainImageURL
     )
     FROM Product p
     ORDER BY p.createdAt DESC
