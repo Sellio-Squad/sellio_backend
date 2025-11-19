@@ -72,13 +72,10 @@ class StoreService(
     ): StoreCreationResponse {
         if (storeRepository.existsByTitle(request.title)){
             throw StoreTitleAlreadyExistException()
-
         }
 
         val ownerUser = userRepository.findByIdOrNull(ownerId) ?: throw UserNotFoundException()
-
         storeCreationValidation(ownerId,request)
-
         val newStore = Store(
             owner = ownerUser,
             title = request.title,
@@ -90,7 +87,6 @@ class StoreService(
         )
 
         val savedStore = storeRepository.save(newStore)
-
         return StoreCreationResponse(
             id = savedStore.id ?: throw StoreNotFoundException(),
             title = savedStore.title,

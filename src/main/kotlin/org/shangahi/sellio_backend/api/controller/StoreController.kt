@@ -6,6 +6,7 @@ import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
+import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreResponse
 import org.shangahi.sellio_backend.api.swagger.doc.StoreDoc
@@ -62,7 +63,7 @@ class StoreController(
         @PageableDefault(page = 0, size = 20) pageable: Pageable
     ): PageResponse<StoreResponse> {
         val storesPage = storeService.searchStoresByTitle(title, city, pageable)
-        return storesPage.toResponse()
+        return storesPage.toPageResponse { it.toStoreResponse() }
     }
 
     @StoreDoc.GetStoreInfo
@@ -78,6 +79,6 @@ class StoreController(
         @PageableDefault(page = 0, size = 20) pageable: Pageable
     ): PageResponse<StoreResponse> {
         val storesPage = storeService.getPagedTopStores(pageable)
-        return storesPage.toResponse()
+        return storesPage.toPageResponse { it.toStoreResponse() }
     }
 }
