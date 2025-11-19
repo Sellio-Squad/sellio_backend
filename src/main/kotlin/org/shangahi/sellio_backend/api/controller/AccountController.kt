@@ -8,22 +8,28 @@ import org.shangahi.sellio_backend.api.dto.request.RefreshTokenRequest
 import org.shangahi.sellio_backend.api.dto.request.VerifyOtpRequest
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
+import org.shangahi.sellio_backend.api.dto.response.UserInfoResponse
+import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
 import org.shangahi.sellio_backend.service.AuthenticationService
 import org.shangahi.sellio_backend.service.RegisterService
 import org.shangahi.sellio_backend.service.ResetPasswordService
+import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @RestController
 @RequestMapping("/v1/auth")
 class AccountController(
     private val authenticationService: AuthenticationService,
+    private val userService: UserService,
     private val registerService: RegisterService,
     private val resetPasswordService: ResetPasswordService
 ) {
@@ -65,4 +71,14 @@ class AccountController(
     ) {
         return resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword, request.confirmPassword)
     }
+
+    @PostMapping("/avatar")
+    fun uploadUserAvatar(
+        @AuthenticationPrincipal userId: UUID,
+        @RequestPart("image") file: MultipartFile
+    ): ResponseEntity<UserInfoResponse> {
+        val updatedUser = userService.uploadUserAvatar(userId, file)
+        return ResponseEntity.ok(updatedUser.toResponse())
+    }
+
 }
