@@ -2,12 +2,14 @@ package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.request.CreateStoreRequest
+import org.shangahi.sellio_backend.api.dto.request.StoreCardResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
+import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreResponse
 import org.shangahi.sellio_backend.api.swagger.doc.StoreDoc
 import org.shangahi.sellio_backend.service.StoreService
@@ -61,9 +63,9 @@ class StoreController(
         @RequestParam(required = false) city: String?,
         @ParameterObject
         @PageableDefault(page = 0, size = 20) pageable: Pageable
-    ): PageResponse<StoreResponse> {
+    ): PageResponse<StoreCardResponse> {
         val storesPage = storeService.searchStoresByTitle(query, city, pageable)
-        return storesPage.toPageResponse { it.toStoreResponse() }
+        return storesPage.toPageResponse { it }
     }
 
     @StoreDoc.GetStoreInfo
@@ -77,8 +79,8 @@ class StoreController(
     fun getTopStores(
         @ParameterObject
         @PageableDefault(page = 0, size = 20) pageable: Pageable
-    ): PageResponse<StoreResponse> {
+    ): PageResponse<StoreCardResponse> {
         val storesPage = storeService.getPagedTopStores(pageable)
-        return storesPage.toPageResponse { it.toStoreResponse() }
+        return storesPage.toPageResponse { it }
     }
 }

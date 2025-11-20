@@ -4,6 +4,8 @@ import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
@@ -14,6 +16,8 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.*
+import org.shangahi.sellio_backend.security.SecurityUtils
 import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -35,7 +39,8 @@ class ProductService(
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
     private val weightRepository: WeightRepository,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    private val favoriteProductRepository: FavoriteProductRepository
 ) {
     @Transactional(readOnly = true)
     fun getStoreProducts(storeId: UUID, pageable: Pageable): Page<Product> {
@@ -231,6 +236,17 @@ class ProductService(
         return productPage.toPageResponse { it.toResponse() }
     }
 
+
+    @Transactional(readOnly = true)
+    fun getProductsBySubCategoryAndStore(
+        subCategoryId: UUID,
+        storeId: UUID,
+        pageable: Pageable
+    ): Page<Product> {
+        return productRepository.findBySubCategoryAndStore(subCategoryId, storeId, pageable)
+    }
+
+
     private fun checkSubCategoryIsExist(subCategoryIds: List<UUID>) {
         subCategoryIds.forEach { subCategoryId ->
             if (!subCategoryRepository.existsById(subCategoryId)) {
@@ -239,11 +255,28 @@ class ProductService(
         }
     }
 
-    fun getProductsBySubCategoryAndStore(
-        subCategoryId: UUID,
-        storeId: UUID,
-        pageable: Pageable
-    ): Page<Product> {
-        return productRepository.findBySubCategoryAndStore(subCategoryId, storeId, pageable)
+
+    private fun mapPageToResponseWithFavorites(productPage: Page<Product>): PageResponse<ProductCardResponse> {
+
+        if (productPage.isEmpty) {
+            return productPage.toPageResponse { it.toProductCardResponse(false) }
+        }
+
+        val currentUserId = SecurityUtils.getCurrentUserId()
+
+        val productIds = productPage.content.map { it.id!! }
+
+        val favoriteIds = if (currentUserId != null) {
+            favoriteProductRepository.findFavoriteProductIdsByUserIdAndProductIds(currentUserId, productIds)
+        } else {
+            emptySet()
+        }
+
+        return productPage.toPageResponse { product ->
+            product.toProductCardResponse(
+                isFavorite = favoriteIds.contains(product.id)
+            )
+        }
     }
 }
+

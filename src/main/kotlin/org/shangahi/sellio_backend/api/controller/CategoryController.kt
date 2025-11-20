@@ -26,13 +26,13 @@ class CategoryController(private val categoryService: CategoryService) {
     @CategoryDoc.InsertCategory
     @PostMapping("/create")
     fun createCategory(@RequestBody request: CategoryRequest): ResponseEntity<CategoryResponse> {
-        val saved = categoryService.create(request)
+        val saved = categoryService.create(request).toResponse()
         return ResponseEntity.ok(saved)
     }
 
     @CategoryDoc.GetCustom
     @GetMapping("/custom")
     fun getCustomProductCategories(): List<CategoryResponse> {
-        return categoryService.getCustomProductCategories()
+        return categoryService.getCustomProductCategories().map { it.toResponse() }
     }
 }
