@@ -257,11 +257,11 @@ class ProductService(
         val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
         val isOrdered = product.items.any { orderItemRepository.existsByProductItemId(it.id!!) }
 
-        if (product.mainImageURL != null) {
-            storageService.deleteImage(product.mainImageURL)
-        }
         if (isOrdered) {
             throw ProductItemInUseException()
+        }
+        if (product.mainImageURL != null) {
+            storageService.deleteImage(product.mainImageURL)
         }
         product.items.forEach { item ->
             item.variationImageUrl?.let { storageService.deleteImage(it) }
