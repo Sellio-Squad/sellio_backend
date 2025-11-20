@@ -50,12 +50,13 @@ class ProductController(
     @GetMapping("/search")
     fun searchProducts(
         @RequestParam("query", required = true) query: String,
+        @RequestParam("city", required = false) city: String?,
         @ParameterObject
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
     ): PageResponse<ProductCardResponse> {
 
-        return productService.searchProductsByTitle(query, pageable)
+        return productService.searchProductsByTitle(query, city, pageable)
             .toPageResponse { it.toProductCardResponse() }
     }
 

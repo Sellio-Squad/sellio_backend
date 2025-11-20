@@ -2,13 +2,11 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductRequest
-import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
-import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
-import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.util.SELLIO_STORE_ID
 import org.shangahi.sellio_backend.entity.Product
@@ -16,11 +14,7 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
-import org.shangahi.sellio_backend.service.exception.ProductAlreadyExistException
-import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
-import org.shangahi.sellio_backend.service.exception.ProductSavingException
-import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
-import org.shangahi.sellio_backend.service.exception.SubCategoryNotFoundException
+import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -51,19 +45,26 @@ class ProductService(
         return productRepository.findAllByStoreId(storeId, pageable)
     }
 
-    fun searchProductsByTitle(title: String, pageable: Pageable): Page<Product> {
+    fun searchProductsByTitle(
+        title: String,
+        city: String?,
+        pageable: Pageable
+    ): Page<Product> {
         val trimmedTitle = title.trim()
 
         if (trimmedTitle.isBlank()) {
             return Page.empty(pageable)
         }
-
-        return productRepository.findByTitleContainingIgnoreCase(title, pageable)
+        return if (city.isNullOrBlank()) {
+            productRepository.findByTitleContainingIgnoreCase(title, pageable)
+        } else {
+            productRepository.findByTitleContainingIgnoreCaseAndStoreCityIgnoreCase(title, city, pageable)
+        }
     }
 
     @Transactional
     fun create(request: ProductRequest): Product {
-        if (productRepository.existsByTitle(request.title)){
+        if (productRepository.existsByTitle(request.title)) {
             throw ProductAlreadyExistException()
         }
         checkSubCategoryIsExist(request.subCategoryIds)
@@ -104,12 +105,12 @@ class ProductService(
 
         val savedProduct = productRepository.save(productToUpdate)
 
-        request.items?.let{
+        request.items?.let {
             productItemRepository.deleteAll(existingProduct.items)
             createProductItems(request.items, savedProduct)
         }
 
-        request.subCategoryIds?.let{
+        request.subCategoryIds?.let {
             productSubcategoryRepository.deleteAll(existingProduct.productSubCategories)
             createProductSubCategories(request.subCategoryIds, savedProduct)
         }
