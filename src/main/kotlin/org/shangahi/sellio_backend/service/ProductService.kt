@@ -17,6 +17,8 @@ import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.service.exception.*
+import org.shangahi.sellio_backend.service.exception.*
+import org.shangahi.sellio_backend.security.SecurityUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -49,7 +51,7 @@ class ProductService(
 
         val productPage = productRepository.findAllByStoreId(storeId, pageable)
 
-        return productPage.toPageResponse { it.toProductCardResponse() }
+        return mapPageToResponseWithFavorites(productPage)
     }
 
     fun searchProductsByTitle(title: String, pageable: Pageable): PageResponse<ProductCardResponse> {
@@ -58,13 +60,13 @@ class ProductService(
 
         if (trimmedTitle.isBlank()) {
             val emptyPage: Page<Product> = Page.empty(pageable)
-            return emptyPage.toPageResponse { it.toProductCardResponse() }
+            return mapPageToResponseWithFavorites(emptyPage)
         }
 
 
         val productPage = productRepository.findByTitleContainingIgnoreCase(title, pageable)
 
-        return productPage.toPageResponse { it.toProductCardResponse() }
+        return mapPageToResponseWithFavorites(productPage)
     }
 
     @Transactional
@@ -236,6 +238,17 @@ class ProductService(
         return productPage.toPageResponse { it.toResponse() }
     }
 
+
+    @Transactional(readOnly = true)
+    fun getProductsBySubCategoryAndStore(
+        subCategoryId: UUID,
+        storeId: UUID,
+        pageable: Pageable
+    ): Page<Product> {
+        return productRepository.findBySubCategoryAndStore(subCategoryId, storeId, pageable)
+    }
+
+
     private fun checkSubCategoryIsExist(subCategoryIds: List<UUID>) {
         subCategoryIds.forEach { subCategoryId ->
             if (!subCategoryRepository.existsById(subCategoryId)) {
@@ -244,12 +257,28 @@ class ProductService(
         }
     }
 
-    fun getProductsBySubCategoryAndStore(
-        subCategoryId: UUID,
-        storeId: UUID,
-        pageable: Pageable
-    ): Page<Product> {
-        return productRepository.findBySubCategoryAndStore(subCategoryId, storeId, pageable)
+
+    private fun mapPageToResponseWithFavorites(productPage: Page<Product>): PageResponse<ProductCardResponse> {
+
+        if (productPage.isEmpty) {
+            return productPage.toPageResponse { it.toProductCardResponse(false) }
+        }
+
+        val currentUserId = SecurityUtils.getCurrentUserId()
+
+        val productIds = productPage.content.map { it.id!! }
+
+        val favoriteIds = if (currentUserId != null) {
+            favoriteProductRepository.findFavoriteProductIdsByUserIdAndProductIds(currentUserId, productIds)
+        } else {
+            emptySet()
+        }
+
+        return productPage.toPageResponse { product ->
+            product.toProductCardResponse(
+                isFavorite = favoriteIds.contains(product.id)
+            )
+        }
     }
 
     @Transactional
@@ -275,3 +304,4 @@ class ProductService(
         return "Product deleted successfully"
     }
 }
+
