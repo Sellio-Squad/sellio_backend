@@ -17,6 +17,7 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
     fun findByProductId(id: UUID, pageable: Pageable): Page<Discount>
     fun findBySubCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
     fun findByCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
+
     @Query("""
         SELECT d FROM Discount d
         WHERE d.store.id = :storeId
@@ -29,4 +30,6 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
         @Param("storeId") storeId: UUID,
         @Param("now") now: Instant = Instant.now()
     ): List<Discount>
+    fun deleteByProductId(productId: UUID)
+    fun deleteByStoreId(storeId: UUID)
 }

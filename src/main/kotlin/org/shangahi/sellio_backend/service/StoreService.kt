@@ -25,6 +25,9 @@ class StoreService(
     private val productRepository: ProductRepository,
     private val storeRepository: StoreRepository,
     private val userRepository: UserRepository,
+    private val orderItemRepository: OrderItemRepository,
+    private val favoriteProductRepository: FavoriteProductRepository,
+    private val favoriteStoreRepository: FavoriteStoreRepository,
     private val storageService: StorageService,
     private val discountRepository: DiscountRepository
 ) {
@@ -34,18 +37,24 @@ class StoreService(
 
         val store = storeRepository.findByIdOrNull(storeId)
             ?: throw StoreNotFoundException()
+
         val featuredPageable = PageRequest.of(0, 10)
-        val featuredProductsPage = productRepository.findStoreFeaturedProductsByStoreId(storeId, featuredPageable)
-        val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse() }
-        val storeRating = storeRatingRepository.getRatingStats(storeId)
-        val activeStoreDiscounts =
-            discountRepository
-                .findActiveStoreDiscounts(storeId)
+        val featuredProductsPage =
+            productRepository.findStoreFeaturedProductsByStoreId(storeId, featuredPageable)
+
+        val featuredProducts =
+            featuredProductsPage.content.map { it.toProductCardResponse() }
+
+        val ratingStats = storeRatingRepository.getRatingStats(storeId)
+
+        val discounts =
+            discountRepository.findActiveStoreDiscounts(storeId)
                 .map { it.toStoreDiscountResponse() }
+
         return store.toStoreDetailsResponse(
             featuredProducts,
-            storeRating.averageRating,
-            activeStoreDiscounts
+            ratingStats.averageRating,
+            discounts
         )
     }
 
@@ -55,14 +64,47 @@ class StoreService(
 
     fun searchStoresByTitle(title: String, city: String?, pageable: Pageable): Page<Store> {
         val trimmedTitle = title.trim()
-        if (trimmedTitle.isBlank()) {
-            return Page.empty(pageable)
-        }
-        return if (!city.isNullOrBlank()) {
+        if (trimmedTitle.isBlank()) return Page.empty(pageable)
+
+        return if (!city.isNullOrBlank())
             storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
-        } else {
+        else
             storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
+    }
+    @Transactional
+    fun deleteStore(storeId: UUID): String {
+
+        val store = storeRepository.findByIdOrNull(storeId)
+            ?: throw StoreNotFoundException()
+        val products = productRepository.findAllByStoreId(storeId)
+        products.forEach { product ->
+            val inUse = product.items.any { item ->
+                orderItemRepository.existsByProductItemId(item.id!!)
+            }
+            if (inUse) throw ProductItemInUseException()
         }
+        store.avatarImageURL?.let { storageService.deleteImage(it) }
+        store.coverImageURL?.let { storageService.deleteImage(it) }
+        products.forEach { product ->
+
+            product.mainImageURL?.let { storageService.deleteImage(it) }
+
+            product.items.forEach { item ->
+                item.variationImageUrl?.let { storageService.deleteImage(it) }
+            }
+
+            product.images.forEach { img ->
+                storageService.deleteImage(img.imageUrl)
+            }
+
+            discountRepository.deleteByProductId(product.id!!)
+            favoriteProductRepository.deleteByProductId(product.id!!)
+        }
+        discountRepository.deleteByStoreId(storeId)
+        favoriteStoreRepository.deleteByStoreId(storeId)
+        productRepository.deleteAll(products)
+        storeRepository.delete(store)
+        return "Store deleted successfully"
     }
 
     @Transactional
@@ -70,17 +112,17 @@ class StoreService(
         ownerId: UUID,
         request: CreateStoreRequest
     ): StoreCreationResponse {
-        if (storeRepository.existsByTitle(request.title)){
+
+        if (storeRepository.existsByTitle(request.title))
             throw StoreTitleAlreadyExistException()
 
-        }
+        val owner = userRepository.findByIdOrNull(ownerId)
+            ?: throw UserNotFoundException()
 
-        val ownerUser = userRepository.findByIdOrNull(ownerId) ?: throw UserNotFoundException()
-
-        storeCreationValidation(ownerId,request)
+        storeCreationValidation(ownerId, request)
 
         val newStore = Store(
-            owner = ownerUser,
+            owner = owner,
             title = request.title,
             description = request.description,
             phoneNumber = request.phoneNumber,
@@ -92,9 +134,9 @@ class StoreService(
         val savedStore = storeRepository.save(newStore)
 
         return StoreCreationResponse(
-            id = savedStore.id ?: throw StoreNotFoundException(),
+            id = savedStore.id!!,
             title = savedStore.title,
-            ownerId = savedStore.owner.id ?: throw UserNotFoundException(),
+            ownerId = savedStore.owner.id!!,
             avatarUrl = savedStore.avatarImageURL.orEmpty(),
             coverUrl = savedStore.coverImageURL.orEmpty(),
             createdAt = savedStore.createdAt ?: Instant.now()
@@ -107,39 +149,38 @@ class StoreService(
         newAvatar: MultipartFile?,
         newCover: MultipartFile?
     ): Store {
-        val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
-        var updatedStore = store
+        val store = storeRepository.findByIdOrNull(storeId)
+            ?: throw StoreNotFoundException()
+
+        var updated = store
 
         if (newAvatar != null && !newAvatar.isEmpty) {
             store.avatarImageURL?.let { storageService.deleteImage(it) }
             val avatarUrl = storageService.uploadImage(newAvatar, store.title, "stores/avatars")
-            updatedStore = updatedStore.copy(avatarImageURL = avatarUrl)
+            updated = updated.copy(avatarImageURL = avatarUrl)
         }
 
         if (newCover != null && !newCover.isEmpty) {
             store.coverImageURL?.let { storageService.deleteImage(it) }
             val coverUrl = storageService.uploadImage(newCover, store.title, "stores/covers")
-            updatedStore = updatedStore.copy(coverImageURL = coverUrl)
+            updated = updated.copy(coverImageURL = coverUrl)
         }
 
-        return storeRepository.save(updatedStore)
+        return storeRepository.save(updated)
     }
 
-    private fun storeCreationValidation(
-        ownerId: UUID,
-        request: CreateStoreRequest
-    ) {
+    private fun storeCreationValidation(ownerId: UUID, request: CreateStoreRequest) {
 
-        if (storeRepository.isExistByOwnerId(ownerId)) {
+        if (storeRepository.isExistByOwnerId(ownerId))
             throw StoreNotOwnerException()
-        }
 
-        if (storeRepository.existsByTitle(request.title)) {
+        if (storeRepository.existsByTitle(request.title))
             throw StoreTitleAlreadyExistException()
-        }
 
-        if (request.phoneNumber != null && storeRepository.existsByPhoneNumber(request.phoneNumber)) {
+        if (request.phoneNumber != null &&
+            storeRepository.existsByPhoneNumber(request.phoneNumber)
+        ) {
             throw StorePhoneNumberExistException()
         }
     }

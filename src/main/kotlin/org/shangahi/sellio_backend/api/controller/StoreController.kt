@@ -49,8 +49,15 @@ class StoreController(
         @RequestPart("coverImage", required = false) coverImage: MultipartFile?
     ): ResponseEntity<StoreResponse> {
 
-        val response = storeService.uploadStoreImages(storeId, avatarImage, coverImage)
-        return ResponseEntity.ok(response.toStoreResponse())
+        val store = storeService.uploadStoreImages(storeId, avatarImage, coverImage)
+
+        return ResponseEntity.ok(store.toStoreResponse())
+    }
+
+    @DeleteMapping("/{storeId}")
+    fun deleteStore(@PathVariable storeId: UUID): ResponseEntity<String> {
+        val message = storeService.deleteStore(storeId)
+        return ResponseEntity.ok(message)
     }
 
     @StoreDoc.SearchByStoreTitle
