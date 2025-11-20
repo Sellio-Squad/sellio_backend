@@ -72,13 +72,13 @@ class AccountController(
         return resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword, request.confirmPassword)
     }
 
-    @PostMapping("/avatar")
-    fun uploadUserAvatar(
-        @AuthenticationPrincipal userId: UUID,
+
+    @PostMapping("/create/pending-avatar")
+    fun uploadTempAvatar(
         @RequestPart("image") file: MultipartFile
-    ): ResponseEntity<UserInfoResponse> {
-        val updatedUser = userService.uploadUserAvatar(userId, file)
-        return ResponseEntity.ok(updatedUser.toResponse())
+    ): ResponseEntity<String> {
+        val url = userService.uploadPendingAvatar(file)
+        return ResponseEntity.ok(url)
     }
 
 }
