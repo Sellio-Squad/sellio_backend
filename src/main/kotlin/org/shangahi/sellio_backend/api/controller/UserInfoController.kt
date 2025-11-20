@@ -10,13 +10,14 @@ import org.shangahi.sellio_backend.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @RestController
 @RequestMapping("/v1/user")
 @Tag(name = "User", description = "Endpoints for managing user operations")
 class UserInfoController(
-    private val userService: UserService
+    private val userService: UserService,
 ) {
 
     @UserDoc.UpdateUser
@@ -35,4 +36,14 @@ class UserInfoController(
         val response = userService.findById(userId).toResponse()
         return ResponseEntity.ok(response)
     }
+
+    @PostMapping("/avatar")
+    fun uploadUserAvatar(
+        @AuthenticationPrincipal userId: UUID,
+        @RequestPart("image") file: MultipartFile
+    ): ResponseEntity<UserInfoResponse> {
+        val updatedUser = userService.uploadUserAvatar(userId, file)
+        return ResponseEntity.ok(updatedUser.toResponse())
+    }
+
 }
