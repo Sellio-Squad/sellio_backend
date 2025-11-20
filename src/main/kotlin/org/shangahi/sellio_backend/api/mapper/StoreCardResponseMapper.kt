@@ -8,13 +8,13 @@ import kotlin.collections.get
 
 fun Store.toStoreCardResponse(
     discountsMap: Map<UUID, Double>,
-    favoriteStoreIds: Set<UUID>
+    isFavorite: Boolean
 ): StoreCardResponse{
     return StoreCardResponse(
         id = id,
         title = title,
         coverImageURL = coverImageURL,
         maxDiscount = discountsMap[id],
-        isFavorite = favoriteStoreIds.contains(id)
+        isFavorite = isFavorite
     )
 }

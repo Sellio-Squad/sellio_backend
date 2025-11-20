@@ -179,7 +179,7 @@ class StoreService(
         } else {
             emptySet()
         }
-        return storesPage.map { store -> store.toStoreCardResponse(discountsMap, favoriteStoreIds) }
+        return storesPage.map { store -> store.toStoreCardResponse(discountsMap, favoriteStoreIds.contains(store.id)) }
     }
 
 }
