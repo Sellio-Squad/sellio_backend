@@ -63,6 +63,15 @@ class UserService(
         return userRepository.save(updatedUser)
     }
 
+    fun uploadPendingAvatar(file: MultipartFile): String {
+        return storageService.uploadImage(
+            file = file,
+            fileName = "pending",
+            folderName = "pending/avatars"
+        )
+    }
+
+
 
     fun updateUser(
         userId: UUID,
