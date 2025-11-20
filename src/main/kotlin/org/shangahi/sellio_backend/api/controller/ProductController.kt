@@ -137,4 +137,11 @@ class ProductController(
         val productsPage = productService.getProductsBySubCategoryAndStore(subCategoryId, storeId, pageable)
         return productsPage.toPageResponse { it.toResponse() }
     }
+
+    @DeleteMapping("/{id}")
+    fun deleteProduct(@PathVariable id: UUID): ResponseEntity<String> {
+        val message = productService.deleteProduct(id)
+        return ResponseEntity.ok(message)
+    }
+
 }
