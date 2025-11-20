@@ -77,7 +77,7 @@ class StoreService(
         if (trimmedTitle.isBlank()) {
             return Page.empty(pageable)
         }
-        return if (city.isNullOrBlank()) {
+        val storePage = if (city.isNullOrBlank()) {
             storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
         } else {
             storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)

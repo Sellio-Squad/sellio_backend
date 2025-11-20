@@ -43,7 +43,6 @@ class ProductController(
         pageable: Pageable
     ): PageResponse<ProductCardResponse> {
         return productService.getStoreProducts(storeId, pageable)
-            .toPageResponse { it.toProductCardResponse() }
     }
 
     @ProductDoc.SearchByProductTitle
@@ -57,7 +56,6 @@ class ProductController(
     ): PageResponse<ProductCardResponse> {
 
         return productService.searchProductsByTitle(query, city, pageable)
-            .toPageResponse { it.toProductCardResponse() }
     }
 
     @ProductDoc.CreateProduct

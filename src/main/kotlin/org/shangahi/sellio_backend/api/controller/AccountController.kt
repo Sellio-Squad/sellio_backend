@@ -24,7 +24,6 @@ import java.util.UUID
 @RequestMapping("/v1/auth")
 class AccountController(
     private val authenticationService: AuthenticationService,
-    private val userService: UserService,
     private val registerService: RegisterService,
     private val resetPasswordService: ResetPasswordService
 ) {

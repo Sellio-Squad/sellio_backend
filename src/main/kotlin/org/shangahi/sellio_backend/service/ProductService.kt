@@ -6,9 +6,9 @@ import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductResponse
-import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
+import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.util.SELLIO_STORE_ID
 import org.shangahi.sellio_backend.entity.Product
@@ -16,7 +16,6 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
-import org.shangahi.sellio_backend.service.exception.*
 import org.shangahi.sellio_backend.security.SecurityUtils
 import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
@@ -43,28 +42,32 @@ class ProductService(
     private val favoriteProductRepository: FavoriteProductRepository
 ) {
     @Transactional(readOnly = true)
-    fun getStoreProducts(storeId: UUID, pageable: Pageable): Page<Product> {
+    fun getStoreProducts(storeId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
         if (!storeRepository.existsById(storeId)) {
             throw StoreNotFoundException()
         }
-        return productRepository.findAllByStoreId(storeId, pageable)
+        val productPage = productRepository.findAllByStoreId(storeId, pageable)
+        return mapPageToResponseWithFavorites(productPage)
+
     }
 
     fun searchProductsByTitle(
         title: String,
         city: String?,
         pageable: Pageable
-    ): Page<Product> {
+    ): PageResponse<ProductCardResponse> {
         val trimmedTitle = title.trim()
 
         if (trimmedTitle.isBlank()) {
-            return Page.empty(pageable)
+            return mapPageToResponseWithFavorites(Page.empty(pageable))
         }
-        return if (city.isNullOrBlank()) {
+        val productPage = if (city.isNullOrBlank()) {
             productRepository.findByTitleContainingIgnoreCase(title, pageable)
         } else {
             productRepository.findByTitleContainingIgnoreCaseAndStoreCityIgnoreCase(title, city, pageable)
         }
+        return mapPageToResponseWithFavorites(productPage)
+
     }
 
     @Transactional
