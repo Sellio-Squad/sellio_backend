@@ -1,14 +1,17 @@
 package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.CreateStoreRequest
+import org.shangahi.sellio_backend.api.dto.request.StoreCardResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
+import org.shangahi.sellio_backend.api.mapper.toStoreCardResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDetailsResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDiscountResponse
 import org.shangahi.sellio_backend.entity.Store
 import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.service.exception.*
+import org.shangahi.sellio_backend.security.SecurityUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -26,7 +29,9 @@ class StoreService(
     private val storeRepository: StoreRepository,
     private val userRepository: UserRepository,
     private val storageService: StorageService,
-    private val discountRepository: DiscountRepository
+    private val favoriteStoreRepository: FavoriteStoreRepository,
+    private val discountRepository: DiscountRepository,
+    private val favoriteProductRepository: FavoriteProductRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -36,7 +41,14 @@ class StoreService(
             ?: throw StoreNotFoundException()
         val featuredPageable = PageRequest.of(0, 10)
         val featuredProductsPage = productRepository.findStoreFeaturedProductsByStoreId(storeId, featuredPageable)
-        val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse() }
+        val currentUserId = SecurityUtils.getCurrentUserId()
+        val featuredProductIds = featuredProductsPage.content.map { it.id!! }
+        val favoriteProductIds = if (currentUserId != null && featuredProductIds.isNotEmpty()) {
+            favoriteProductRepository.findFavoriteProductIdsByUserIdAndProductIds(currentUserId, featuredProductIds)
+        } else {
+            emptySet()
+        }
+        val featuredProducts = featuredProductsPage.content.map { product -> product.toProductCardResponse(favoriteProductIds.contains(product.id)) }
         val storeRating = storeRatingRepository.getRatingStats(storeId)
         val activeStoreDiscounts =
             discountRepository
@@ -49,20 +61,27 @@ class StoreService(
         )
     }
 
-    fun getPagedTopStores(pageable: Pageable): Page<Store> {
-        return storeRatingRepository.findTopStoresByHighestRating(pageable)
+
+    @Transactional(readOnly = true)
+    fun getPagedTopStores(pageable: Pageable): Page<StoreCardResponse> {
+
+        val storesPage = storeRatingRepository.findTopStoresByHighestRating(pageable)
+        return mapStoresToStoreCardPage(storesPage)
     }
 
-    fun searchStoresByTitle(title: String, city: String?, pageable: Pageable): Page<Store> {
+
+    @Transactional(readOnly = true)
+    fun searchStoresByTitle(title: String, city: String?, pageable: Pageable): Page<StoreCardResponse> {
         val trimmedTitle = title.trim()
         if (trimmedTitle.isBlank()) {
             return Page.empty(pageable)
         }
-        return if (!city.isNullOrBlank()) {
+        val storePage = if (!city.isNullOrBlank()) {
             storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
         } else {
             storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
         }
+        return mapStoresToStoreCardPage(storePage)
     }
 
     @Transactional
@@ -70,14 +89,14 @@ class StoreService(
         ownerId: UUID,
         request: CreateStoreRequest
     ): StoreCreationResponse {
-        if (storeRepository.existsByTitle(request.title)){
+        if (storeRepository.existsByTitle(request.title)) {
             throw StoreTitleAlreadyExistException()
 
         }
 
         val ownerUser = userRepository.findByIdOrNull(ownerId) ?: throw UserNotFoundException()
 
-        storeCreationValidation(ownerId,request)
+        storeCreationValidation(ownerId, request)
 
         val newStore = Store(
             owner = ownerUser,
@@ -143,4 +162,24 @@ class StoreService(
             throw StorePhoneNumberExistException()
         }
     }
+
+
+    private fun mapStoresToStoreCardPage(storesPage: Page<Store>): Page<StoreCardResponse> {
+
+        if (storesPage.isEmpty) {
+            return Page.empty(storesPage.pageable)
+        }
+
+        val storeIds = storesPage.content.map { it.id!! }
+        val currentUserId = SecurityUtils.getCurrentUserId()
+        val discountsStats = discountRepository.findMaxDiscountByStoreIds(storeIds)
+        val discountsMap = discountsStats.associate { it.storeId to it.maxDiscount }
+        val favoriteStoreIds = if (currentUserId != null) {
+            favoriteStoreRepository.findFavoriteStoreIdsByUserIdAndStoreIds(currentUserId, storeIds)
+        } else {
+            emptySet()
+        }
+        return storesPage.map { store -> store.toStoreCardResponse(discountsMap, favoriteStoreIds) }
+    }
+
 }
