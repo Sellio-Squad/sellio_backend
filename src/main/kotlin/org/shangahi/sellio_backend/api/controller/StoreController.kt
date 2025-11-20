@@ -57,12 +57,12 @@ class StoreController(
     @StoreDoc.SearchByStoreTitle
     @GetMapping("/search")
     fun searchStoresByTitle(
-        @RequestParam title: String,
+        @RequestParam query: String,
         @RequestParam(required = false) city: String?,
         @ParameterObject
         @PageableDefault(page = 0, size = 20) pageable: Pageable
     ): PageResponse<StoreResponse> {
-        val storesPage = storeService.searchStoresByTitle(title, city, pageable)
+        val storesPage = storeService.searchStoresByTitle(query, city, pageable)
         return storesPage.toPageResponse { it.toStoreResponse() }
     }
 
