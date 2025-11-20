@@ -3,6 +3,8 @@ package org.shangahi.sellio_backend.api.controller
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.response.DiscountResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.mapper.toDiscountResponse
+import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.swagger.doc.DiscountDoc
 import org.shangahi.sellio_backend.service.DiscountService
 import org.springdoc.core.annotations.ParameterObject
@@ -30,7 +32,7 @@ class DiscountController(
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
     ): PageResponse<DiscountResponse> {
-        return discountService.getDiscountsByStoreId(storeId, pageable)
+        return discountService.getDiscountsByStoreId(storeId, pageable).toPageResponse{it.toDiscountResponse()}
     }
 
     @DiscountDoc.GetDiscountByProductId
@@ -41,7 +43,7 @@ class DiscountController(
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
     ): PageResponse<DiscountResponse> {
-        return discountService.getDiscountsByProductId(productId, pageable)
+        return discountService.getDiscountsByProductId(productId, pageable).toPageResponse{it.toDiscountResponse()}
     }
 
     @DiscountDoc.GetDiscountByCategoryId
@@ -52,7 +54,7 @@ class DiscountController(
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
     ): PageResponse<DiscountResponse> {
-        return discountService.getDiscountsByCategoryId(categoryId, pageable)
+        return discountService.getDiscountsByCategoryId(categoryId, pageable).toPageResponse{it.toDiscountResponse()}
     }
 
     @DiscountDoc.GetDiscountBySubCategoryId
@@ -63,7 +65,7 @@ class DiscountController(
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
     ): PageResponse<DiscountResponse> {
-        return discountService.getDiscountsBySubCategoryId(subCategoryId, pageable)
+        return discountService.getDiscountsBySubCategoryId(subCategoryId, pageable).toPageResponse{it.toDiscountResponse()}
     }
 
 }

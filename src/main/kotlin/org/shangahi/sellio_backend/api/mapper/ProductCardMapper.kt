@@ -1,18 +1,21 @@
 package org.shangahi.sellio_backend.api.mapper
 
-import org.shangahi.sellio_backend.api.dto.response.ProductItemResponse
 import org.shangahi.sellio_backend.api.dto.request.ProductRequest
-import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductItemResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.Store
 
-fun Product.toProductCardResponse(): ProductCardResponse = ProductCardResponse(
-    id = this.id ?: throw IllegalStateException("Product ID was null for product ${this.title}"),
+fun Product.toProductCardResponse(
+    isFavorite: Boolean
+): ProductCardResponse = ProductCardResponse(
+    id = this.id!!,
     title = this.title,
     price = this.price,
     mainImageUrl = this.mainImageURL,
+    isFavorite = isFavorite
 )
 
 fun ProductRequest.toEntity(store: Store): Product =

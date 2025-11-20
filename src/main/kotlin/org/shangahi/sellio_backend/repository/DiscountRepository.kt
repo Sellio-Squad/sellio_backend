@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.repository
 
+import org.shangahi.sellio_backend.api.dto.request.StoreDiscountStats
 import org.shangahi.sellio_backend.entity.Discount
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -29,4 +30,16 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
         @Param("storeId") storeId: UUID,
         @Param("now") now: Instant = Instant.now()
     ): List<Discount>
+
+    @Query("""
+        SELECT d.store.id AS storeId, MAX(d.value) AS maxDiscount
+        FROM Discount d
+        WHERE d.store.id IN :storeIds
+        AND d.product IS NULL 
+        AND d.category IS NULL 
+        AND d.subCategory IS NULL
+        AND (d.endDate IS NULL OR d.endDate >= CURRENT_TIMESTAMP)
+        GROUP BY d.store.id
+    """)
+    fun findMaxDiscountByStoreIds(@Param("storeIds") storeIds: List<UUID>): List<StoreDiscountStats>
 }
