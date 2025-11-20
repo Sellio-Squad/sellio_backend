@@ -249,6 +249,30 @@ class ProductService(
     }
 
 
+    @Transactional
+    fun deleteProduct(productId: UUID): String {
+        val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
+        val isOrdered = product.items.any { orderItemRepository.existsByProductItemId(it.id!!) }
+
+        if (isOrdered) {
+            throw ProductItemInUseException()
+        }
+        if (product.mainImageURL != null) {
+            storageService.deleteImage(product.mainImageURL)
+        }
+        product.items.forEach { item ->
+            item.variationImageUrl?.let { storageService.deleteImage(it) }
+        }
+        product.images.forEach { image ->
+            storageService.deleteImage(image.imageUrl)
+        }
+        discountRepository.deleteByProductId(productId)
+        favoriteProductRepository.deleteByProductId(productId)
+        productRepository.delete(product)
+        return "Product deleted successfully"
+    }
+
+
     private fun checkSubCategoryIsExist(subCategoryIds: List<UUID>) {
         subCategoryIds.forEach { subCategoryId ->
             if (!subCategoryRepository.existsById(subCategoryId)) {
@@ -279,29 +303,6 @@ class ProductService(
                 isFavorite = favoriteIds.contains(product.id)
             )
         }
-    }
-
-    @Transactional
-    fun deleteProduct(productId: UUID): String {
-        val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
-        val isOrdered = product.items.any { orderItemRepository.existsByProductItemId(it.id!!) }
-
-        if (isOrdered) {
-            throw ProductItemInUseException()
-        }
-        if (product.mainImageURL != null) {
-            storageService.deleteImage(product.mainImageURL)
-        }
-        product.items.forEach { item ->
-            item.variationImageUrl?.let { storageService.deleteImage(it) }
-        }
-        product.images.forEach { image ->
-            storageService.deleteImage(image.imageUrl)
-        }
-        discountRepository.deleteByProductId(productId)
-        favoriteProductRepository.deleteByProductId(productId)
-        productRepository.delete(product)
-        return "Product deleted successfully"
     }
 }
 
