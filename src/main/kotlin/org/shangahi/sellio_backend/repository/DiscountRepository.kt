@@ -29,4 +29,5 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
         @Param("storeId") storeId: UUID,
         @Param("now") now: Instant = Instant.now()
     ): List<Discount>
+    fun deleteByProductId(productId: UUID)
 }
