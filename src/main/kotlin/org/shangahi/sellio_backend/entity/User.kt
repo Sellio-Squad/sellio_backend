@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 
 @Table(name = "users")
@@ -44,11 +45,17 @@ data class User(
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     val favoriteStores: Set<FavoriteStore> = emptySet(),
 
+    @Column(name = "is_deleted", nullable = false)
+    val isDeleted: Boolean = false,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Instant? = null,
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = true)
-    val updatedAt: Instant? = null
-)
+    val updatedAt: Instant? = null,
+
+    @Column(name = "deleted_at", nullable = true)
+    val deletedAt: LocalDateTime? = null,
+    )
