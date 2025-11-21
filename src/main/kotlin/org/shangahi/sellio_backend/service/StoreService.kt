@@ -69,17 +69,18 @@ class StoreService(
         return mapStoresToStoreCardPage(storesPage)
     }
 
-
-    @Transactional(readOnly = true)
-    fun searchStoresByTitle(title: String, city: String?, pageable: Pageable): Page<StoreCardResponse> {
+    fun searchStoresByTitle(
+        title: String,
+        city: String?,
+        pageable: Pageable): Page<StoreCardResponse> {
         val trimmedTitle = title.trim()
         if (trimmedTitle.isBlank()) {
             return Page.empty(pageable)
         }
-        val storePage = if (!city.isNullOrBlank()) {
-            storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
-        } else {
+        val storePage = if (city.isNullOrBlank()) {
             storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
+        } else {
+            storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
         }
         return mapStoresToStoreCardPage(storePage)
     }
@@ -91,13 +92,10 @@ class StoreService(
     ): StoreCreationResponse {
         if (storeRepository.existsByTitle(request.title)) {
             throw StoreTitleAlreadyExistException()
-
         }
 
         val ownerUser = userRepository.findByIdOrNull(ownerId) ?: throw UserNotFoundException()
-
-        storeCreationValidation(ownerId, request)
-
+        storeCreationValidation(ownerId,request)
         val newStore = Store(
             owner = ownerUser,
             title = request.title,
@@ -109,7 +107,6 @@ class StoreService(
         )
 
         val savedStore = storeRepository.save(newStore)
-
         return StoreCreationResponse(
             id = savedStore.id ?: throw StoreNotFoundException(),
             title = savedStore.title,

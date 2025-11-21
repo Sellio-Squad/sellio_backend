@@ -8,6 +8,8 @@ import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
+import org.shangahi.sellio_backend.api.mapper.toResponse
+import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreResponse
 import org.shangahi.sellio_backend.api.swagger.doc.StoreDoc
 import org.shangahi.sellio_backend.service.StoreService
@@ -57,12 +59,12 @@ class StoreController(
     @StoreDoc.SearchByStoreTitle
     @GetMapping("/search")
     fun searchStoresByTitle(
-        @RequestParam title: String,
+        @RequestParam query: String,
         @RequestParam(required = false) city: String?,
         @ParameterObject
         @PageableDefault(page = 0, size = 20) pageable: Pageable
     ): PageResponse<StoreCardResponse> {
-        val storesPage = storeService.searchStoresByTitle(title, city, pageable)
+        val storesPage = storeService.searchStoresByTitle(query, city, pageable)
         return storesPage.toPageResponse { it }
     }
 
