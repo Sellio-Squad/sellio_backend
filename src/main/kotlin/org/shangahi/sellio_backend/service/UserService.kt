@@ -7,32 +7,36 @@ import org.shangahi.sellio_backend.repository.UserRepository
 import org.shangahi.sellio_backend.service.exception.UserEmailAlreadyExistsException
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
+import org.springframework.context.annotation.Lazy
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDateTime
 import java.util.*
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    @param:Lazy private val authService: AuthenticationService
 ) {
 
     fun findUserByPhoneNumber(phoneNumber: String): User? {
-        return userRepository.findByPhoneNumber(phoneNumber)
+        return userRepository.findByPhoneNumberAndIsDeletedFalse(phoneNumber)
     }
 
     fun findById(userId: UUID): User {
-        return userRepository.findByIdOrNull(userId)
+        return userRepository.findByIdAndIsDeletedFalse(userId)
             ?: throw UserNotFoundException()
     }
 
     fun createUser(request: User): User {
-        if (userRepository.existsByPhoneNumber(request.phoneNumber)) {
+        if (userRepository.existsByPhoneNumberAndIsDeletedFalse(request.phoneNumber)) {
             throw UserPhoneNumberAlreadyExistsException()
         }
 
-        if (request.email != null && userRepository.existsByEmail(request.email)) {
+        if (request.email != null && userRepository.existsByEmailAndIsDeletedFalse(request.email)) {
             throw UserEmailAlreadyExistsException()
         }
         return userRepository.save(request)
@@ -69,20 +73,20 @@ class UserService(
         request: UserUpdateRequest
     ): User {
 
-        val existingUser = userRepository.findByIdOrNull(userId)
+        val existingUser = userRepository.findByIdAndIsDeletedFalse(userId)
             ?: throw UserNotFoundException()
 
         if (
             request.phoneNumber != null &&
             request.phoneNumber != existingUser.phoneNumber &&
-            userRepository.existsByPhoneNumber(request.phoneNumber)
+            userRepository.existsByPhoneNumberAndIsDeletedFalse(request.phoneNumber)
         ) {
             throw UserPhoneNumberAlreadyExistsException()
         }
         if (
             request.email != null &&
             request.email != existingUser.email &&
-            userRepository.existsByEmail(request.email)
+            userRepository.existsByEmailAndIsDeletedFalse(request.email)
         ) {
             throw UserEmailAlreadyExistsException()
         }
