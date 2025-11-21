@@ -1,9 +1,7 @@
 package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.CategoryRequest
-import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity
-import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.util.SELLIO_STORE_ID
 import org.shangahi.sellio_backend.entity.Category
 import org.shangahi.sellio_backend.repository.CategoryRepository
@@ -17,24 +15,25 @@ import java.util.*
 @Service
 class CategoryService(private val categoryRepository: CategoryRepository) {
 
+    @Transactional(readOnly = true)
     fun getAllCategories(): List<Category> = categoryRepository.findAll()
 
+    @Transactional(readOnly = true)
     fun getCategoryById(id: UUID): Category {
         val category = categoryRepository.findByIdOrNull(id) ?: throw CategoryNotFoundException()
         return category
     }
 
-    fun create(request: CategoryRequest): CategoryResponse {
+    @Transactional
+    fun create(request: CategoryRequest): Category {
         if (categoryRepository.existsByTitle(request.title)) {
             throw CategoryAlreadyExistException()
         }
-        val saved = categoryRepository.save(request.toEntity())
-        return saved.toResponse()
+        return categoryRepository.save(request.toEntity())
     }
 
     @Transactional(readOnly = true)
-    fun getCustomProductCategories(): List<CategoryResponse> {
+    fun getCustomProductCategories(): List<Category> {
         return categoryRepository.findCategoriesByStoreId(SELLIO_STORE_ID)
-            .map { it.toResponse() }
     }
 }
