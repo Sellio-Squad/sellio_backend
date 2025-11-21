@@ -7,6 +7,7 @@ import org.shangahi.sellio_backend.service.exception.InvalidRefreshTokenExceptio
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class AuthenticationService(
@@ -43,5 +44,9 @@ class AuthenticationService(
             accessToken = newAccessToken,
             refreshToken = newRefreshToken.refreshToken
         )
+    }
+
+    fun logout(userId: UUID) {
+        refreshTokenService.deleteUserRefreshTokens(userId)
     }
 }
