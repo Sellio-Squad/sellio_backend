@@ -63,7 +63,6 @@ class UserService(
         return userRepository.save(updatedUser)
     }
 
-
     fun updateUser(
         userId: UUID,
         request: UserUpdateRequest

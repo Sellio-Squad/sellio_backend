@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.api.controller
 
 import org.shangahi.sellio_backend.api.dto.response.OrderItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.service.OrderService
 import org.springdoc.core.annotations.ParameterObject
@@ -24,6 +25,6 @@ class OrderController(
         pageable: Pageable
     ): PageResponse<OrderItemResponse> {
         val ordersPage = orderService.getCompletedOrdersItems(pageable)
-        return ordersPage.toResponse()
+        return ordersPage.toPageResponse { it.toResponse() }
     }
 }
