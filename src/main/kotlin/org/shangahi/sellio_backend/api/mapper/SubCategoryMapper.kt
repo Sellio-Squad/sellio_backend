@@ -20,6 +20,6 @@ fun SubCategoryRequest.toEntity(category: Category): SubCategory {
     return SubCategory(
         title = this.title,
         category = category,
-        products = emptySet()
+        products = mutableSetOf()
     )
 }

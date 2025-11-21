@@ -20,8 +20,7 @@ class CategoryService(private val categoryRepository: CategoryRepository) {
 
     @Transactional(readOnly = true)
     fun getCategoryById(id: UUID): Category {
-        val category = categoryRepository.findByIdOrNull(id) ?: throw CategoryNotFoundException()
-        return category
+        return categoryRepository.findByIdOrNull(id) ?: throw CategoryNotFoundException()
     }
 
     @Transactional
@@ -35,5 +34,11 @@ class CategoryService(private val categoryRepository: CategoryRepository) {
     @Transactional(readOnly = true)
     fun getCustomProductCategories(): List<Category> {
         return categoryRepository.findCategoriesByStoreId(SELLIO_STORE_ID)
+    }
+    @Transactional
+    fun deleteCategory(id: UUID) {
+        val category = categoryRepository.findByIdOrNull(id)
+            ?: throw CategoryNotFoundException()
+        categoryRepository.delete(category)
     }
 }

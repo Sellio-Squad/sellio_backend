@@ -26,6 +26,12 @@ class SubCategoryController(private val subCategoryService: SubCategoryService) 
         return subCategoryService.getSubCategoriesByStoreId(storeId)
     }
 
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: UUID): ResponseEntity<Void> {
+        subCategoryService.deleteSubCategory(id)
+        return ResponseEntity.noContent().build()
+    }
+
     @SubCategoryDoc.InsertSubCategory
     @PostMapping("/create")
     fun create(@RequestBody request: SubCategoryRequest): ResponseEntity<SubCategoryResponse> =

@@ -29,6 +29,12 @@ class CategoryController(private val categoryService: CategoryService) {
         val saved = categoryService.create(request).toResponse()
         return ResponseEntity.ok(saved)
     }
+    @CategoryDoc.DeleteCategory
+    @DeleteMapping("/{id}")
+    fun deleteCategory(@PathVariable id: UUID): ResponseEntity<Void> {
+        categoryService.deleteCategory(id)
+        return ResponseEntity.noContent().build()
+    }
 
     @CategoryDoc.GetCustom
     @GetMapping("/custom")

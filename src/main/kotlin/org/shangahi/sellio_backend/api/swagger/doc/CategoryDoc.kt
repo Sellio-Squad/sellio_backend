@@ -250,6 +250,52 @@ annotation class CategoryDoc {
     annotation class InsertCategory
 
     @Operation(
+        summary = "Delete Category",
+        description = "Delete a category by its ID. This also deletes all subcategories inside it due to cascading.",
+        responses = [
+            ApiResponse(
+                responseCode = "204",
+                description = "Category deleted successfully",
+                content = []
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Category not found",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "CategoryNotFoundExample",
+                                value = ErrorResponseExample.CATEG_NOT_FOUND
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerErrorExample",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+    annotation class DeleteCategory
+
+
+    @Operation(
         summary = "Get Custom Product Categories",
         description = "Retrieves a list of all main categories that contain customizable products. These are linked to the official 'Sellio Customize' store.",
         responses = [
