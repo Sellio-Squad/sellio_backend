@@ -16,6 +16,8 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.*
+import org.shangahi.sellio_backend.service.exception.*
 import org.shangahi.sellio_backend.security.SecurityUtils
 import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
@@ -39,6 +41,7 @@ class ProductService(
     private val sizeRepository: SizeRepository,
     private val weightRepository: WeightRepository,
     private val storageService: StorageService,
+    private val orderItemRepository: OrderItemRepository,
     private val favoriteProductRepository: FavoriteProductRepository
 ) {
     @Transactional(readOnly = true)
@@ -247,6 +250,30 @@ class ProductService(
         pageable: Pageable
     ): Page<Product> {
         return productRepository.findBySubCategoryAndStore(subCategoryId, storeId, pageable)
+    }
+
+
+    @Transactional
+    fun deleteProduct(productId: UUID): String {
+        val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
+        val isOrdered = product.items.any { orderItemRepository.existsByProductItemId(it.id!!) }
+
+        if (isOrdered) {
+            throw ProductItemInUseException()
+        }
+        if (product.mainImageURL != null) {
+            storageService.deleteImage(product.mainImageURL)
+        }
+        product.items.forEach { item ->
+            item.variationImageUrl?.let { storageService.deleteImage(it) }
+        }
+        product.images.forEach { image ->
+            storageService.deleteImage(image.imageUrl)
+        }
+        discountRepository.deleteByProductId(productId)
+        favoriteProductRepository.deleteByProductId(productId)
+        productRepository.delete(product)
+        return "Product deleted successfully"
     }
 
 

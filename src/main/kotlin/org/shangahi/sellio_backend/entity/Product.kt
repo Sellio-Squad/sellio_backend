@@ -24,18 +24,18 @@ data class Product(
     @Column(name = "main_image_url", nullable = true)
     val mainImageURL: String?,
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: Set<ProductItem> = emptySet(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     val store: Store,
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonManagedReference
     val productSubCategories: Set<ProductSubCategory> = emptySet(),
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
     val images: Set<ProductImage> = emptySet(),
 
     @Column(name = "price", nullable = false)
