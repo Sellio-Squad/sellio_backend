@@ -101,4 +101,15 @@ class UserService(
         )
         return userRepository.save(updatedUser)
     }
+
+    @Transactional
+    fun deleteUser(userId: UUID) {
+        val user = userRepository.findByIdAndIsDeletedFalse(userId)
+            ?: throw UserNotFoundException()
+
+        val updatedUser = user.copy(isDeleted = true, deletedAt = LocalDateTime.now())
+        authService.logout(userId)
+        userRepository.save(updatedUser)
+    }
+
 }
