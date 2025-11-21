@@ -19,6 +19,7 @@ import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.service.exception.*
 import org.shangahi.sellio_backend.service.exception.*
 import org.shangahi.sellio_backend.security.SecurityUtils
+import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -48,29 +49,32 @@ class ProductService(
         if (!storeRepository.existsById(storeId)) {
             throw StoreNotFoundException()
         }
-
         val productPage = productRepository.findAllByStoreId(storeId, pageable)
-
         return mapPageToResponseWithFavorites(productPage)
+
     }
 
-    fun searchProductsByTitle(title: String, pageable: Pageable): PageResponse<ProductCardResponse> {
-
+    fun searchProductsByTitle(
+        title: String,
+        city: String?,
+        pageable: Pageable
+    ): PageResponse<ProductCardResponse> {
         val trimmedTitle = title.trim()
 
         if (trimmedTitle.isBlank()) {
-            val emptyPage: Page<Product> = Page.empty(pageable)
-            return mapPageToResponseWithFavorites(emptyPage)
+            return mapPageToResponseWithFavorites(Page.empty(pageable))
         }
-
-
-        val productPage = productRepository.findByTitleContainingIgnoreCase(title, pageable)
-
+        val productPage = if (city.isNullOrBlank()) {
+            productRepository.findByTitleContainingIgnoreCase(title, pageable)
+        } else {
+            productRepository.findByTitleContainingIgnoreCaseAndStoreCityIgnoreCase(title, city, pageable)
+        }
         return mapPageToResponseWithFavorites(productPage)
+
     }
 
     @Transactional
-    fun create(request: ProductRequest): ProductResponse {
+    fun create(request: ProductRequest): Product {
         if (productRepository.existsByTitle(request.title)) {
             throw ProductAlreadyExistException()
         }
@@ -85,13 +89,12 @@ class ProductService(
 
         val fullProduct = productRepository.findByIdWithItems(savedProduct.id!!)
             ?: throw ProductSavingException()
-        return fullProduct.toResponse()
+        return fullProduct
     }
 
 
     @Transactional
     fun updateProduct(productId: UUID, request: ProductUpdateRequest): Product {
-
 
         val existingProduct = productRepository.findByIdOrNull(productId)
             ?: throw ProductNotFoundException()
@@ -113,15 +116,16 @@ class ProductService(
 
         val savedProduct = productRepository.save(productToUpdate)
 
-        if (request.items != null) {
+        request.items?.let {
             productItemRepository.deleteAll(existingProduct.items)
             createProductItems(request.items, savedProduct)
         }
 
-        if (request.subCategoryIds != null) {
+        request.subCategoryIds?.let {
             productSubcategoryRepository.deleteAll(existingProduct.productSubCategories)
             createProductSubCategories(request.subCategoryIds, savedProduct)
         }
+
         val product = productRepository.findByIdWithItems(savedProduct.id!!)
             ?: throw ProductSavingException()
         return product

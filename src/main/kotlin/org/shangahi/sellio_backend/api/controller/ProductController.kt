@@ -8,6 +8,7 @@ import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
+import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.ProductDoc
 import org.shangahi.sellio_backend.service.ProductService
@@ -27,9 +28,7 @@ import java.util.*
 class ProductController(
     private val productService: ProductService,
     private val storageService: StorageService
-
 ) {
-
     @ProductDoc.GetProductByStoreId
     @GetMapping("/store/{storeId}")
     fun getAllProductsForStore(
@@ -50,18 +49,19 @@ class ProductController(
     @GetMapping("/search")
     fun searchProducts(
         @RequestParam("query", required = true) query: String,
+        @RequestParam("city", required = false) city: String?,
         @ParameterObject
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
     ): PageResponse<ProductCardResponse> {
 
-        return productService.searchProductsByTitle(query, pageable)
+        return productService.searchProductsByTitle(query, city, pageable)
     }
 
     @ProductDoc.CreateProduct
     @PostMapping("/create")
     fun create(@Valid @RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
-        val saved = productService.create(request)
+        val saved = productService.create(request).toResponse()
         return ResponseEntity.ok(saved)
     }
 
@@ -91,7 +91,9 @@ class ProductController(
         @ParameterObject
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC)
         pageable: Pageable
-    ): PageResponse<ProductResponse> = productService.getUsedProducts(pageable).toPageResponse { it.toResponse() }
+    ): PageResponse<ProductResponse> {
+        return productService.getUsedProducts(pageable).toPageResponse { it.toResponse() }
+    }
 
     @ProductDoc.GetProductById
     @GetMapping("/{productId}")
