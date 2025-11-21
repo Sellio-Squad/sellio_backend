@@ -32,9 +32,7 @@ class StoreService(
     private val favoriteProductRepository: FavoriteProductRepository,
     private val favoriteStoreRepository: FavoriteStoreRepository,
     private val storageService: StorageService,
-    private val favoriteStoreRepository: FavoriteStoreRepository,
-    private val discountRepository: DiscountRepository,
-    private val favoriteProductRepository: FavoriteProductRepository
+    private val discountRepository: DiscountRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -55,7 +53,7 @@ class StoreService(
             emptySet()
         }
         val featuredProducts =
-            featuredProductsPage.content.map { it.toProductCardResponse(favoriteProductIds.contains(product.id)) }
+            featuredProductsPage.content.map { it.toProductCardResponse(favoriteProductIds.contains(it.id)) }
 
         val ratingStats = storeRatingRepository.getRatingStats(storeId)
 
@@ -88,7 +86,10 @@ class StoreService(
             storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
         else
             storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
+
+        return mapStoresToStoreCardPage(storePage)
     }
+
     @Transactional
     fun deleteStore(storeId: UUID): String {
 
@@ -123,7 +124,6 @@ class StoreService(
         productRepository.deleteAll(products)
         storeRepository.delete(store)
         return "Store deleted successfully"
-        return mapStoresToStoreCardPage(storePage)
     }
 
     @Transactional
