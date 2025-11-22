@@ -32,6 +32,18 @@ class SubCategoryController(private val subCategoryService: SubCategoryService) 
         return ResponseEntity.noContent().build()
     }
 
+    // Support legacy/alternate combined path used by a client: /v1/category/{categoryId}-{subCategoryId}
+    // This is a minimal, non-invasive mapping that delegates to the same service method.
+    @DeleteMapping("/v1/category/{categoryId}-{subCategoryId}")
+    fun deleteByCombinedPath(
+        @PathVariable categoryId: UUID,
+        @PathVariable subCategoryId: UUID
+    ): ResponseEntity<Void> {
+        // categoryId is accepted for compatibility but not needed by the deletion logic
+        subCategoryService.deleteSubCategory(subCategoryId)
+        return ResponseEntity.noContent().build()
+    }
+
     @SubCategoryDoc.InsertSubCategory
     @PostMapping("/create")
     fun create(@RequestBody request: SubCategoryRequest): ResponseEntity<SubCategoryResponse> =
