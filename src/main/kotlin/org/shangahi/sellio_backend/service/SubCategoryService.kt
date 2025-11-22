@@ -8,6 +8,8 @@ import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.repository.CategoryRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.shangahi.sellio_backend.repository.SubCategoryRepository
+import org.shangahi.sellio_backend.repository.DiscountRepository
+import org.shangahi.sellio_backend.repository.ProductSubcategoryRepository
 import org.shangahi.sellio_backend.service.exception.CategoryNotFoundException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.shangahi.sellio_backend.service.exception.SubCategoryAlreadyExistException
@@ -19,8 +21,19 @@ import java.util.*
 class SubCategoryService(
     private val subCategoryRepository: SubCategoryRepository,
     private val categoryRepository: CategoryRepository,
-    private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository,
+    private val discountRepository: DiscountRepository,
+    private val productSubcategoryRepository: ProductSubcategoryRepository
 ) {
+
+    @Transactional
+    fun deleteSubCategory(id: UUID) {
+        val subCategory = subCategoryRepository.findById(id)
+            .orElseThrow { SubCategoryNotFoundException() }
+        discountRepository.deleteBySubCategoryId(id)
+        productSubcategoryRepository.deleteBySubCategoryId(id)
+        subCategoryRepository.delete(subCategory)
+    }
 
     fun getSubCategoriesByCategoryId(categoryId: UUID): List<SubCategoryResponse> {
         if (!categoryRepository.existsById(categoryId)) {
@@ -46,13 +59,5 @@ class SubCategoryService(
 
         val saved = subCategoryRepository.save(request.toEntity(category))
         return saved.toResponse()
-    }
-
-    @Transactional
-    fun deleteSubCategory(id: UUID) {
-        val subCategory = subCategoryRepository.findById(id)
-            .orElseThrow { SubCategoryNotFoundException() }
-
-        subCategoryRepository.delete(subCategory)
     }
 }
