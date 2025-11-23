@@ -68,21 +68,40 @@ class RegisterService(
         val pending = pendingRegistrationRepository.findById(uuid)
             .orElseThrow { SessionIdNotFoundException() }
 
-        if (userService.findUserByPhoneNumber(pending.phoneNumber) != null)
+        val existing = userService.findUserByPhoneNumber(pending.phoneNumber)
+
+        if (existing != null && !existing.isDeleted)
             throw UserPhoneNumberAlreadyExistsException()
 
-        val user = User(
-            phoneNumber = pending.phoneNumber,
-            password = pending.password,
-            firstName = pending.firstName,
-            lastName = pending.lastName,
-            city = pending.city,
-            country = pending.country,
-            email = pending.email,
-            avatarUrl = pending.avatarUrl
-        )
+        val deletedUser = userService.findDeletedUserByPhoneNumber(pending.phoneNumber)
 
-        val savedUser = userService.createUser(user)
+        val savedUser = if (deletedUser != null) {
+            val restored = deletedUser.copy(
+                isDeleted = false,
+                deletedAt = null,
+                firstName = pending.firstName,
+                lastName = pending.lastName,
+                email = pending.email,
+                city = pending.city,
+                country = pending.country,
+                avatarUrl = pending.avatarUrl,
+                password = pending.password,
+                updatedAt = Instant.now()
+            )
+            userService.saveUser(restored)
+        } else {
+            val user = User(
+                phoneNumber = pending.phoneNumber,
+                password = pending.password,
+                firstName = pending.firstName,
+                lastName = pending.lastName,
+                city = pending.city,
+                country = pending.country,
+                email = pending.email,
+                avatarUrl = pending.avatarUrl
+            )
+            userService.createUser(user)
+        }
 
         pendingRegistrationRepository.deleteById(uuid)
 
