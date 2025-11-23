@@ -40,9 +40,9 @@ class SecurityConfig(
                     "/v1/stores/*",
                     "/v1/stores/top-rating",
                     "/v1/stores/search",
-                    "/v1/store-rating",
+                    "/v1/store-rating/**",
                     "v1/subcategories/store/*",
-                    "/v1/subcategories/create"
+                    "/v1/subcategories/category/*"
                 ).permitAll()
                     .anyRequest().authenticated()
             }
