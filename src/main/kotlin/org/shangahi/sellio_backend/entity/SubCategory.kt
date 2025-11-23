@@ -25,7 +25,7 @@ class SubCategory(
 
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
     @JsonManagedReference
-    val products: Set<ProductSubCategory>,
+    val products: MutableSet<ProductSubCategory> = mutableSetOf(),  // FIXED
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

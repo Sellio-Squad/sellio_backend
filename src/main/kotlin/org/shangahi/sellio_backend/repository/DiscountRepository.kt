@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.time.Instant
@@ -18,6 +19,7 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
     fun findByProductId(id: UUID, pageable: Pageable): Page<Discount>
     fun findBySubCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
     fun findByCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
+
     @Query("""
         SELECT d FROM Discount d
         WHERE d.store.id = :storeId
@@ -31,6 +33,10 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
         @Param("now") now: Instant = Instant.now()
     ): List<Discount>
     fun deleteByProductId(productId: UUID)
+
+    @Modifying
+    @Query("DELETE FROM Discount d WHERE d.subCategory.id = :subCategoryId")
+    fun deleteBySubCategoryId(@Param("subCategoryId") subCategoryId: UUID)
 
     @Query("""
         SELECT d.store.id AS storeId, MAX(d.value) AS maxDiscount

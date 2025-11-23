@@ -17,9 +17,14 @@ data class Category(
     @Column(name = "title", nullable = false)
     val title: String = "",
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(
+        mappedBy = "category",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
     @JsonManagedReference
-    val subCategories: Set<SubCategory> = emptySet(),
+    val subCategories: MutableSet<SubCategory> = mutableSetOf(),
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = true)

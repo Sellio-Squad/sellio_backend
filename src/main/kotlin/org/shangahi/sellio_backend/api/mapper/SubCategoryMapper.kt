@@ -4,6 +4,7 @@ import org.shangahi.sellio_backend.api.dto.request.SubCategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
 import org.shangahi.sellio_backend.entity.Category
 import org.shangahi.sellio_backend.entity.SubCategory
+import java.util.Collections.emptySet
 
 fun SubCategory.toResponse(): SubCategoryResponse {
     return SubCategoryResponse(
