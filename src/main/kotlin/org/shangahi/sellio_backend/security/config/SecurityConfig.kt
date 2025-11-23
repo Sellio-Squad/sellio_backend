@@ -27,10 +27,29 @@ class SecurityConfig(
                     "/v3/api-docs/**",
                     "/v1/auth/**",
                     "/v1/forgot-password/**",
+                    "/v1/category/all-categories",
+                    "/v1/category/*",
+                    "/v1/discounts/**",
+                    "/v1/products/store/*",
+                    "/v1/products/search",
+                    "/v1/products/used",
+                    "/v1/products/*",
+                    "/v1/products/store/*/subcategory/*",
+                    "/v1/product-items/trending",
+                    "/v1/product-items/*/items",
+                    "/v1/stores/*",
+                    "/v1/stores/top-rating",
+                    "/v1/stores/search",
+                    "/v1/store-rating/**",
+                    "v1/subcategories/store/*",
+                    "/v1/subcategories/category/*"
                 ).permitAll()
                     .anyRequest().authenticated()
             }
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter::class.java
+            )
             .build()
     }
 

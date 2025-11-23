@@ -5,6 +5,7 @@ import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_INVALID_REFR
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_PASSWORD_NOT_MATCH
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_SESSION_ID_NOT_FOUND
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_UNAUTHORIZED
+import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_USER_REGISTRATION_PENDING
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER_REGION
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_EXPIRED
@@ -65,4 +66,8 @@ class SessionIdNotFoundException : SellioException (
     code = AUTH_SESSION_ID_NOT_FOUND
 )
 
-
+class UserRegistrationPendingException : SellioException (
+    message = "User registration pending for this phone number",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = AUTH_USER_REGISTRATION_PENDING
+)

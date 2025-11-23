@@ -8,8 +8,6 @@ import org.shangahi.sellio_backend.service.exception.UserEmailAlreadyExistsExcep
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
 import org.springframework.context.annotation.Lazy
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
@@ -25,6 +23,11 @@ class UserService(
     fun findUserByPhoneNumber(phoneNumber: String): User? {
         return userRepository.findByPhoneNumberAndIsDeletedFalse(phoneNumber)
     }
+
+    fun findDeletedUserByPhoneNumber(phoneNumber: String): User? {
+        return userRepository.findByPhoneNumberAndIsDeletedTrue(phoneNumber)
+    }
+
 
     fun findById(userId: UUID): User {
         return userRepository.findByIdAndIsDeletedFalse(userId)
