@@ -18,19 +18,19 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthenticationFilter(
     private val jwtService: JwtService,
     private val userService: UserService,
-): OncePerRequestFilter() {
+) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authHeader = request.getHeader("Authorization")
+        val authHeader = request.getHeader(AUTH_HEADER)
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             filterChain.doFilter(request, response)
             return
         }
-        val token = authHeader.substringAfter("Bearer ").trim()
+        val token = authHeader.substringAfter(BEARER_PREFIX).trim()
 
         try {
             val userId = jwtService.parseClaims(token)
@@ -62,6 +62,11 @@ class JwtAuthenticationFilter(
             response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
             response.writer.write("Authentication error: ${ex.message}")
         }
+    }
+
+    companion object {
+        private const val AUTH_HEADER = "Authorization"
+        private const val BEARER_PREFIX = "Bearer "
     }
 
 }

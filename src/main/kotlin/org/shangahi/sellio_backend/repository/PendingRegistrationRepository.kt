@@ -7,4 +7,6 @@ import java.util.*
 
 interface PendingRegistrationRepository : JpaRepository<PendingRegistration, UUID> {
     fun deleteAllByCreatedAtBefore(time: Instant)
+
+    fun findByPhoneNumber(phoneNumber: String): PendingRegistration?
 }
