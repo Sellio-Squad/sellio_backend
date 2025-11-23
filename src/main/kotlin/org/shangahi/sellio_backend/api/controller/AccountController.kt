@@ -65,4 +65,9 @@ class AccountController(
     ) {
         return resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword, request.confirmPassword)
     }
+
+    @PostMapping("/logout")
+    fun logout(@AuthenticationPrincipal userId: UUID) {
+        authenticationService.logout(userId)
+    }
 }

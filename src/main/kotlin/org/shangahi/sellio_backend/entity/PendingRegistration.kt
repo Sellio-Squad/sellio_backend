@@ -34,6 +34,9 @@ data class PendingRegistration(
     @Column(name = "country", nullable = false)
     val country: String,
 
+    @Column(name = "avatar_url")
+    val avatarUrl: String? = null,
+
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant = Instant.now()
 )

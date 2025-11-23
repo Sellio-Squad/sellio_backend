@@ -46,4 +46,9 @@ class UserInfoController(
         return ResponseEntity.ok(updatedUser.toResponse())
     }
 
+    @DeleteMapping("/delete")
+    fun deleteUser(@AuthenticationPrincipal userId: UUID) {
+        userService.deleteUser(userId)
+    }
+
 }
