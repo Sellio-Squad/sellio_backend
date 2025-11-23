@@ -7,7 +7,6 @@ import org.shangahi.sellio_backend.model.RegisterUserModel
 
 fun User.toResponse(cdnEndpoint: String): UserInfoResponse {
     return UserInfoResponse(
-        id = id,
         firstName = firstName,
         lastName = lastName,
         email = email,
@@ -21,7 +20,6 @@ fun User.toResponse(cdnEndpoint: String): UserInfoResponse {
 
 fun User.toResponse(): UserInfoResponse {
     return UserInfoResponse(
-        id = id,
         firstName = firstName,
         lastName = lastName,
         email = email,
