@@ -31,6 +31,7 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
         @Param("storeId") storeId: UUID,
         @Param("now") now: Instant = Instant.now()
     ): List<Discount>
+    fun deleteByProductId(productId: UUID)
 
     @Query("""
         SELECT d.store.id AS storeId, MAX(d.value) AS maxDiscount

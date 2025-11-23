@@ -81,4 +81,10 @@ interface ProductRepository : JpaRepository<Product, UUID> {
         @Param("storeId") storeId: UUID,
         pageable: Pageable
     ): Page<Product>
+
+    fun findByTitleContainingIgnoreCaseAndStoreCityIgnoreCase(
+        title: String,
+        city: String,
+        pageable: Pageable
+    ): Page<Product>
 }

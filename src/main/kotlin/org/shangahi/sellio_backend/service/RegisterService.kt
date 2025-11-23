@@ -42,6 +42,7 @@ class RegisterService(
             email = request.email,
             city = request.city,
             country = request.country,
+            avatarUrl = request.avatarUrl
         )
         val savedPending = pendingRegistrationRepository.save(pending)
 
@@ -72,7 +73,8 @@ class RegisterService(
             lastName = pending.lastName,
             city = pending.city,
             country = pending.country,
-            email = pending.email
+            email = pending.email,
+            avatarUrl = pending.avatarUrl
         )
 
         val savedUser = userService.createUser(user)

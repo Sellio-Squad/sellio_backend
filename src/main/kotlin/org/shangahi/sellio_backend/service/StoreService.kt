@@ -76,9 +76,10 @@ class StoreService(
         return mapStoresToStoreCardPage(storesPage)
     }
 
-
-    @Transactional(readOnly = true)
-    fun searchStoresByTitle(title: String, city: String?, pageable: Pageable): Page<StoreCardResponse> {
+    fun searchStoresByTitle(
+        title: String,
+        city: String?,
+        pageable: Pageable): Page<StoreCardResponse> {
         val trimmedTitle = title.trim()
         if (trimmedTitle.isBlank()) return Page.empty(pageable)
 
@@ -86,7 +87,14 @@ class StoreService(
             storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
         else
             storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
-
+        if (trimmedTitle.isBlank()) {
+            return Page.empty(pageable)
+        }
+        val storePage = if (city.isNullOrBlank()) {
+            storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
+        } else {
+            storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
+        }
         return mapStoresToStoreCardPage(storePage)
     }
 
@@ -131,7 +139,6 @@ class StoreService(
         ownerId: UUID,
         request: CreateStoreRequest
     ): StoreCreationResponse {
-
         if (storeRepository.existsByTitle(request.title))
             throw StoreTitleAlreadyExistException()
 
@@ -139,7 +146,12 @@ class StoreService(
             ?: throw UserNotFoundException()
 
         storeCreationValidation(ownerId, request)
+        if (storeRepository.existsByTitle(request.title)) {
+            throw StoreTitleAlreadyExistException()
+        }
 
+        val ownerUser = userRepository.findByIdOrNull(ownerId) ?: throw UserNotFoundException()
+        storeCreationValidation(ownerId,request)
         val newStore = Store(
             owner = owner,
             title = request.title,
@@ -151,7 +163,6 @@ class StoreService(
         )
 
         val savedStore = storeRepository.save(newStore)
-
         return StoreCreationResponse(
             id = savedStore.id!!,
             title = savedStore.title,
