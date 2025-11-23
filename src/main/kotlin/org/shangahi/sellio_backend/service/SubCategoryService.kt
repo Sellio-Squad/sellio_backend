@@ -2,7 +2,9 @@ package org.shangahi.sellio_backend.service
 
 import jakarta.transaction.Transactional
 import org.shangahi.sellio_backend.api.dto.request.SubCategoryRequest
+import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity
+import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.entity.SubCategory
 import org.shangahi.sellio_backend.repository.CategoryRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
@@ -29,6 +31,7 @@ class SubCategoryService(
     fun deleteSubCategory(id: UUID) {
         val subCategory = subCategoryRepository.findById(id)
             .orElseThrow { SubCategoryNotFoundException() }
+
         discountRepository.deleteBySubCategoryId(id)
         productSubcategoryRepository.deleteBySubCategoryId(id)
         subCategoryRepository.delete(subCategory)
@@ -39,22 +42,16 @@ class SubCategoryService(
             throw CategoryNotFoundException()
         }
         return subCategoryRepository.findByCategoryId(categoryId).map { it.toResponse() }
-    fun getSubCategoriesByCategoryId(categoryId: UUID): List<SubCategory> {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw CategoryNotFoundException()
-        }
-
-        return subCategoryRepository.findByCategoryId(categoryId)
     }
 
-    fun getSubCategoriesByStoreId(storeId: UUID): List<SubCategory> {
+    fun getSubCategoriesByStoreId(storeId: UUID): List<SubCategoryResponse> {
         if (!storeRepository.existsById(storeId)) {
             throw StoreNotFoundException()
         }
-        return subCategoryRepository.findAllByStoreId(storeId)
+        return subCategoryRepository.findAllByStoreId(storeId).map { it.toResponse() }
     }
 
-    fun create(request: SubCategoryRequest): SubCategory {
+    fun create(request: SubCategoryRequest): SubCategoryResponse {
         val category = categoryRepository.findById(request.categoryId)
             .orElseThrow { CategoryNotFoundException() }
 
@@ -63,6 +60,6 @@ class SubCategoryService(
         }
 
         val saved = subCategoryRepository.save(request.toEntity(category))
-        return subCategoryRepository.save(request.toEntity(category))
+        return saved.toResponse()
     }
 }
