@@ -17,7 +17,7 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
     fun findByStoreId(storeId: UUID, pageable: Pageable): Page<Discount>
     fun findByProductId(id: UUID, pageable: Pageable): Page<Discount>
     fun findBySubCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
-    fun findByCategoryId(subCategoryId: UUID, pageable: Pageable): Page<Discount>
+    fun findByCategoryId(categoryId: UUID, pageable: Pageable): Page<Discount>
 
     @Query("""
         SELECT d FROM Discount d
@@ -31,7 +31,9 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
         @Param("storeId") storeId: UUID,
         @Param("now") now: Instant = Instant.now()
     ): List<Discount>
+
     fun deleteByProductId(productId: UUID)
+    fun deleteByStoreId(storeId: UUID)
 
     @Query("""
         SELECT d.store.id AS storeId, MAX(d.value) AS maxDiscount
@@ -44,6 +46,4 @@ interface DiscountRepository : JpaRepository<Discount, UUID> {
         GROUP BY d.store.id
     """)
     fun findMaxDiscountByStoreIds(@Param("storeIds") storeIds: List<UUID>): List<StoreDiscountStats>
-    fun deleteByProductId(productId: UUID)
-    fun deleteByStoreId(storeId: UUID)
 }

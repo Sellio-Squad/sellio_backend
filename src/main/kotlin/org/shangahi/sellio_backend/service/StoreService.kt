@@ -79,22 +79,18 @@ class StoreService(
     fun searchStoresByTitle(
         title: String,
         city: String?,
-        pageable: Pageable): Page<StoreCardResponse> {
+        pageable: Pageable
+    ): Page<StoreCardResponse> {
+
         val trimmedTitle = title.trim()
         if (trimmedTitle.isBlank()) return Page.empty(pageable)
 
-        val storePage = if (!city.isNullOrBlank())
-            storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
-        else
-            storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
-        if (trimmedTitle.isBlank()) {
-            return Page.empty(pageable)
-        }
-        val storePage = if (city.isNullOrBlank()) {
-            storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
-        } else {
-            storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
-        }
+        val storePage =
+            if (city.isNullOrBlank())
+                storeRepository.findStoresByTitleContainingIgnoreCase(pageable, trimmedTitle)
+            else
+                storeRepository.findStoresByTitleContainingIgnoreCaseAndCityIgnoreCase(trimmedTitle, city, pageable)
+
         return mapStoresToStoreCardPage(storePage)
     }
 

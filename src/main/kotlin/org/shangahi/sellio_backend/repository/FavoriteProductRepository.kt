@@ -7,22 +7,25 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.annotation.Propagation
 import java.util.*
 
 @Repository
 interface FavoriteProductRepository: JpaRepository<FavoriteProduct, UUID>{
+
     fun findByUserId(userId: UUID,pageable: Pageable): Page<FavoriteProduct>
     fun findByUserIdAndProductId(userId: UUID, productId: UUID): FavoriteProduct?
     fun deleteByProductId(productId: UUID)
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun deleteByUserIdAndProductId(userId: UUID, productId: UUID)
-    fun deleteByProductId(productId: UUID)
 
     @Query("""
         SELECT fp.product.id
         FROM FavoriteProduct fp 
         WHERE fp.user.id = :userId AND fp.product.id IN :productIds
-        """)
+    """)
     fun findFavoriteProductIdsByUserIdAndProductIds(
         @Param("userId") userId: UUID,
         @Param("productIds") productIds: List<UUID>
