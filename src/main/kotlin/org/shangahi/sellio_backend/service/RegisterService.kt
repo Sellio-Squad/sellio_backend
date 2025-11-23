@@ -34,6 +34,11 @@ class RegisterService(
 
         if (userService.findUserByPhoneNumber(validated.phoneNumber) != null)
             throw UserPhoneNumberAlreadyExistsException()
+
+        pendingRegistrationRepository.findByPhoneNumber(validated.phoneNumber)?.let {
+            pendingRegistrationRepository.delete(it)
+        }
+
         val pending = PendingRegistration(
             firstName = request.firstName,
             lastName = request.lastName,

@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.service
 import org.shangahi.sellio_backend.entity.RefreshToken
 import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.repository.RefreshTokenRepository
+import org.shangahi.sellio_backend.service.exception.InvalidRefreshTokenException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
@@ -28,7 +29,7 @@ class RefreshTokenService(
     }
 
     fun validateRefreshToken(token: String): RefreshToken? {
-        val stored = refreshTokenRepository.findByRefreshToken(token) ?: return null
+        val stored = refreshTokenRepository.findByRefreshToken(token) ?:  throw InvalidRefreshTokenException()
         return if (stored.expiryDate.isAfter(Instant.now())) stored else null
     }
 

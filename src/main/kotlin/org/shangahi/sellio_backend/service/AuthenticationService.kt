@@ -32,9 +32,8 @@ class AuthenticationService(
 
     fun refreshToken(refreshToken: String): AuthResponse {
         val validToken = refreshTokenService.validateRefreshToken(refreshToken)
-            ?: throw InvalidRefreshTokenException()
 
-        refreshTokenService.deleteUserRefreshTokens(validToken.user.id ?: throw UserNotFoundException())
+        refreshTokenService.deleteUserRefreshTokens(validToken?.user?.id ?: throw UserNotFoundException())
 
         val user = userService.findById(validToken.user.id)
         val newAccessToken = jwtService.generateUserToken(user)
