@@ -20,6 +20,7 @@ interface ProductRepository : JpaRepository<Product, UUID> {
         WHERE p.store.id = :storeId AND p.isFeatured = true
     """
     )
+    fun findAllByStoreId(storeId: UUID): List<Product>
     fun findStoreFeaturedProductsByStoreId(storeId: UUID, pageable: Pageable): Page<Product>
 
     fun findByTitleContainingIgnoreCase(title: String, pageable: Pageable): Page<Product>

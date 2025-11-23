@@ -23,4 +23,5 @@ interface FavoriteStoreRepository : JpaRepository<FavoriteStore, UUID> {
         @Param("userId") userId: UUID,
         @Param("storeIds") storeIds: List<UUID>
     ): Set<UUID>
+    fun deleteByStoreId(storeId: UUID)
 }
