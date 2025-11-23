@@ -5,15 +5,18 @@ import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
 import org.shangahi.sellio_backend.entity.PendingRegistration
 import org.shangahi.sellio_backend.entity.User
+import org.shangahi.sellio_backend.model.ValidatedPhoneNumber
 import org.shangahi.sellio_backend.repository.PendingRegistrationRepository
 import org.shangahi.sellio_backend.security.service.JwtService
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
 import org.shangahi.sellio_backend.security.service.otp.SmsSender
 import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
+import org.shangahi.sellio_backend.service.exception.UserRegistrationPendingException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.util.*
 
@@ -29,6 +32,7 @@ class RegisterService(
     private val pendingRegistrationRepository: PendingRegistrationRepository
 ) {
 
+    @Transactional
     fun prepareRegistration(request: CreateUserRequest): OtpRequestResponse {
         val validated = phoneNumberValidator.validate(request.phoneNumber, request.region)
 
@@ -36,7 +40,7 @@ class RegisterService(
             throw UserPhoneNumberAlreadyExistsException()
 
         pendingRegistrationRepository.findByPhoneNumber(validated.phoneNumber)?.let {
-            pendingRegistrationRepository.delete(it)
+            throw UserRegistrationPendingException()
         }
 
         val pending = PendingRegistration(
@@ -51,15 +55,10 @@ class RegisterService(
         )
         val savedPending = pendingRegistrationRepository.save(pending)
 
-        val otpLog = otpService.createOtp(
-            validated.phoneNumber,
-            savedPending.sessionId ?: throw SessionIdNotFoundException()
-        )
-
-        smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
-        return OtpRequestResponse(otpLog.sessionId.toString())
+        return getOtpResponse(validated, savedPending)
     }
 
+    @Transactional
     fun verifyOtpAndCreateUser(sessionId: String, otp: String): AuthResponse {
         val uuid = UUID.fromString(sessionId)
 
@@ -112,7 +111,20 @@ class RegisterService(
 
     @Scheduled(fixedRate = 5 * 60 * 1000)
     fun deleteExpiredPendingSignups() {
-        val expiryTime = Instant.now().minusSeconds(15 * 60)
+        val expiryTime = Instant.now().minusSeconds(5 * 60)
         pendingRegistrationRepository.deleteAllByCreatedAtBefore(expiryTime)
+    }
+
+    private fun getOtpResponse(
+        validated: ValidatedPhoneNumber,
+        savedPending: PendingRegistration
+    ): OtpRequestResponse {
+        val otpLog = otpService.createOtp(
+            validated.phoneNumber,
+            savedPending.sessionId ?: throw SessionIdNotFoundException()
+        )
+
+        smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
+        return OtpRequestResponse(otpLog.sessionId.toString())
     }
 }
