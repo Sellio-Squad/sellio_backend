@@ -6,6 +6,7 @@ import org.shangahi.sellio_backend.api.dto.response.ConfirmOrderResponse
 import org.shangahi.sellio_backend.api.dto.response.OrderHistoryResponse
 import org.shangahi.sellio_backend.api.dto.response.OrderItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.mapper.OrderHistoryResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.model.OrderStatus
@@ -40,9 +41,12 @@ class OrderController(
         @Valid @RequestBody request: ConfirmOrderRequest,
         @AuthenticationPrincipal
         userId: UUID,
-        ): ResponseEntity<ConfirmOrderResponse> {
+    ): ResponseEntity<ConfirmOrderResponse> {
 
-        val response = orderService.confirmOrder(userId, request)
+        val response = ConfirmOrderResponse(
+            message = "Orders placed successfully",
+            orderIds = orderService.confirmOrder(userId, request)
+        )
         return ResponseEntity.ok(response)
     }
 
@@ -56,7 +60,12 @@ class OrderController(
         @AuthenticationPrincipal
         userId: UUID,
     ): PageResponse<OrderHistoryResponse> {
-        return orderService.getOrders(userId, status, pageable)
+        val orders = orderService.getOrders(userId, status, pageable)
+        val itemsGroupedByOrder = orderService.groupedItemsByOrder(orders)
+        return orders.toPageResponse {
+            val orderItems = itemsGroupedByOrder[it.id] ?: emptyList()
+            it.OrderHistoryResponse(orderItems)
+        }
     }
 }
 
