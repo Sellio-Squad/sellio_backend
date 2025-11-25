@@ -23,8 +23,8 @@ data class Store(
     @Column(name = "description", nullable = false)
     val description: String,
 
-    @Column(name = "phone_number", unique = true)
-    val phoneNumber: String? = null,
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val contacts: List<StoreContact> = emptyList(),
 
     @Column(name = "avatar_image_url", nullable = true)
     val avatarImageURL: String? = null,
