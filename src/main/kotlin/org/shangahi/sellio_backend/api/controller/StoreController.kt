@@ -76,7 +76,7 @@ class StoreController(
     }
 
     @StoreDoc.GetStoreInfo
-    @GetMapping("/{storeId}")
+    @GetMapping("store-details/{storeId}")
     fun getStoreDetailsById(@PathVariable storeId: UUID): StoreInfoResponse {
         return storeService.getStoreDetailsById(storeId)
     }
