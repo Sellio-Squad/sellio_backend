@@ -9,6 +9,7 @@ import org.shangahi.sellio_backend.api.mapper.toStoreCardResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDetailsResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDiscountResponse
 import org.shangahi.sellio_backend.entity.Store
+import org.shangahi.sellio_backend.model.ContactType
 import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.service.exception.*
 import org.shangahi.sellio_backend.security.SecurityUtils
@@ -29,10 +30,11 @@ class StoreService(
     private val storeRepository: StoreRepository,
     private val userRepository: UserRepository,
     private val orderItemRepository: OrderItemRepository,
-    private val favoriteProductRepository: FavoriteProductRepository,
     private val favoriteStoreRepository: FavoriteStoreRepository,
+    private val favoriteProductRepository: FavoriteProductRepository,
     private val storageService: StorageService,
-    private val discountRepository: DiscountRepository
+    private val discountRepository: DiscountRepository,
+    private val storeContactRepository: StoreContactRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -71,7 +73,6 @@ class StoreService(
 
     @Transactional(readOnly = true)
     fun getPagedTopStores(pageable: Pageable): Page<StoreCardResponse> {
-
         val storesPage = storeRatingRepository.findTopStoresByHighestRating(pageable)
         return mapStoresToStoreCardPage(storesPage)
     }
@@ -142,17 +143,17 @@ class StoreService(
             ?: throw UserNotFoundException()
 
         storeCreationValidation(ownerId, request)
+
         if (storeRepository.existsByTitle(request.title)) {
             throw StoreTitleAlreadyExistException()
         }
 
-        val ownerUser = userRepository.findByIdOrNull(ownerId) ?: throw UserNotFoundException()
         storeCreationValidation(ownerId,request)
+
         val newStore = Store(
             owner = owner,
             title = request.title,
             description = request.description,
-            phoneNumber = request.phoneNumber,
             city = request.city,
             government = request.government,
             country = request.country,
@@ -204,9 +205,7 @@ class StoreService(
         if (storeRepository.existsByTitle(request.title))
             throw StoreTitleAlreadyExistException()
 
-        if (request.phoneNumber != null &&
-            storeRepository.existsByPhoneNumber(request.phoneNumber)
-        ) {
+        if (request.phoneNumber != null && storeContactRepository.existsByTypeAndValue(ContactType.PHONE, request.phoneNumber)) {
             throw StorePhoneNumberExistException()
         }
     }
