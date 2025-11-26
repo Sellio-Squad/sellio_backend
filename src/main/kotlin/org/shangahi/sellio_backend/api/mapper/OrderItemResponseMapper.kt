@@ -12,7 +12,6 @@ fun OrderItem.toResponse(): OrderItemResponse {
         productId = productItem.id,
         quantity = quantity,
         price = price,
-        status = status,
         createdAt = createdAt,
         updatedAt = updatedAt
     )
