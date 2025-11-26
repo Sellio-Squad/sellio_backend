@@ -37,7 +37,7 @@ class SecurityConfig(
                     "/v1/products/store/*/subcategory/*",
                     "/v1/product-items/trending",
                     "/v1/product-items/*/items",
-                    "/v1/stores/store-details",
+                    "/v1/stores/store-details/*",
                     "/v1/stores/top-rating",
                     "/v1/stores/search",
                     "/v1/store-rating/**",
