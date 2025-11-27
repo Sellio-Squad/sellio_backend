@@ -11,4 +11,7 @@ interface StoreContactRepository : JpaRepository<StoreContact, UUID> {
 
     fun existsByTypeAndValue(type: ContactType, value: String): Boolean
 
+    fun existsByTypeAndStoreId(type: ContactType, storeId: UUID): Boolean
+
+    fun findAllByStoreId(storeId: UUID): List<StoreContact>
 }
