@@ -7,10 +7,15 @@ import org.springframework.data.domain.Page
 
 fun OrderItem.toResponse(): OrderItemResponse {
     val price = productItem.price ?: productItem.product.price
+    val imageUrl = this.customizationImageUrl
+        ?: this.productItem.variationImageUrl
+        ?: this.productItem.product.mainImageURL
     return OrderItemResponse(
         id = id,
         productId = productItem.id,
         quantity = quantity,
+        productName = productItem.product.title,
+        productImageUrl = imageUrl,
         price = price,
         createdAt = createdAt,
         updatedAt = updatedAt

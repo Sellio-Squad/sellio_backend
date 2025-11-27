@@ -1,6 +1,8 @@
 package org.shangahi.sellio_backend.service
 
+import org.shangahi.sellio_backend.api.dto.request.StoreCardResponse
 import org.shangahi.sellio_backend.entity.FavoriteStore
+import org.shangahi.sellio_backend.repository.DiscountRepository
 import org.shangahi.sellio_backend.repository.FavoriteStoreRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.shangahi.sellio_backend.repository.UserRepository
@@ -16,7 +18,8 @@ import java.util.*
 class FavoriteStoreService(
     private val favoriteStoreRepository: FavoriteStoreRepository,
     private val userRepository: UserRepository,
-    private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository,
+    private val discountRepository: DiscountRepository,
 ) {
     @Transactional
     fun toggleFavoriteStore(
@@ -39,10 +42,30 @@ class FavoriteStoreService(
         }
     }
 
-    fun getFavoriteStoresByUserId(userId: UUID, pageable: Pageable): Page<FavoriteStore> {
+    @Transactional(readOnly = true)
+    fun getFavoriteStoresByUserId(userId: UUID, pageable: Pageable): Page<StoreCardResponse> {
         if (!userRepository.existsById(userId)) {
             throw UserNotFoundException()
         }
-        return favoriteStoreRepository.findByUserId(userId, pageable)
+        val favoritesPage = favoriteStoreRepository.findByUserId(userId, pageable)
+
+        if (favoritesPage.isEmpty) {
+            return Page.empty(pageable)
+        }
+        val storeIds = favoritesPage.content.map { it.store.id!! }
+        val discountsStats = discountRepository.findMaxDiscountByStoreIds(storeIds)
+        val discountsMap = discountsStats.associate { it.storeId to it.maxDiscount }
+
+        return favoritesPage.map { favStore ->
+            val store = favStore.store
+
+            StoreCardResponse(
+                id = store.id,
+                title = store.title,
+                coverImageURL = store.coverImageURL,
+                maxDiscount = discountsMap[store.id],
+                isFavorite = true
+            )
+        }
     }
 }

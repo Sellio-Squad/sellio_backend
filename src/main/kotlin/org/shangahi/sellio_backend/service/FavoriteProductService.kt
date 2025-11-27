@@ -1,5 +1,7 @@
 package org.shangahi.sellio_backend.service
 
+import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
+import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.entity.FavoriteProduct
 import org.shangahi.sellio_backend.repository.FavoriteProductRepository
 import org.shangahi.sellio_backend.repository.ProductRepository
@@ -21,13 +23,18 @@ class FavoriteProductService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getFavoriteProductsByUserId(userId: UUID, pageable: Pageable): Page<FavoriteProduct> {
+    fun getFavoriteProductsByUserId(userId: UUID, pageable: Pageable): Page<ProductCardResponse> {
+
         if (!userRepository.existsById(userId)) {
             throw UserNotFoundException()
         }
-        return favoriteProductRepository.findByUserId(userId, pageable)
-    }
 
+        val favoritesPage = favoriteProductRepository.findByUserId(userId, pageable)
+
+        return favoritesPage.map { favProduct ->
+            favProduct.product.toProductCardResponse(isFavorite = true)
+        }
+    }
 
     @Transactional
     fun toggleFavorite(

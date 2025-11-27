@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.shangahi.sellio_backend.api.dto.request.StoreCardResponse
 import org.shangahi.sellio_backend.api.dto.response.FavoriteStoreResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
@@ -36,8 +37,8 @@ class FavoriteStoreController(
         @ParameterObject
         @PageableDefault(page = 0, size = 20)
         pageable: Pageable
-    ): PageResponse<FavoriteStoreResponse> {
-        val favoriteStores = favoriteStoreService.getFavoriteStoresByUserId(userId, pageable)
-        return favoriteStores.toPageResponse()
+    ): PageResponse<StoreCardResponse> {
+        val favoriteStoresPage = favoriteStoreService.getFavoriteStoresByUserId(userId, pageable)
+        return favoriteStoresPage.toPageResponse { it }
     }
 }

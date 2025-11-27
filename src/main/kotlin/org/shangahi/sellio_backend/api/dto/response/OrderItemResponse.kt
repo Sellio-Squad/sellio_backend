@@ -6,6 +6,8 @@ import java.util.*
 data class OrderItemResponse(
     val id: UUID?,
     val productId: UUID?,
+    val productName: String,
+    val productImageUrl: String?,
     val quantity: Int,
     val price: Double,
     val createdAt: Instant?,
