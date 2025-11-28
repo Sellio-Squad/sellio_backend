@@ -8,12 +8,6 @@ class StoreContactTypeAlreadyExistsException : SellioException(
     message = "Store contact type already exists"
 )
 
-class StoreContactValueAlreadyExistsException : SellioException(
-    httpStatus = HttpStatus.CONFLICT,
-    code = ErrorCode.STORE_CONTACT_VALUE_ALREADY_EXISTS,
-    message = "Store contact value already exists"
-)
-
 class StoreContactTypeDuplicateException : SellioException(
     httpStatus = HttpStatus.CONFLICT,
     code = ErrorCode.STORE_CONTACT_TYPE_DUPLICATE,
