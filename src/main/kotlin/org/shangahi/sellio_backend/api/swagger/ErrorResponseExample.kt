@@ -442,5 +442,41 @@ object ErrorResponseExample {
     }
     """
 //endregion
+
+    //region Store Contact
+    const val STORE_CONTACT_NOT_FOUND = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 404,
+      "error": "Not Found",
+      "message": "Store contact not found",
+      "path": "/v1/store-contacts/update-contact/{contactId}",
+      "code": "STORE_CONTACT_003"
+    }
+    """
+
+    const val STORE_CONTACT_ALREADY_EXISTS = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 409,
+      "error": "Conflict",
+      "message": "Store contact type already exists",
+      "path": "/v1/store-contacts/{storeId}/add-contacts",
+      "code": "STORE_CONTACT_001"
+    }
+    """
+
+    const val STORE_CONTACT_TYPE_DUPLICATE = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 409,
+      "error": "Conflict",
+      "message": "Store contact type duplicate in your request",
+      "path": "/v1/store-contacts/{storeId}/add-contacts",
+      "code": "STORE_CONTACT_004"
+    }
+    """
+
+//endregion
 }
 

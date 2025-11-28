@@ -20,12 +20,12 @@ fun Store.toStoreDetailsResponse(
     avatarImageURL = this.avatarImageURL,
     coverImageURL = this.coverImageURL,
     featuredProducts = featuredProducts,
-    phoneNumber = this.phoneNumber,
     city = this.city,
     government = this.government,
     country = this.country,
     avgRating = averageRating,
-    activeStoreDiscounts = discounts
+    activeStoreDiscounts = discounts,
+    storeContacts = this.contacts.map { it.toStoreContactResponse() }
 )
 
 fun Store.toStoreResponse(): StoreResponse {

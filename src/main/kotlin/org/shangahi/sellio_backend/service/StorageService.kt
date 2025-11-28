@@ -44,11 +44,12 @@ class StorageService(
     }
 
     fun deleteImage(imageUrl: String): Boolean {
-        val prefix = props.cdnEndpoint
+        val prefix = "${props.cdnEndpoint}/${props.bucket}/"
+
         if (!imageUrl.startsWith(prefix)) {
             throw Exception()
         }
-        val key = imageUrl.removePrefix("$prefix/")
+        val key = imageUrl.removePrefix(prefix)
 
         return sellioClient.deleteObject(
             DeleteObjectRequest.builder()

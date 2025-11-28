@@ -9,7 +9,7 @@ data class StoreInfoResponse(
     val description: String,
     val avatarImageURL: String?,
     val coverImageURL: String?,
-    val phoneNumber: String?,
+    val storeContacts: List<StoreContactResponse>,
     val city: String,
     val government: String,
     val country: String,
