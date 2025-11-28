@@ -1,13 +1,13 @@
 package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.entity.StoreContact
-import org.shangahi.sellio_backend.model.ContactType
 import org.shangahi.sellio_backend.model.StoreContactCreationModel
 import org.shangahi.sellio_backend.model.StoreContactModel
 import org.shangahi.sellio_backend.repository.StoreContactRepository
 import org.shangahi.sellio_backend.repository.StoreRepository
 import org.shangahi.sellio_backend.service.exception.StoreContactNotFoundException
 import org.shangahi.sellio_backend.service.exception.StoreContactTypeAlreadyExistsException
+import org.shangahi.sellio_backend.service.exception.StoreContactTypeDuplicateException
 import org.shangahi.sellio_backend.service.exception.StoreContactValueAlreadyExistsException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.springframework.stereotype.Service
@@ -21,62 +21,34 @@ class StoreContactService(
 ) {
 
     @Transactional
-    fun addContact(
-        storeId: UUID,
-        request: StoreContactCreationModel
-    ): StoreContactModel {
+    fun addContacts(storeId: UUID, requests: List<StoreContactCreationModel>)
+    : List<StoreContactModel> {
 
         val store = storeRepository.findById(storeId)
             .orElseThrow { StoreNotFoundException() }
 
+        val existingTypes = storeContactRepository.findAllByStoreId(storeId)
+            .map { it.type }.toSet()
 
-        if (storeContactRepository.existsByTypeAndStoreId(request.type, storeId)) {
+        val requestTypes = requests.map { it.type }
+
+        val duplicatesInRequest = requestTypes.groupingBy { it }.eachCount().filter { it.value > 1 }
+        if (duplicatesInRequest.isNotEmpty()) {
+            throw StoreContactTypeDuplicateException()
+        }
+
+        val conflictingTypes = requestTypes.intersect(existingTypes)
+        if (conflictingTypes.isNotEmpty()) {
             throw StoreContactTypeAlreadyExistsException()
-        }
-
-        if (storeContactRepository.existsByTypeAndValue(request.type, request.value)) {
-            throw StoreContactValueAlreadyExistsException()
-        }
-
-        val saved = storeContactRepository.save(
-            StoreContact(
-                type = request.type,
-                value = request.value,
-                store = store
-            )
-        )
-
-        return StoreContactModel(
-            id = saved.id!!,
-            storeId = saved.store.id!!,
-            type = saved.type,
-            value = saved.value
-        )
-    }
-
-    @Transactional
-    fun addMultipleContacts(storeId: UUID, requests: List<StoreContactCreationModel>): List<StoreContactModel> {
-
-        val store = storeRepository.findById(storeId)
-            .orElseThrow { StoreNotFoundException() }
-
-
-        val existingTypes = storeContactRepository.findAllByStoreId(storeId).map { it.type }.toSet()
-        requests.forEach {
-            existingTypes.contains(it.type).let {
-                throw StoreContactNotFoundException()
-            }
-        }
-
-        requests.forEach {
-            storeContactRepository.existsByTypeAndValue(it.type, it.value).let {
-                throw StoreContactValueAlreadyExistsException()
-            }
         }
 
         val savedContacts = storeContactRepository.saveAll(
             requests.map {
-                StoreContact(type = it.type, value = it.value, store = store)
+                StoreContact(
+                    type = it.type,
+                    value = it.value,
+                    store = store
+                )
             }
         )
 
@@ -101,6 +73,40 @@ class StoreContactService(
                     value = it.value
                 )
             }
+    }
+
+    @Transactional
+    fun updateContact(
+        contactId: UUID,
+        model: StoreContactCreationModel
+    ): StoreContact {
+
+        val contact = storeContactRepository.findById(contactId)
+            .orElseThrow { StoreContactNotFoundException() }
+
+        val storeId = contact.store.id!!
+
+        val isTypeChanged = model.type != contact.type
+        val isValueChanged = model.value != contact.value
+
+        if (isTypeChanged &&
+            storeContactRepository.existsByTypeAndStoreId(model.type, storeId)
+        ) {
+            throw StoreContactTypeAlreadyExistsException()
+        }
+
+        if (isValueChanged &&
+            storeContactRepository.existsByTypeAndValue(model.type, model.value)
+        ) {
+            throw StoreContactValueAlreadyExistsException()
+        }
+
+        val updated = contact.copy(
+            type = model.type,
+            value = model.value
+        )
+
+        return storeContactRepository.save(updated)
     }
 
     @Transactional
