@@ -5,6 +5,7 @@ import org.shangahi.sellio_backend.api.dto.response.StoreContactResponse
 import org.shangahi.sellio_backend.api.mapper.toRequest
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreContactResponse
+import org.shangahi.sellio_backend.api.swagger.doc.StoreContactDoc
 import org.shangahi.sellio_backend.service.StoreContactService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -15,6 +16,7 @@ class StoreContactController(
     private val storeContactService: StoreContactService
 ) {
 
+    @StoreContactDoc.AddContacts
     @PostMapping("{storeId}/add-contacts")
     fun addContacts(
         @PathVariable storeId: UUID,
@@ -25,6 +27,7 @@ class StoreContactController(
         return response.map { it.toResponse() }
     }
 
+    @StoreContactDoc.GetContacts
     @GetMapping( "{storeId}/get-contacts")
     fun getContacts(
         @PathVariable storeId: UUID
@@ -33,6 +36,7 @@ class StoreContactController(
         return response.map { it.toResponse() }
     }
 
+    @StoreContactDoc.UpdateContacts
     @PutMapping("update-contact/{contactId}")
     fun updateContact(
         @PathVariable contactId: UUID,
