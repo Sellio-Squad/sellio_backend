@@ -43,7 +43,7 @@ class OffersService(
         return offersRepository.save(newOffer)
     }
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 0 * * 5")
     fun deactivateExpiredOffers() {
         val now = Instant.now()
         val expiredOffers = offersRepository.findAllByIsActiveTrueAndEndDateBefore(now)
@@ -51,7 +51,6 @@ class OffersService(
         if (expiredOffers.isNotEmpty()) {
             expiredOffers.forEach { it.isActive = false }
             offersRepository.saveAll(expiredOffers)
-            println("Deactivated ${expiredOffers.size} expired offers.")
         }
     }
 }
