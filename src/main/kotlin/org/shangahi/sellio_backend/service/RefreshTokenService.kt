@@ -17,7 +17,7 @@ class RefreshTokenService(
 
     fun createRefreshToken(user: User): RefreshToken {
         val token = UUID.randomUUID().toString()
-        val expiryDate = Instant.now().plus(Duration.ofDays(14))
+        val expiryDate = Instant.now().plus(Duration.ofDays(60))
 
         val refreshToken = RefreshToken(
             refreshToken = token,
