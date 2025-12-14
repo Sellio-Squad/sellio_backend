@@ -16,7 +16,7 @@ import java.util.UUID
 class JwtService(
     @param:Value("\${jwt.secret}") private val jwtSecret: String,
 ) {
-    private val accessTokenExpiration = Duration.ofHours(1)
+    private val accessTokenExpiration = Duration.ofDays(30)
 
     private val secretKey = Keys.hmacShaKeyFor(
         Base64.getDecoder().decode(jwtSecret)
