@@ -15,7 +15,7 @@ class OffersService(
     private val storageService: StorageService,
 ) {
     fun getOffers(): List<Offer> {
-        return offersRepository.findAllActiveOffers()
+        return offersRepository.findAllActiveOffers(now = Instant.now())
     }
 
     fun createOffer(imageFile: MultipartFile, request: OfferRequest): Offer {
