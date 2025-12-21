@@ -42,7 +42,8 @@ class SecurityConfig(
                     "/v1/stores/search",
                     "/v1/store-rating/**",
                     "v1/subcategories/store/*",
-                    "/v1/subcategories/category/*"
+                    "/v1/subcategories/category/*",
+                    "/v1/offers"
                 ).permitAll()
                     .anyRequest().authenticated()
             }
