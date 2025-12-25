@@ -11,6 +11,7 @@ data class ProductResponse(
     val price: Double,
     val isUsed: Boolean,
     val isFeatured: Boolean,
+    val isFavorite: Boolean,
     val subCategoryIds: List<UUID>,
     val imageUrls: List<String>,
     val items: List<ProductItemResponse>

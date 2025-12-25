@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -97,10 +98,12 @@ class ProductController(
 
     @ProductDoc.GetProductById
     @GetMapping("/{productId}")
-    fun getProductById(@PathVariable productId: UUID): ResponseEntity<ProductResponse> {
-        val product = productService.getProductById(productId)
-        return ResponseEntity.ok(product.toResponse())
-
+    fun getProductById(
+        @AuthenticationPrincipal userId: UUID?,
+        @PathVariable productId: UUID
+    ): ResponseEntity<ProductResponse> {
+        val product = productService.getProductById(productId, userId)
+        return ResponseEntity.ok(product)
     }
 
     @GetMapping("/{categoryId}/custom")

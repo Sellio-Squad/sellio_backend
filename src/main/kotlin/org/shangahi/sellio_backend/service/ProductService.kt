@@ -225,9 +225,19 @@ class ProductService(
     }
 
     @Transactional(readOnly = true)
-    fun getProductById(productId: UUID): Product {
-        val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
-        return product
+    fun getProductById(
+        productId: UUID,
+        userId: UUID?
+    ): ProductResponse {
+        val product = productRepository.findByIdWithItems(productId)
+            ?: throw ProductNotFoundException()
+
+        val isFavorite = userId?.let {
+            favoriteProductRepository
+                .findByUserIdAndProductId(it, productId) != null
+        } ?: false
+
+        return product.toResponse(isFavorite)
     }
 
     @Transactional(readOnly = true)
