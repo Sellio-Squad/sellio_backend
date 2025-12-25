@@ -41,8 +41,26 @@ fun Product.toResponse(): ProductResponse =
         isFeatured = this.isFeatured,
         subCategoryIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
         imageUrls = this.images.map { it.imageUrl },
+        items = this.items.map { it.toResponse() },
+        isFavorite = false
+    )
+
+fun Product.toResponse(isFavorite: Boolean): ProductResponse =
+    ProductResponse(
+        id = this.id!!,
+        title = this.title,
+        description = this.description,
+        mainImageURL = this.mainImageURL,
+        storeId = this.store.id!!,
+        price = this.price,
+        isUsed = this.isUsed,
+        isFeatured = this.isFeatured,
+        isFavorite = isFavorite,
+        subCategoryIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
+        imageUrls = this.images.map { it.imageUrl },
         items = this.items.map { it.toResponse() }
     )
+
 
 fun ProductItem.toResponse(): ProductItemResponse {
     val price = this.price ?: this.product.price
