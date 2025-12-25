@@ -11,7 +11,8 @@ import org.springframework.data.domain.Page
 fun Store.toStoreDetailsResponse(
     featuredProducts: List<ProductCardResponse>,
     averageRating: Double,
-    discounts : List<StoreDiscountResponse>
+    discounts : List<StoreDiscountResponse>,
+    isFavorite : Boolean
 ) = StoreInfoResponse(
     id = this.id ?: throw IllegalStateException("Store ID was null for Store ${this.title}"),
     ownerId = this.owner.id ?: throw IllegalStateException("Store owner ID was null for Store ${this.title}"),
@@ -25,7 +26,8 @@ fun Store.toStoreDetailsResponse(
     country = this.country,
     avgRating = averageRating,
     activeStoreDiscounts = discounts,
-    storeContacts = this.contacts.map { it.toStoreContactResponse() }
+    storeContacts = this.contacts.map { it.toStoreContactResponse() },
+    isFavorite = isFavorite
 )
 
 fun Store.toStoreResponse(): StoreResponse {
