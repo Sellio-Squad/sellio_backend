@@ -11,8 +11,8 @@ import org.shangahi.sellio_backend.api.mapper.toStoreDiscountResponse
 import org.shangahi.sellio_backend.entity.Store
 import org.shangahi.sellio_backend.model.ContactType
 import org.shangahi.sellio_backend.repository.*
-import org.shangahi.sellio_backend.service.exception.*
 import org.shangahi.sellio_backend.security.SecurityUtils
+import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -38,7 +38,10 @@ class StoreService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getStoreDetailsById(storeId: UUID): StoreInfoResponse {
+    fun getStoreDetailsById(
+        userId: UUID?,
+        storeId: UUID
+    ): StoreInfoResponse {
 
         val store = storeRepository.findByIdOrNull(storeId)
             ?: throw StoreNotFoundException()
@@ -47,10 +50,9 @@ class StoreService(
         val featuredProductsPage =
             productRepository.findStoreFeaturedProductsByStoreId(storeId, featuredPageable)
 
-        val currentUserId = SecurityUtils.getCurrentUserId()
         val featuredProductIds = featuredProductsPage.content.map { it.id!! }
-        val favoriteProductIds = if (currentUserId != null && featuredProductIds.isNotEmpty()) {
-            favoriteProductRepository.findFavoriteProductIdsByUserIdAndProductIds(currentUserId, featuredProductIds)
+        val favoriteProductIds = if (userId != null && featuredProductIds.isNotEmpty()) {
+            favoriteProductRepository.findFavoriteProductIdsByUserIdAndProductIds(userId, featuredProductIds)
         } else {
             emptySet()
         }
@@ -63,10 +65,16 @@ class StoreService(
             discountRepository.findActiveStoreDiscounts(storeId)
                 .map { it.toStoreDiscountResponse() }
 
+        val isFavorite = userId?.let {
+            favoriteStoreRepository
+                .findFavoriteStoresByUserIdAndStoreId(userId, storeId) != null
+        } ?: false
+
         return store.toStoreDetailsResponse(
             featuredProducts,
             ratingStats.averageRating,
-            discounts
+            discounts,
+            isFavorite
         )
     }
 
@@ -148,7 +156,7 @@ class StoreService(
             throw StoreTitleAlreadyExistException()
         }
 
-        storeCreationValidation(ownerId,request)
+        storeCreationValidation(ownerId, request)
 
         val newStore = Store(
             owner = owner,
@@ -205,7 +213,11 @@ class StoreService(
         if (storeRepository.existsByTitle(request.title))
             throw StoreTitleAlreadyExistException()
 
-        if (request.phoneNumber != null && storeContactRepository.existsByTypeAndValue(ContactType.PHONE, request.phoneNumber)) {
+        if (request.phoneNumber != null && storeContactRepository.existsByTypeAndValue(
+                ContactType.PHONE,
+                request.phoneNumber
+            )
+        ) {
             throw StorePhoneNumberExistException()
         }
     }

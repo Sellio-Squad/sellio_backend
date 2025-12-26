@@ -2,15 +2,16 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductItemUpdateRequest
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
+import org.shangahi.sellio_backend.api.dto.response.TrendingProductResponse
+import org.shangahi.sellio_backend.api.mapper.toPagedResponse
 import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.model.OrderStatus
-import org.shangahi.sellio_backend.model.TrendingProduct
 import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.service.exception.ProductItemInUseException
 import org.shangahi.sellio_backend.service.exception.ProductItemNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -23,20 +24,27 @@ class ProductItemService(
     private val productRepository: ProductRepository,
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
-    private val weightRepository: WeightRepository,
     private val discountRepository: DiscountRepository,
     private val cartItemRepository: CartItemRepository,
-    private val orderItemRepository: OrderItemRepository
+    private val orderItemRepository: OrderItemRepository,
+    private val favoriteProductRepository: FavoriteProductRepository
 ) {
-    fun getTrendingProducts(pageable: Pageable): Page<TrendingProduct> {
-        val trendingProducts = productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
+    fun getTrendingProducts(userId: UUID?, pageable: Pageable): PageResponse<TrendingProductResponse> {
+        val trendingProducts =
+            productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
+                .takeIf { !it.isEmpty }
+                ?: productItemRepository.findAllProducts(pageable)
+        val productIds = trendingProducts.content.map { it.productId }
 
-        return if (trendingProducts.isEmpty) {
-            productItemRepository.findAllProducts(pageable)
-        } else {
-            trendingProducts
-        }
+        val favoriteIds =
+            if (userId != null && productIds.isNotEmpty()) {
+                favoriteProductRepository
+                    .findFavoriteProductIdsByUserIdAndProductIds(userId, productIds)
+            } else emptySet()
+
+        return trendingProducts.toPagedResponse(favoriteIds)
     }
+
 
     fun getProductItems(productId: UUID): List<ProductItem> {
         if (!productRepository.existsById(productId)) {

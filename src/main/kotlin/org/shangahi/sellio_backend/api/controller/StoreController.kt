@@ -8,8 +8,6 @@ import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
-import org.shangahi.sellio_backend.api.mapper.toResponse
-import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreResponse
 import org.shangahi.sellio_backend.api.swagger.doc.StoreDoc
 import org.shangahi.sellio_backend.service.StoreService
@@ -36,7 +34,7 @@ class StoreController(
         @AuthenticationPrincipal ownerId: UUID
     ): ResponseEntity<StoreCreationResponse> {
 
-        val response = storeService.createStore(ownerId,request)
+        val response = storeService.createStore(ownerId, request)
 
         val location = URI.create("/v1/stores/${response.id}")
 
@@ -77,8 +75,11 @@ class StoreController(
 
     @StoreDoc.GetStoreInfo
     @GetMapping("store-details/{storeId}")
-    fun getStoreDetailsById(@PathVariable storeId: UUID): StoreInfoResponse {
-        return storeService.getStoreDetailsById(storeId)
+    fun getStoreDetailsById(
+        @AuthenticationPrincipal userId: UUID?,
+        @PathVariable storeId: UUID
+    ): StoreInfoResponse {
+        return storeService.getStoreDetailsById(userId, storeId)
     }
 
     @StoreDoc.TopStores

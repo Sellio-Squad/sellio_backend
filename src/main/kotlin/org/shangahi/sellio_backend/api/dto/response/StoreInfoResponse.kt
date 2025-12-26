@@ -15,5 +15,6 @@ data class StoreInfoResponse(
     val country: String,
     val featuredProducts: List<ProductCardResponse>,
     val avgRating: Double,
+    val isFavorite: Boolean,
     val activeStoreDiscounts : List<StoreDiscountResponse>
 )

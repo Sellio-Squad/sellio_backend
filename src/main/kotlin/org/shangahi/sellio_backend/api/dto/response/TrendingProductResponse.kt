@@ -7,5 +7,6 @@ data class TrendingProductResponse(
     val title: String,
     val sold: Long,
     val price: Double,
-    val image: String?
+    val image: String?,
+    val isFavorite: Boolean
 )
