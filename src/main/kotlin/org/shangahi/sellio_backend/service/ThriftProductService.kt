@@ -7,6 +7,7 @@ import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.entity.ThriftProduct
 import org.shangahi.sellio_backend.repository.*
+import org.shangahi.sellio_backend.service.exception.CategoryNotFoundException
 import org.shangahi.sellio_backend.service.exception.StoreNotFoundException
 import org.shangahi.sellio_backend.service.exception.SubCategoryNotFoundException
 import org.springframework.data.domain.Page
@@ -26,7 +27,8 @@ class ThriftProductService(
     private val discountRepository: DiscountRepository,
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
-    private val weightRepository: WeightRepository
+    private val weightRepository: WeightRepository,
+    private val categoryRepository: CategoryRepository
 ) {
 
     @Transactional
@@ -58,6 +60,9 @@ class ThriftProductService(
         categoryId: UUID?,
         pageable: Pageable
     ): Page<ThriftProduct> {
+        if (categoryId != null && !categoryRepository.existsById(categoryId)) {
+            throw CategoryNotFoundException()
+        }
         return if (categoryId != null) {
             thriftProductRepository.findByCategoryId(categoryId, pageable)
         } else {
