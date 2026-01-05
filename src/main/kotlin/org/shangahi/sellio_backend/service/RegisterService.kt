@@ -109,6 +109,7 @@ class RegisterService(
         return AuthResponse(accessToken, refreshToken)
     }
 
+    @Transactional
     @Scheduled(fixedRate = 5 * 60 * 1000)
     fun deleteExpiredPendingSignups() {
         val expiryTime = Instant.now().minusSeconds(5 * 60)

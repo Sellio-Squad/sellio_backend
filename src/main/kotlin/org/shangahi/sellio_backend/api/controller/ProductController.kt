@@ -3,12 +3,11 @@ package org.shangahi.sellio_backend.api.controller
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.ProductRequest
-import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
+import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
-import org.shangahi.sellio_backend.api.mapper.toProductCardResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.ProductDoc
 import org.shangahi.sellio_backend.service.ProductService
