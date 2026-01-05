@@ -16,8 +16,6 @@ import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
 import org.shangahi.sellio_backend.repository.*
-import org.shangahi.sellio_backend.service.exception.*
-import org.shangahi.sellio_backend.service.exception.*
 import org.shangahi.sellio_backend.security.SecurityUtils
 import org.shangahi.sellio_backend.service.exception.*
 import org.springframework.data.domain.Page
@@ -98,23 +96,21 @@ class ProductService(
 
         val existingProduct = productRepository.findByIdOrNull(productId)
             ?: throw ProductNotFoundException()
-        var titleToUpdate = existingProduct.title
         if (request.title != null && request.title != existingProduct.title) {
             if (productRepository.existsByTitleAndIdNot(request.title, existingProduct.id!!)) {
                 throw ProductAlreadyExistException()
             }
-            titleToUpdate = request.title
+            existingProduct.title = request.title
         }
-        val productToUpdate = existingProduct.copy(
-            title = titleToUpdate,
-            description = request.description ?: existingProduct.description,
-            mainImageURL = request.mainImageURL ?: existingProduct.mainImageURL,
-            price = request.price ?: existingProduct.price,
-            isUsed = request.isUsed ?: existingProduct.isUsed,
-            isFeatured = request.isFeatured ?: existingProduct.isFeatured
-        )
 
-        val savedProduct = productRepository.save(productToUpdate)
+        request.description?.let { existingProduct.description = it }
+        request.mainImageURL?.let { existingProduct.mainImageURL = it }
+        request.price?.let { existingProduct.price = it }
+        request.isUsed?.let { existingProduct.isUsed = it }
+        request.isFeatured?.let { existingProduct.isFeatured = it }
+
+
+        val savedProduct = productRepository.save(existingProduct)
 
         request.items?.let {
             productItemRepository.deleteAll(existingProduct.items)
@@ -272,7 +268,7 @@ class ProductService(
             throw ProductItemInUseException()
         }
         if (product.mainImageURL != null) {
-            storageService.deleteImage(product.mainImageURL)
+            storageService.deleteImage(product.mainImageURL!!)
         }
         product.items.forEach { item ->
             item.variationImageUrl?.let { storageService.deleteImage(it) }
