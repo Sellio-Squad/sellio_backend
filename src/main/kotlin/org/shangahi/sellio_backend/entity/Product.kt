@@ -9,51 +9,55 @@ import java.time.Instant
 import java.util.*
 
 @Table(name = "product")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "product_type")
+@DiscriminatorValue("NEW")
 @Entity
-data class Product(
+
+open class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID? = null,
+    open val id: UUID? = null,
 
     @Column(name = "title", nullable = false)
-    val title: String,
+    open var title: String,
 
     @Column(name = "description", nullable = true)
-    val description: String?,
+    open var description: String?,
 
     @Column(name = "main_image_url", nullable = true)
-    val mainImageURL: String?,
+    open var mainImageURL: String?,
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    val items: Set<ProductItem> = emptySet(),
+    open val items: Set<ProductItem> = emptySet(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
-    val store: Store,
+    open val store: Store,
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonManagedReference
-    val productSubCategories: Set<ProductSubCategory> = emptySet(),
+    open val productSubCategories: Set<ProductSubCategory> = emptySet(),
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
-    val images: Set<ProductImage> = emptySet(),
+    open val images: Set<ProductImage> = emptySet(),
 
     @Column(name = "price", nullable = false)
-    val price: Double,
+    open var price: Double,
 
     @Column(name = "is_used", nullable = false)
-    val isUsed: Boolean = false,
+    open var isUsed: Boolean = false,
 
     @Column(name = "is_featured", nullable = false)
-    val isFeatured: Boolean = false,
+    open var isFeatured: Boolean = false,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    val createdAt: Instant? = null,
+    open var createdAt: Instant? = null,
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = true)
-    val updatedAt: Instant? = null,
+    open var updatedAt: Instant? = null,
 ){
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
