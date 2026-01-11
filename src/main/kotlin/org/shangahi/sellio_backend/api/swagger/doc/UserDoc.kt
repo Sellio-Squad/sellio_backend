@@ -122,7 +122,6 @@ annotation class UserDoc {
                               "firstName": "Not Ahmed",
                               "lastName": "Sayed",
                               "email": null,
-                              "phoneNumber": "01111111111",
                               "city": "Cairo",
                               "country": "Egypt",
                               "avatarUrl": null
