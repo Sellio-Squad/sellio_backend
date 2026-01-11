@@ -30,6 +30,12 @@ class InvalidPhoneNumberException : SellioException (
     code = INVALID_PHONE_NUMBER
 )
 
+class SamePhoneNumberException : SellioException (
+    message = "New phone number cannot be the same as the current one",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = INVALID_PHONE_NUMBER
+)
+
 class InvalidPhoneNumberRegionException : SellioException (
     message = "Invalid phone number region",
     httpStatus = HttpStatus.BAD_REQUEST,
