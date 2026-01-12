@@ -21,7 +21,7 @@ class UserInfoController(
 ) {
 
     @UserDoc.UpdateUser
-    @PutMapping("/update")
+    @PatchMapping("/update")
     fun updateUser(
         @AuthenticationPrincipal userId: UUID,
         @Valid @RequestBody request: UserUpdateRequest,
