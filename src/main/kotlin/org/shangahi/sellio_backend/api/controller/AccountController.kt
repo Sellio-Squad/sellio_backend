@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.*
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
+import org.shangahi.sellio_backend.api.dto.response.MessageResponse
 import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
 import org.shangahi.sellio_backend.service.AccountService
@@ -60,15 +61,11 @@ class AccountController(
     @PostMapping("/reset-password")
     @AccountDoc.ChangePassword
     fun resetPassword(
-        @RequestBody request: ChangePasswordRequest,
+        @RequestBody @Valid request: ChangePasswordRequest,
         @AuthenticationPrincipal userId: UUID
-    ) {
-        return resetPasswordService.resetPassword(
-            userId,
-            request.currentPassword,
-            request.newPassword,
-            request.confirmPassword
-        )
+    ): ResponseEntity<MessageResponse> {
+        resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword)
+        return ResponseEntity.ok(MessageResponse("Password reset successfully"))
     }
 
     @PostMapping("/logout")
