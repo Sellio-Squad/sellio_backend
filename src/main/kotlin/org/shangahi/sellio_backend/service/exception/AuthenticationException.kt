@@ -54,6 +54,13 @@ class PasswordNotMatchException : SellioException (
     code = AUTH_PASSWORD_NOT_MATCH
 )
 
+
+class CurrentPasswordIncorrectException : SellioException(
+    message = "Current password is incorrect",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = AUTH_INVALID_CREDENTIALS
+)
+
 class InvalidOtpException : SellioException (
     message = "Invalid OTP",
     httpStatus = HttpStatus.BAD_REQUEST,
