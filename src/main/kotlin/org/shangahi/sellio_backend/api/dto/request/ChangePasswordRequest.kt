@@ -7,9 +7,7 @@ data class ChangePasswordRequest(
     @field:NotBlank
     val currentPassword: String,
 
-    @field:NotBlank @field:Size(min = 8)
+    @field:NotBlank
+    @field:Size(min = 8, message = "Password must be at least 8 characters")
     val newPassword: String,
-
-    @field:NotBlank @field:Size(min = 8)
-    val confirmPassword: String
 )
