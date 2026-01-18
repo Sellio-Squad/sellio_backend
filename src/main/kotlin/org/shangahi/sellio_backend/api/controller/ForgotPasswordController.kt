@@ -1,10 +1,15 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.request.*
+import org.shangahi.sellio_backend.api.dto.request.RequestOtpRequest
+import org.shangahi.sellio_backend.api.dto.request.ResetPasswordRequest
+import org.shangahi.sellio_backend.api.dto.request.VerifyOtpRequest
 import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
 import org.shangahi.sellio_backend.api.swagger.doc.ForgotPasswordDoc
 import org.shangahi.sellio_backend.service.ForgotPasswordService
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/forgot-password")
@@ -33,7 +38,6 @@ class ForgotPasswordController(
         forgotPasswordService.resetPassword(
             sessionId = request.sessionId,
             newPassword = request.newPassword,
-            confirmPassword = request.confirmPassword
         )
     }
 }
