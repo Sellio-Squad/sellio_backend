@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.controller
 
+import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.RequestOtpRequest
 import org.shangahi.sellio_backend.api.dto.request.ResetPasswordRequest
 import org.shangahi.sellio_backend.api.dto.request.VerifyOtpRequest
@@ -34,7 +35,7 @@ class ForgotPasswordController(
 
     @PostMapping("/reset")
     @ForgotPasswordDoc.ResetPassword
-    fun resetPassword(@RequestBody request: ResetPasswordRequest) {
+    fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest) {
         forgotPasswordService.resetPassword(
             sessionId = request.sessionId,
             newPassword = request.newPassword,
