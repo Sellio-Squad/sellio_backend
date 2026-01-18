@@ -30,8 +30,7 @@ annotation class UserDoc {
                                 value = """
                             {
                                 "id": "f895cdbe-73fc-4e44-b5db-02f396953f64",
-                                "firstName": "Ahmed",
-                                "lastName": "Sayed",
+                                "fullName": "Ahmed Sayed",
                                 "email": "ahmed@sellio.com",
                                 "phoneNumber": "01000000001",
                                 "city": "Cairo",
@@ -119,8 +118,7 @@ annotation class UserDoc {
                                 value = """
                            {
                               "id": "e8387af4-0646-403a-9bfb-b718252ce48b",
-                              "firstName": "Not Ahmed",
-                              "lastName": "Sayed",
+                              "fullName": "Abdulaziz",
                               "email": null,
                               "city": "Cairo",
                               "country": "Egypt",
