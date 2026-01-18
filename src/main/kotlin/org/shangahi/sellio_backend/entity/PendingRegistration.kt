@@ -13,11 +13,8 @@ data class PendingRegistration(
     @Column(name = "session_id", nullable = false)
     val sessionId: UUID? = null,
 
-    @Column(name = "first_name", nullable = false)
-    val firstName: String,
-
-    @Column(name = "last_name", nullable = false)
-    val lastName: String,
+    @Column(name = "full_name", nullable = false)
+    val fullName: String,
 
     @Column(name = "phone_number", nullable = false, unique = true)
     val phoneNumber: String,
