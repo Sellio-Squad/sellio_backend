@@ -5,7 +5,6 @@ import org.shangahi.sellio_backend.repository.OtpLogRepository
 import org.shangahi.sellio_backend.repository.UserRepository
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
 import org.shangahi.sellio_backend.security.service.otp.SmsSender
-import org.shangahi.sellio_backend.service.exception.PasswordNotMatchException
 import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -43,10 +42,7 @@ class ForgotPasswordService(
         otpService.verifyOtp(uuid, otp)
     }
 
-    fun resetPassword(sessionId: String, newPassword: String, confirmPassword: String) {
-        if (newPassword != confirmPassword) {
-            throw PasswordNotMatchException()
-        }
+    fun resetPassword(sessionId: String, newPassword: String) {
 
         val uuid = UUID.fromString(sessionId)
 
