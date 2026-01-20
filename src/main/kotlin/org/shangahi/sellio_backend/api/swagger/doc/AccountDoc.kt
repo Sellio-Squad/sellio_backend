@@ -403,7 +403,7 @@ annotation class AccountDoc {
                             value = """
                             {
                               "currentPassword": "OldPassword123!",
-                              "newPassword": "NewPassword123!",
+                              "newPassword": "NewPassword123!"
                             }
                             """
                         )
