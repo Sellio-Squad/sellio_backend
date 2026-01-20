@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.service.exception.ErrorCode.GEN_INTERNAL_SERVER_ERROR
 import org.slf4j.LoggerFactory
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
-class SellioExceptionHandler {
+class SellioExceptionHandler(private val env: Environment) {
     private val log = LoggerFactory.getLogger(SellioExceptionHandler::class.java)
 
     @ExceptionHandler(SellioException::class)
@@ -89,10 +90,16 @@ class SellioExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun handleGenericException(ex: Exception, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         log.error("Unhandled exception occurred at path: ${request.requestURI}", ex)
+        val isDev = env.activeProfiles.contains("dev")
+        val message = if (isDev) {
+            ex.message ?: "Unknown error"
+        } else {
+            "Something went wrong, please try again later."
+        }
         val body = ErrorResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             error = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase,
-            message = ex.message ?: "An internal server error occurred",
+            message = message,
             path = request.requestURI,
             code = GEN_INTERNAL_SERVER_ERROR
         )
