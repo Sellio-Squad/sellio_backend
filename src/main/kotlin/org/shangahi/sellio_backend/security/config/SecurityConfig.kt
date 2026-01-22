@@ -43,7 +43,8 @@ class SecurityConfig(
                     "/v1/store-rating/**",
                     "v1/subcategories/store/*",
                     "/v1/subcategories/category/*",
-                    "/v1/offers"
+                    "/v1/offers",
+                    "v1/countries/**"
                 ).permitAll()
                     .anyRequest().authenticated()
             }
