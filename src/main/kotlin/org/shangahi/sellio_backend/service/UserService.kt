@@ -70,7 +70,7 @@ class UserService(
         return userRepository.save(updatedUser)
     }
 
-
+    @Transactional
     fun updateUser(
         userId: UUID,
         request: UserUpdateRequest
@@ -79,13 +79,6 @@ class UserService(
         val existingUser = userRepository.findByIdAndIsDeletedFalse(userId)
             ?: throw UserNotFoundException()
 
-        if (
-            request.phoneNumber != null &&
-            request.phoneNumber != existingUser.phoneNumber &&
-            userRepository.existsByPhoneNumberAndIsDeletedFalse(request.phoneNumber)
-        ) {
-            throw UserPhoneNumberAlreadyExistsException()
-        }
         if (
             request.email != null &&
             request.email != existingUser.email &&
@@ -96,11 +89,9 @@ class UserService(
         val updatedUser = existingUser.copy(
             firstName = request.firstName ?: existingUser.firstName,
             lastName = request.lastName ?: existingUser.lastName,
-            phoneNumber = request.phoneNumber ?: existingUser.phoneNumber,
             email = request.email ?: existingUser.email,
             city = request.city ?: existingUser.city,
             country = request.country ?: existingUser.country,
-            avatarUrl = request.avatarUrl ?: existingUser.avatarUrl
         )
         return userRepository.save(updatedUser)
     }

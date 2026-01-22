@@ -403,8 +403,7 @@ annotation class AccountDoc {
                             value = """
                             {
                               "currentPassword": "OldPassword123!",
-                              "newPassword": "NewPassword123!",
-                              "confirmPassword": "NewPassword123!"
+                              "newPassword": "NewPassword123!"
                             }
                             """
                         )
@@ -414,22 +413,6 @@ annotation class AccountDoc {
         ),
         responses = [
             ApiResponse(responseCode = "200", description = "Password updated successfully"),
-            ApiResponse(
-                responseCode = "401",
-                description = "Invalid current password",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "InvalidCurrentPassword",
-                                value = ErrorResponseExample.AUTH_INVALID_CREDENTIALS
-                            )
-                        ]
-                    )
-                ]
-            ),
             ApiResponse(
                 responseCode = "400",
                 description = "New password mismatch or validation error",

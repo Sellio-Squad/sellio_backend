@@ -1,10 +1,9 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.service.exception.PasswordNotMatchException
-import org.shangahi.sellio_backend.service.exception.UnauthorizedException
+import org.shangahi.sellio_backend.service.exception.CurrentPasswordIncorrectException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class ResetPasswordService(
@@ -16,16 +15,12 @@ class ResetPasswordService(
         userId: UUID,
         currentPassword: String,
         newPassword: String,
-        confirmPassword: String
     ) {
-        if (newPassword != confirmPassword) {
-            throw PasswordNotMatchException()
-        }
 
         val user = userService.findById(userId)
 
         if (!passwordEncoder.matches(currentPassword, user.password)) {
-            throw UnauthorizedException()
+            throw CurrentPasswordIncorrectException()
         }
 
         val updatedUser = user.copy(password = passwordEncoder.encode(newPassword))

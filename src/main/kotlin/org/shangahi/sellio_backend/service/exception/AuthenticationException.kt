@@ -30,6 +30,12 @@ class InvalidPhoneNumberException : SellioException (
     code = INVALID_PHONE_NUMBER
 )
 
+class SamePhoneNumberException : SellioException (
+    message = "New phone number cannot be the same as the current one",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = INVALID_PHONE_NUMBER
+)
+
 class InvalidPhoneNumberRegionException : SellioException (
     message = "Invalid phone number region",
     httpStatus = HttpStatus.BAD_REQUEST,
@@ -46,6 +52,13 @@ class PasswordNotMatchException : SellioException (
     message = "Password not match",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = AUTH_PASSWORD_NOT_MATCH
+)
+
+
+class CurrentPasswordIncorrectException : SellioException(
+    message = "Current password is incorrect",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = AUTH_INVALID_CREDENTIALS
 )
 
 class InvalidOtpException : SellioException (

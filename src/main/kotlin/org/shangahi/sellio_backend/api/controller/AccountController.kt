@@ -1,14 +1,14 @@
 package org.shangahi.sellio_backend.api.controller
 
-import org.shangahi.sellio_backend.api.dto.request.ChangePasswordRequest
-import org.shangahi.sellio_backend.api.dto.request.ResetPasswordRequest
-import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
-import org.shangahi.sellio_backend.api.dto.request.LoginRequest
-import org.shangahi.sellio_backend.api.dto.request.RefreshTokenRequest
-import org.shangahi.sellio_backend.api.dto.request.VerifyOtpRequest
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import jakarta.validation.Valid
+import org.shangahi.sellio_backend.api.dto.request.*
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
+import org.shangahi.sellio_backend.api.dto.response.MessageResponse
 import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
+import org.shangahi.sellio_backend.service.AccountService
 import org.shangahi.sellio_backend.service.AuthenticationService
 import org.shangahi.sellio_backend.service.RegisterService
 import org.shangahi.sellio_backend.service.ResetPasswordService
@@ -18,14 +18,15 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import java.util.*
 
 @RestController
 @RequestMapping("/v1/auth")
 class AccountController(
     private val authenticationService: AuthenticationService,
     private val registerService: RegisterService,
-    private val resetPasswordService: ResetPasswordService
+    private val resetPasswordService: ResetPasswordService,
+    private val accountService: AccountService
 ) {
 
     @PostMapping("/login")
@@ -60,14 +61,37 @@ class AccountController(
     @PostMapping("/reset-password")
     @AccountDoc.ChangePassword
     fun resetPassword(
-        @RequestBody request: ChangePasswordRequest,
+        @RequestBody @Valid request: ChangePasswordRequest,
         @AuthenticationPrincipal userId: UUID
-    ) {
-        return resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword, request.confirmPassword)
+    ): ResponseEntity<MessageResponse> {
+        resetPasswordService.resetPassword(userId, request.currentPassword, request.newPassword)
+        return ResponseEntity.ok(MessageResponse("Password reset successfully"))
     }
 
     @PostMapping("/logout")
     fun logout(@AuthenticationPrincipal userId: UUID) {
         authenticationService.logout(userId)
     }
+
+    @PostMapping("/change-phone/initiate")
+    @Operation(summary = "Request OTP for new phone number", security = [SecurityRequirement(name = "bearer-key")])
+    fun initiateChangePhone(
+        @RequestBody @Valid request: ChangePhoneRequest,
+        @AuthenticationPrincipal userId: UUID
+    ): ResponseEntity<OtpRequestResponse> {
+        val response = accountService.initiatePhoneNumberChange(userId, request)
+        return ResponseEntity.ok(response)
+    }
+
+    @PostMapping("/change-phone/verify")
+    @Operation(summary = "Verify OTP and update phone number", security = [SecurityRequirement(name = "bearer-key")])
+    fun verifyChangePhone(
+        @RequestBody @Valid request: VerifyOtpRequest,
+        @AuthenticationPrincipal userId: UUID
+    ): ResponseEntity<String> {
+        accountService.verifyAndChangePhoneNumber(userId, request.sessionId, request.otp)
+        return ResponseEntity.ok("Phone number updated successfully")
+    }
+
+
 }

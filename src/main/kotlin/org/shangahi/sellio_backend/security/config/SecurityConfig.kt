@@ -44,6 +44,7 @@ class SecurityConfig(
                     "v1/subcategories/store/*",
                     "/v1/subcategories/category/*",
                     "/v1/offers",
+                    "/v1/thrift-products",
                     "v1/countries/**"
                 ).permitAll()
                     .anyRequest().authenticated()
