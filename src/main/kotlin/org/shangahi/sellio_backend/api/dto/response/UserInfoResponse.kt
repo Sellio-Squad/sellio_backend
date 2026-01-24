@@ -2,8 +2,7 @@ package org.shangahi.sellio_backend.api.dto.response
 
 
 data class UserInfoResponse(
-    val firstName: String,
-    val lastName: String,
+    val fullName:String,
     val email: String?,
     val phoneNumber: String? = null,
     val city: String,

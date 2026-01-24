@@ -5,11 +5,8 @@ import jakarta.validation.constraints.Size
 import java.util.UUID
 
 data class CreateUserRequest(
-    @field:NotBlank(message = "First name is required")
-    val firstName: String,
-
-    @field:NotBlank(message = "Last name is required")
-    val lastName: String,
+    @field:NotBlank(message = "Full name is required")
+    val fullName: String,
 
     @field:NotBlank(message = "Phone number is required")
     val phoneNumber: String,

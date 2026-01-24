@@ -62,7 +62,7 @@ class UserService(
 
         val imageUrl = storageService.uploadImage(
             file = file,
-            fileName = user.firstName,
+            fileName = user.fullName,
             folderName = "avatars"
         )
 
@@ -87,8 +87,7 @@ class UserService(
             throw UserEmailAlreadyExistsException()
         }
         val updatedUser = existingUser.copy(
-            firstName = request.firstName ?: existingUser.firstName,
-            lastName = request.lastName ?: existingUser.lastName,
+            fullName = request.fullName ?: existingUser.fullName,
             email = request.email ?: existingUser.email,
             city = request.city ?: existingUser.city,
             country = request.country ?: existingUser.country,

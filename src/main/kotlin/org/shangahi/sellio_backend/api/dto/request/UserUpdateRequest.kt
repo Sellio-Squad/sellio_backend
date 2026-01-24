@@ -5,9 +5,7 @@ import jakarta.validation.constraints.Size
 
 data class UserUpdateRequest(
     @field:Size(min = 2, max = 50)
-    val firstName: String?,
-    @field:Size(min = 2, max = 50)
-    val lastName: String?,
+    val fullName: String?,
     @field:Email(message = "Invalid email format")
     @field:Size(min = 2, max = 100)
     val email: String?,

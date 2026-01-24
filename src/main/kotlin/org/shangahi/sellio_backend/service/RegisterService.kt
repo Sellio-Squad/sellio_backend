@@ -44,8 +44,7 @@ class RegisterService(
         }
 
         val pending = PendingRegistration(
-            firstName = request.firstName,
-            lastName = request.lastName,
+            fullName = request.fullName,
             phoneNumber = validated.phoneNumber,
             password = passwordEncoder.encode(request.password),
             email = request.email,
@@ -78,8 +77,7 @@ class RegisterService(
             val restored = deletedUser.copy(
                 isDeleted = false,
                 deletedAt = null,
-                firstName = pending.firstName,
-                lastName = pending.lastName,
+                fullName = pending.fullName,
                 email = pending.email,
                 city = pending.city,
                 country = pending.country,
@@ -92,8 +90,7 @@ class RegisterService(
             val user = User(
                 phoneNumber = pending.phoneNumber,
                 password = pending.password,
-                firstName = pending.firstName,
-                lastName = pending.lastName,
+                fullName = pending.fullName,
                 city = pending.city,
                 country = pending.country,
                 email = pending.email,
@@ -110,9 +107,9 @@ class RegisterService(
     }
 
     @Transactional
-    @Scheduled(fixedRate = 5 * 60 * 1000)
+    @Scheduled(fixedRate = 2 * 60 * 1000)
     fun deleteExpiredPendingSignups() {
-        val expiryTime = Instant.now().minusSeconds(5 * 60)
+        val expiryTime = Instant.now().minusSeconds(2 * 60)
         pendingRegistrationRepository.deleteAllByCreatedAtBefore(expiryTime)
     }
 
