@@ -5,14 +5,17 @@ import org.shangahi.sellio_backend.api.dto.response.ProductCardResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreDiscountResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreResponse
+import org.shangahi.sellio_backend.api.dto.response.SubCategoryResponse
 import org.shangahi.sellio_backend.entity.Store
+import org.shangahi.sellio_backend.entity.SubCategory
 import org.springframework.data.domain.Page
 
 fun Store.toStoreDetailsResponse(
     featuredProducts: List<ProductCardResponse>,
     averageRating: Double,
     discounts : List<StoreDiscountResponse>,
-    isFavorite : Boolean
+    isFavorite : Boolean,
+    subCategories: List<SubCategoryResponse>
 ) = StoreInfoResponse(
     id = this.id ?: throw IllegalStateException("Store ID was null for Store ${this.title}"),
     ownerId = this.owner.id ?: throw IllegalStateException("Store owner ID was null for Store ${this.title}"),
@@ -27,7 +30,8 @@ fun Store.toStoreDetailsResponse(
     avgRating = averageRating,
     activeStoreDiscounts = discounts,
     storeContacts = this.contacts.map { it.toStoreContactResponse() },
-    isFavorite = isFavorite
+    isFavorite = isFavorite,
+    subCategories = subCategories
 )
 
 fun Store.toStoreResponse(): StoreResponse {
