@@ -11,6 +11,7 @@ import org.shangahi.sellio_backend.repository.SubCategoryRepository
 import org.shangahi.sellio_backend.service.exception.CategoryNotFoundException
 import org.shangahi.sellio_backend.service.exception.CategorySectionNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -19,6 +20,7 @@ class CategorySectionService(
     private val subCategoryRepository: SubCategoryRepository,
     private val categoryRepository: CategoryRepository
 ) {
+    @Transactional(readOnly = true)
     fun getActiveCategorySections(): List<CategorySectionResponse> {
         val activeCategorySections = categorySectionRepository.findAllByIsActiveTrueOrderBySortOrderAsc()
         if (activeCategorySections.isEmpty()) return emptyList()
@@ -30,6 +32,7 @@ class CategorySectionService(
         }
     }
 
+    @Transactional
     fun createCategorySection(request: CategorySectionRequest): List<CategorySectionResponse> {
         val categoryId = UUID.fromString(request.categoryId)
         if (!categoryRepository.existsById(categoryId)) {
@@ -39,20 +42,33 @@ class CategorySectionService(
         return getActiveCategorySections()
     }
 
+    @Transactional
     fun editCategorySection(id: String, request: EditCategorySectionRequest): List<CategorySectionResponse> {
         val existingCategorySection = categorySectionRepository.findById(UUID.fromString(id)).orElseThrow {
             throw CategorySectionNotFoundException()
         }
+        if (request.sortOrder != existingCategorySection.sortOrder) {
+            val existingCategorySectionBySortOrder =
+                categorySectionRepository.findBySortOrder(request.sortOrder)
+            if (existingCategorySectionBySortOrder != null) {
+                val swappedSection = existingCategorySectionBySortOrder.copy(
+                    sortOrder = existingCategorySection.sortOrder
+                )
+                categorySectionRepository.save(swappedSection)
+            }
+        }
+
         val updatedSection = existingCategorySection.copy(
-            sectionTitle = request.sectionTitle,
-            categoryId = UUID.fromString(request.categoryId),
-            sortOrder = request.sortOrder,
-            isActive = request.isActive
+            sectionTitle = request.sectionTitle ?: existingCategorySection.sectionTitle,
+            categoryId = request.categoryId?.let { UUID.fromString(it) } ?: existingCategorySection.categoryId,
+            sortOrder = request.sortOrder ?: existingCategorySection.sortOrder,
+            isActive = request.isActive ?: existingCategorySection.isActive
         )
         categorySectionRepository.save(updatedSection)
         return getActiveCategorySections()
     }
 
+    @Transactional
     fun deleteCategorySection(id: String): List<CategorySectionResponse> {
         if (!categorySectionRepository.existsById(UUID.fromString(id))) {
             throw CategorySectionNotFoundException()

@@ -14,8 +14,8 @@ data class CategorySectionRequest(
 )
 
 data class EditCategorySectionRequest(
-    val sectionTitle: String,
-    val categoryId: String,
-    val sortOrder: Int,
-    val isActive: Boolean = true
+    val sectionTitle: String?= null,
+    val categoryId: String?= null,
+    val sortOrder: Int?= null,
+    val isActive: Boolean?= null
 )

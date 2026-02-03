@@ -8,4 +8,5 @@ import java.util.UUID
 @Repository
 interface CategorySectionRepository : JpaRepository<CategorySection, UUID>{
     fun findAllByIsActiveTrueOrderBySortOrderAsc(): List<CategorySection>
+    fun findBySortOrder(sortOrder: Int?): CategorySection?
 }
