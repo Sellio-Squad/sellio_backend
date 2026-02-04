@@ -127,7 +127,7 @@ class RegisterService(
     }
 
     companion object{
-        private const val PENDING_SIGNUP_EXPIRY_SECONDS = 15 * 60L // 15 minutes
-        private const val CLEANUP_INTERVAL_MS = 5 * 60 * 1000L // 5 minutes
+        private const val PENDING_SIGNUP_EXPIRY_SECONDS = 15 * 60L
+        private const val CLEANUP_INTERVAL_MS = 5 * 60 * 1000L
     }
 }
