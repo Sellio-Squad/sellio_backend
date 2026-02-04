@@ -11,16 +11,10 @@ import java.util.*
 
 interface OtpLogRepository : JpaRepository<OtpLog, UUID> {
 
-    fun findByOtpAndSessionId(otp: String, sessionId: UUID): OtpLog?
-
     @Transactional
     @Query("SELECT o FROM OtpLog o WHERE o.sessionId = :sessionId ORDER BY o.id DESC")
     fun findLatestBySessionId(sessionId: UUID): OtpLog?
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE OtpLog o SET o.isVerified = true WHERE o.sessionId = :sessionId")
-    fun verifyOtp(sessionId: UUID)
 
     @Modifying
     @Transactional
