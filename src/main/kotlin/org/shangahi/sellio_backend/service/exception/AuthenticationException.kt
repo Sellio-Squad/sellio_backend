@@ -8,8 +8,10 @@ import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_UNAUTHORIZED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_USER_REGISTRATION_PENDING
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER_REGION
+import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_BLOCKED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_EXPIRED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_INVALID
+import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_MISMATCH
 import org.springframework.http.HttpStatus
 
 class InvalidCredentialsException : SellioException (
@@ -71,6 +73,18 @@ class OtpExpiredException : SellioException (
     message = "OTP expired",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = OTP_EXPIRED
+)
+
+class OtpMismatchException : SellioException(
+    message = "Incorrect OTP",
+    httpStatus = HttpStatus.NOT_ACCEPTABLE,
+    code = OTP_MISMATCH
+)
+
+class OtpBlockedException: SellioException(
+    message = "Too many attempts. Try again later",
+    httpStatus = HttpStatus.NOT_ACCEPTABLE,
+    code = OTP_BLOCKED
 )
 
 class SessionIdNotFoundException : SellioException (

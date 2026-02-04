@@ -62,6 +62,8 @@ internal object ErrorCode {
     //OTP_xxx
     const val OTP_EXPIRED = "OTP_001"
     const val OTP_INVALID = "OTP_002"
+    const val OTP_MISMATCH = "OTP_003"
+    const val OTP_BLOCKED = "OTP_004"
 
     //STORE_CONTACT_xxx
     const val STORE_CONTACT_TYPE_ALREADY_EXISTS = "STORE_CONTACT_001"
