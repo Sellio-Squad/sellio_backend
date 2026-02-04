@@ -107,9 +107,9 @@ class RegisterService(
     }
 
     @Transactional
-    @Scheduled(fixedRate = 2 * 60 * 1000)
+    @Scheduled(fixedRate =CLEANUP_INTERVAL_MS)
     fun deleteExpiredPendingSignups() {
-        val expiryTime = Instant.now().minusSeconds(2 * 60)
+        val expiryTime = Instant.now().minusSeconds(PENDING_SIGNUP_EXPIRY_SECONDS)
         pendingRegistrationRepository.deleteAllByCreatedAtBefore(expiryTime)
     }
 
@@ -124,5 +124,10 @@ class RegisterService(
 
         smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
         return OtpRequestResponse(otpLog.sessionId.toString())
+    }
+
+    companion object{
+        private const val PENDING_SIGNUP_EXPIRY_SECONDS = 15 * 60L // 15 minutes
+        private const val CLEANUP_INTERVAL_MS = 5 * 60 * 1000L // 5 minutes
     }
 }

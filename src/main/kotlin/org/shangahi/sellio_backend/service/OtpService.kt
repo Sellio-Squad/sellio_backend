@@ -81,7 +81,7 @@ class OtpService(
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 */25 * * * *")
     fun deleteExpiredOtps() {
         otpLogRepository.deleteExpiredOtpsBefore(Instant.now())
     }
@@ -100,7 +100,7 @@ class OtpService(
 
 
     companion object {
-        private const val OTP_EXPIRY_SECONDS = 4 * 60L
+        private const val OTP_EXPIRY_SECONDS = 1 * 60L
         private const val MAX_ATTEMPTS = 3
         private const val BLOCK_DURATION_SECONDS = 3 * 60L
     }
