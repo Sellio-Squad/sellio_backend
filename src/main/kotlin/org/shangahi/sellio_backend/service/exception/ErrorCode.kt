@@ -70,4 +70,8 @@ internal object ErrorCode {
 
     //COUNTRY_CITY_xxx
     const val CITIES_NOT_FOUND = "COUNTRY_CITY_001"
+
+    //CATEG_SECTION_xxx
+    const val CATEG_SECTION_ALREADY_EXISTS = "CATEG_SECTION_001"
+    const val CATEG_SECTION_NOT_FOUND = "CATEG_SECTION_002"
 }

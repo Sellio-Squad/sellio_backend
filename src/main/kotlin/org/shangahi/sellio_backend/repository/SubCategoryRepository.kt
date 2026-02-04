@@ -20,4 +20,6 @@ interface SubCategoryRepository : JpaRepository<SubCategory, UUID> {
     )
     fun findAllByStoreId(@Param("storeId") storeId: UUID): List<SubCategory>
     fun existsByTitle(@Param("title") title: String): Boolean
+    fun findAllByCategoryIdIn(categoryIds: List<UUID>): List<SubCategory>
+
 }
