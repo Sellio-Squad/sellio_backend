@@ -6,7 +6,7 @@ import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.*
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.MessageResponse
-import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
+import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
 import org.shangahi.sellio_backend.service.AccountService
 import org.shangahi.sellio_backend.service.AuthenticationService
@@ -39,7 +39,7 @@ class AccountController(
 
     @PostMapping("/create")
     @AccountDoc.CreateUser
-    fun create(@RequestBody request: CreateUserRequest): ResponseEntity<OtpRequestResponse> {
+    fun create(@RequestBody request: CreateUserRequest): ResponseEntity<OtpResponse> {
         val response = registerService.prepareRegistration(request)
         return ResponseEntity.ok(response)
     }
@@ -78,7 +78,7 @@ class AccountController(
     fun initiateChangePhone(
         @RequestBody @Valid request: ChangePhoneRequest,
         @AuthenticationPrincipal userId: UUID
-    ): ResponseEntity<OtpRequestResponse> {
+    ): ResponseEntity<OtpResponse> {
         val response = accountService.initiatePhoneNumberChange(userId, request)
         return ResponseEntity.ok(response)
     }

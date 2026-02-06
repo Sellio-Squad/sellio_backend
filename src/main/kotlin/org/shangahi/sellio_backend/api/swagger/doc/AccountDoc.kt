@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.shangahi.sellio_backend.api.dto.request.*
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
-import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
+import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.api.swagger.ErrorResponseExample
 
 annotation class AccountDoc {
@@ -133,7 +133,7 @@ annotation class AccountDoc {
                 content = [
                     Content(
                         mediaType = "application/json",
-                        schema = Schema(implementation = OtpRequestResponse::class),
+                        schema = Schema(implementation = OtpResponse::class),
                         examples = [
                             ExampleObject(
                                 name = "OtpRequestResponseExample",
