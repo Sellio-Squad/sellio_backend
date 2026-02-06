@@ -23,15 +23,6 @@ data class OtpLog(
     @Column(name = "is_verified", nullable = false)
     var isVerified: Boolean = false,
 
-    @Column(name = "attempt_count", nullable = false)
-    var attemptCount: Int = 0,
-
-    @Column(name = "blocked_until")
-    var blockedUntil: Instant? = null,
-
-    @Column(name = "expire_at", nullable = false)
-    val expireAt: Instant,
-
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant = Instant.now()
 )
