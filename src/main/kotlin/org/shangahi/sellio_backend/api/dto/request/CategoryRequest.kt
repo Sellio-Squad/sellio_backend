@@ -1,3 +1,13 @@
 package org.shangahi.sellio_backend.api.dto.request
 
-data class CategoryRequest(val title: String)
+import jakarta.validation.constraints.NotBlank
+
+data class CategoryRequest(
+    @field:NotBlank(message = "Title is required")
+    val title: String,
+)
+
+
+data class EditCategoryRequest(
+    val title: String?,
+)

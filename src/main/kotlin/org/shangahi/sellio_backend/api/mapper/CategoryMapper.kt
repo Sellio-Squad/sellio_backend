@@ -8,6 +8,7 @@ fun Category.toResponse(): CategoryResponse {
     return CategoryResponse(
         id = this.id!!,
         title = this.title,
+        imageUrl = this.imageUrl,
         createdAt = this.createdAt,
         updatedAt = this.updatedAt,
         subCategories = this.subCategories.map { it.toResponse() }
