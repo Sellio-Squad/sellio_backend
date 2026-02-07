@@ -14,8 +14,11 @@ data class Category(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     val title: String = "",
+
+    @Column(name = "image_url")
+    val imageUrl: String? = null,
 
     @OneToMany(
         mappedBy = "category",
