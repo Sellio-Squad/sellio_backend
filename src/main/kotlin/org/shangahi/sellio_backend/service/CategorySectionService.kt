@@ -31,6 +31,18 @@ class CategorySectionService(
             categorySection.toResponse(subCategories = subCategories.map { it.toResponse() })
         }
     }
+    fun getAllCategorySections () : List<CategorySectionResponse> {
+        val categorySections = categorySectionRepository.findAll()
+        if (categorySections.isEmpty()) return emptyList()
+        val categoryIds = categorySections.map { it.categoryId }
+        val subCategories = subCategoryRepository.findAllByCategoryIdIn(categoryIds)
+        return categorySections.map { categorySection ->
+            val subCategories = subCategories.filter { it.category.id == categorySection.categoryId }
+            categorySection.toResponse(
+                subCategories = subCategories.map { it.toResponse() }
+            )
+        }
+    }
 
     @Transactional
     fun createCategorySection(request: CategorySectionRequest): List<CategorySectionResponse> {

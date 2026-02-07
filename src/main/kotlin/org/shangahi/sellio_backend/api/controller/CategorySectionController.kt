@@ -18,6 +18,11 @@ class CategorySectionController(
         val categorySections = categorySectionService.getActiveCategorySections()
         return ResponseEntity.ok(categorySections)
     }
+    @GetMapping()
+    fun getAllCategorySections(): ResponseEntity<List<CategorySectionResponse>> {
+        val categorySections = categorySectionService.getAllCategorySections()
+        return ResponseEntity.ok(categorySections)
+    }
 
     @PostMapping()
     fun createCategorySection(@Valid @RequestBody request: CategorySectionRequest): ResponseEntity<List<CategorySectionResponse>> {
