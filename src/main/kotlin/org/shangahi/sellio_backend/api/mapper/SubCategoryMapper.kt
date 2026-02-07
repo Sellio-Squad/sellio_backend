@@ -10,6 +10,7 @@ fun SubCategory.toResponse(): SubCategoryResponse {
     return SubCategoryResponse(
         id = this.id!!,
         title = this.title,
+        imageUrl = this.imageUrl,
         categoryId = this.category.id,
         categoryTitle = this.category.title,
         createdAt = this.createdAt,

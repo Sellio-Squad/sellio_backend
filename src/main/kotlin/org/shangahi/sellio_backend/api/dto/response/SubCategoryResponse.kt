@@ -6,6 +6,7 @@ import java.util.*
 data class SubCategoryResponse(
     val id: UUID?,
     val title: String,
+    val imageUrl: String?,
     val categoryId: UUID?,
     val categoryTitle: String?,
     val createdAt: Instant?,
