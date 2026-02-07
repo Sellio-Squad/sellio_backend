@@ -5,6 +5,7 @@ import org.shangahi.sellio_backend.api.dto.request.EditCategorySectionRequest
 import org.shangahi.sellio_backend.api.dto.response.CategorySectionResponse
 import org.shangahi.sellio_backend.api.mapper.toEntity
 import org.shangahi.sellio_backend.api.mapper.toResponse
+import org.shangahi.sellio_backend.entity.CategorySection
 import org.shangahi.sellio_backend.repository.CategoryRepository
 import org.shangahi.sellio_backend.repository.CategorySectionRepository
 import org.shangahi.sellio_backend.repository.SubCategoryRepository
@@ -23,26 +24,23 @@ class CategorySectionService(
     @Transactional(readOnly = true)
     fun getActiveCategorySections(): List<CategorySectionResponse> {
         val activeCategorySections = categorySectionRepository.findAllByIsActiveTrueOrderBySortOrderAsc()
-        if (activeCategorySections.isEmpty()) return emptyList()
-        val categoryIds = activeCategorySections.map { it.categoryId }
-        val subCategories = subCategoryRepository.findAllByCategoryIdIn(categoryIds)
-        return activeCategorySections.map { categorySection ->
-            val subCategories = subCategories.filter { it.category.id == categorySection.categoryId }
-            categorySection.toResponse(subCategories = subCategories.map { it.toResponse() })
-        }
+        return getCategorySections(activeCategorySections)
     }
     fun getAllCategorySections () : List<CategorySectionResponse> {
         val categorySections = categorySectionRepository.findAll()
-        if (categorySections.isEmpty()) return emptyList()
-        val categoryIds = categorySections.map { it.categoryId }
-        val subCategories = subCategoryRepository.findAllByCategoryIdIn(categoryIds)
-        return categorySections.map { categorySection ->
-            val subCategories = subCategories.filter { it.category.id == categorySection.categoryId }
-            categorySection.toResponse(
-                subCategories = subCategories.map { it.toResponse() }
-            )
-        }
+       return getCategorySections(categorySections)
     }
+        private fun getCategorySections(categorySections: List<CategorySection>) : List<CategorySectionResponse> {
+            if (categorySections.isEmpty()) return emptyList()
+            val categoryIds = categorySections.map { it.categoryId }
+            val subCategories = subCategoryRepository.findAllByCategoryIdIn(categoryIds)
+            return categorySections.map { categorySection ->
+                val subCategories = subCategories.filter { it.category.id == categorySection.categoryId }
+                categorySection.toResponse(
+                    subCategories = subCategories.map { it.toResponse() }
+                )
+            }
+        }
 
     @Transactional
     fun createCategorySection(request: CategorySectionRequest): List<CategorySectionResponse> {
