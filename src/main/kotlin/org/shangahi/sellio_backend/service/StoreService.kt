@@ -71,8 +71,6 @@ class StoreService(
                 .findFavoriteStoresByUserIdAndStoreId(userId, storeId) != null
         } ?: false
 
-        //todo
-        //fetch subcategories
         val subcategories = subCategoryService.getSubCategoriesByStoreId(storeId)
 
         return store.toStoreDetailsResponse(
