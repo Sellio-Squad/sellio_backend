@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.api.mapper
 
 import org.shangahi.sellio_backend.api.dto.response.*
 import org.shangahi.sellio_backend.entity.Store
+import org.shangahi.sellio_backend.entity.SubCategory
 import org.springframework.data.domain.Page
 
 fun Store.toStoreDetailsResponse(
