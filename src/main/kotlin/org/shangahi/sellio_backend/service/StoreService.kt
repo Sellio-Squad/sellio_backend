@@ -34,7 +34,8 @@ class StoreService(
     private val favoriteProductRepository: FavoriteProductRepository,
     private val storageService: StorageService,
     private val discountRepository: DiscountRepository,
-    private val storeContactRepository: StoreContactRepository
+    private val storeContactRepository: StoreContactRepository,
+    private val subCategoryService: SubCategoryService
 ) {
 
     @Transactional(readOnly = true)
@@ -70,11 +71,14 @@ class StoreService(
                 .findFavoriteStoresByUserIdAndStoreId(userId, storeId) != null
         } ?: false
 
+        val subcategories = subCategoryService.getSubCategoriesByStoreId(storeId)
+
         return store.toStoreDetailsResponse(
             featuredProducts,
             ratingStats.averageRating,
             discounts,
-            isFavorite
+            isFavorite,
+            subcategories
         )
     }
 

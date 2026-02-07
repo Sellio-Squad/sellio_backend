@@ -16,5 +16,6 @@ data class StoreInfoResponse(
     val featuredProducts: List<ProductCardResponse>,
     val avgRating: Double,
     val isFavorite: Boolean,
-    val activeStoreDiscounts : List<StoreDiscountResponse>
+    val activeStoreDiscounts : List<StoreDiscountResponse>,
+    val subCategories: List<SubCategoryResponse>
 )
