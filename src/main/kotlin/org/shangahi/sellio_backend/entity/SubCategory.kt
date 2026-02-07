@@ -10,7 +10,7 @@ import java.util.*
 
 @Entity
 @Table(name = "sub_category")
-class SubCategory(
+data class SubCategory(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
@@ -22,6 +22,9 @@ class SubCategory(
 
     @Column(name = "title", nullable = false, unique = true)
     val title: String = "",
+
+    @Column(name = "image_url")
+    val imageUrl: String? = null,
 
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
     @JsonManagedReference
