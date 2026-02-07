@@ -14,10 +14,7 @@ import org.shangahi.sellio_backend.service.RegisterService
 import org.shangahi.sellio_backend.service.ResetPasswordService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -71,6 +68,12 @@ class AccountController(
     @PostMapping("/logout")
     fun logout(@AuthenticationPrincipal userId: UUID) {
         authenticationService.logout(userId)
+    }
+
+    @PostMapping("/resend-otp/{sessionId}")
+    fun resendOtp(@PathVariable sessionId: String): ResponseEntity<OtpResponse> {
+        val response = registerService.resendOtp(sessionId)
+        return ResponseEntity.ok(response)
     }
 
     @PostMapping("/change-phone/initiate")
