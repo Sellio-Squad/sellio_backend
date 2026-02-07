@@ -1,13 +1,16 @@
 package org.shangahi.sellio_backend.api.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.shangahi.sellio_backend.api.swagger.doc.CategoryDoc
+import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.CategoryRequest
+import org.shangahi.sellio_backend.api.dto.request.EditCategoryRequest
 import org.shangahi.sellio_backend.api.dto.response.CategoryResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
+import org.shangahi.sellio_backend.api.swagger.doc.CategoryDoc
 import org.shangahi.sellio_backend.service.CategoryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @RestController
@@ -24,14 +27,28 @@ class CategoryController(private val categoryService: CategoryService) {
     fun getById(@PathVariable id: UUID): CategoryResponse = categoryService.getCategoryById(id).toResponse()
 
     @CategoryDoc.InsertCategory
-    @PostMapping("/create")
-    fun createCategory(@RequestBody request: CategoryRequest): ResponseEntity<CategoryResponse> {
-        val saved = categoryService.create(request).toResponse()
+    @PostMapping()
+    fun createCategory(
+        @Valid @RequestPart("data") request: CategoryRequest,
+        @RequestPart("image") imageFile: MultipartFile
+    ): ResponseEntity<CategoryResponse> {
+        val saved = categoryService.create(request, imageFile).toResponse()
         return ResponseEntity.ok(saved)
     }
-    @CategoryDoc.DeleteCategory
+
+    @PutMapping("/{id}")
+    fun updateCategory(
+        @PathVariable id: UUID,
+        @RequestPart("data") request: EditCategoryRequest,
+        @RequestPart("image") imageFile: MultipartFile?
+    ): ResponseEntity<CategoryResponse> {
+        val updated = categoryService.updateCategory(id, request, imageFile).toResponse()
+        return ResponseEntity.ok(updated)
+    }
+
     @DeleteMapping("/{id}")
-    fun deleteCategory(@PathVariable id: UUID): ResponseEntity<Void> {
+    @CategoryDoc.DeleteCategory
+    fun deleteCategory(@PathVariable id: UUID): ResponseEntity<Unit> {
         categoryService.deleteCategory(id)
         return ResponseEntity.noContent().build()
     }
