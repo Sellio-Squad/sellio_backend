@@ -17,14 +17,14 @@ class OtpService(
     private val otpLogRepository: OtpLogRepository
 ) {
     @Transactional
-    fun createOtp(phoneNumber: String, sessionId: UUID): OtpLog {
+    fun createOtp(sessionId: UUID): OtpLog {
         val otp = otpGenerator.generateOtp()
 
         return otpLogRepository.save(
             OtpLog(
-                phoneNumber = phoneNumber,
                 otp = otp,
-                sessionId = sessionId
+                sessionId = sessionId,
+                expireAt = Instant.now().plusSeconds(OTP_SECONDS)
             )
         )
     }
@@ -45,8 +45,10 @@ class OtpService(
 
     @Scheduled(cron = "0 */25 * * * *")
     fun deleteExpiredOtps() {
-        val cutoff = Instant.now().minus(1, ChronoUnit.HOURS)
-        otpLogRepository.deleteByCreatedAtBefore(cutoff)
+        otpLogRepository.deleteExpiredOtps(Instant.now())
     }
 
+    companion object {
+        private const val OTP_SECONDS = 30L
+    }
 }
