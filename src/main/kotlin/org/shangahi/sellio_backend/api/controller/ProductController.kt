@@ -147,5 +147,14 @@ class ProductController(
         val message = productService.deleteProduct(id)
         return ResponseEntity.ok(message)
     }
+    @GetMapping("/category/{categoryId}")
+    fun getProductsByCategory(
+        @PathVariable categoryId: UUID,
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20, sort = ["isFeatured"], direction = Sort.Direction.DESC)
+        pageable: Pageable
+    ): PageResponse<ProductCardResponse> {
+        return productService.getProductsByCategoryId(categoryId, pageable)
+    }
 
 }
