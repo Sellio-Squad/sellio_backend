@@ -43,6 +43,14 @@ class ProductService(
     private val favoriteProductRepository: FavoriteProductRepository,
     private val categoryRepository: CategoryRepository,
 ) {
+    @Transactional(readOnly = true)
+    fun getProductsBySubCategoryId(subCategoryId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
+        if (!subCategoryRepository.existsById(subCategoryId)) {
+            throw SubCategoryNotFoundException()
+        }
+        val productPage = productRepository.findBySubCategoryId(subCategoryId, pageable)
+        return mapPageToResponseWithFavorites(productPage)
+    }
 
     @Transactional(readOnly = true)
     fun getProductsByCategoryId(categoryId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
