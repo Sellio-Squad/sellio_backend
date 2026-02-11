@@ -11,7 +11,6 @@ import org.shangahi.sellio_backend.repository.PendingRegistrationRepository
 import org.shangahi.sellio_backend.security.service.JwtService
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
 import org.shangahi.sellio_backend.security.service.otp.SmsSender
-import org.shangahi.sellio_backend.service.exception.OtpMismatchException
 import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
 import org.springframework.scheduling.annotation.Scheduled
@@ -31,7 +30,8 @@ class RegisterService(
     private val phoneNumberValidator: PhoneNumberValidatorService,
     private val smsSender: SmsSender,
     private val pendingRegistrationRepository: PendingRegistrationRepository,
-    private val otpSessionService: OtpSessionService
+    private val otpSessionService: OtpSessionService,
+    private val otpFlowService: OtpFlowService
 ) {
 
     @Transactional
@@ -42,6 +42,7 @@ class RegisterService(
             throw UserPhoneNumberAlreadyExistsException()
 
         val otpSession = otpSessionService.create(validated.phoneNumber)
+        otpSessionService.onOtpResend(otpSession)
 
         val pending = pendingRegistrationRepository.findByPhoneNumber(validated.phoneNumber)?.apply {
             fullName = request.fullName
@@ -93,16 +94,7 @@ class RegisterService(
     fun verifyOtpAndCreateUser(sessionId: String, otp: String): AuthResponse {
         val uuid = UUID.fromString(sessionId)
         val otpSession = otpSessionService.getOtpSession(uuid)
-
-        otpSessionService.ensureNotBlocked(otpSession)
-
-        try {
-            otpService.verifyOtp(uuid, otp)
-        } catch (e: OtpMismatchException) {
-            otpSessionService.onOtpMismatch(otpSession)
-            throw e
-        }
-        otpSessionService.markVerified(otpSession)
+        otpFlowService.verifyOtpForSession(sessionId, otp)
 
         val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
             ?: throw SessionIdNotFoundException()
