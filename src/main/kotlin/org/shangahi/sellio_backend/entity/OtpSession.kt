@@ -16,15 +16,6 @@ data class OtpSession(
     @Column(name = "phone_number", nullable = false, unique = true)
     val phoneNumber: String,
 
-    @Column(name = "attempt_count", nullable = false)
-    var attemptCount: Int = 0,
-
-    @Column(name = "resend_count", nullable = false)
-    var resendCount: Int = 0,
-
-    @Column(name = "blocked_until")
-    var blockedUntil: Instant? = null,
-
     @Column(name = "verified_at")
     var verifiedAt: Instant? = null,
 

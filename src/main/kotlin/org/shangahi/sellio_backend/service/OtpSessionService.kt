@@ -23,7 +23,7 @@ class OtpSessionService(
         val existing = otpSessionRepository.findByPhoneNumber(phoneNumber)
 
         if (existing != null && existing.expiresAt.isAfter(Instant.now())) {
-            ensureNotBlocked(existing)
+            validateActive(existing)
             return existing
         }
         val session = OtpSession(
@@ -40,34 +40,12 @@ class OtpSessionService(
             ?: throw SessionIdNotFoundException()
     }
 
-    fun ensureNotBlocked(session: OtpSession) {
+    fun validateActive(session: OtpSession) {
         if (session.expiresAt.isBefore(Instant.now())) {
             throw SessionExpiredException()
         }
-        if (session.blockedUntil?.isAfter(Instant.now()) == true) {
-            throw OtpBlockedException()
-        }
     }
 
-
-    @Transactional
-    fun onOtpMismatch(session: OtpSession) {
-        session.attemptCount++
-        if (session.attemptCount > MAX_OTP_ATTEMPTS) {
-            session.blockedUntil = Instant.now().plusSeconds(BLOCK_SECONDS)
-        }
-        otpSessionRepository.save(session)
-    }
-
-    @Transactional
-    fun onOtpResend(session: OtpSession) {
-        session.resendCount++
-        session.attemptCount = 0
-        if (session.resendCount > MAX_OTP_RESENDS) {
-            session.blockedUntil = Instant.now().plusSeconds(BLOCK_SECONDS)
-        }
-        otpSessionRepository.save(session)
-    }
     @Transactional
     fun markVerified(session: OtpSession) {
         if (session.expiresAt.isBefore(Instant.now())) {
@@ -81,9 +59,6 @@ class OtpSessionService(
 
 
     companion object {
-        private const val MAX_OTP_RESENDS = 3
-        private const val MAX_OTP_ATTEMPTS = 3
-        private const val BLOCK_SECONDS = 2 * 60 * 60L
         private const val OTP_SESSION_EXPIRE_SECONDS = 15 * 60L
     }
 }

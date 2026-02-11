@@ -4,7 +4,6 @@ import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.repository.UserRepository
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
 import org.shangahi.sellio_backend.security.service.otp.SmsSender
-import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UnauthorizedException
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -20,18 +19,24 @@ class ForgotPasswordService(
     private val phoneNumberValidator: PhoneNumberValidatorService,
     private val passwordEncoder: PasswordEncoder,
     private val otpSessionService: OtpSessionService,
+    private val otpAbuseService: OtpAbuseService
 ) {
 
     fun requestReset(phoneNumber: String, region: String?): OtpResponse {
+
         val validated = phoneNumberValidator.validate(phoneNumber, region)
 
-        userService.findUserByPhoneNumber(validated.phoneNumber) ?: throw UserNotFoundException()
+        userService.findUserByPhoneNumber(validated.phoneNumber)
+            ?: throw UserNotFoundException()
+
+        val abuse = otpAbuseService.create(validated.phoneNumber)
+
+        otpAbuseService.ensureNotBlocked(abuse)
 
         val otpSession = otpSessionService.create(validated.phoneNumber)
+        val otpLog = otpService.createOtp(otpSession.sessionId!!)
 
-        val otpLog = otpService.createOtp(
-            otpSession.sessionId ?: throw SessionIdNotFoundException()
-        )
+        otpAbuseService.onOtpResend(abuse)
 
         smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
 
@@ -48,6 +53,7 @@ class ForgotPasswordService(
         if (otpSession.verifiedAt == null) {
             throw UnauthorizedException()
         }
+        otpSessionService.validateActive(otpSession)
 
         val user = userService.findUserByPhoneNumber(otpSession.phoneNumber) ?: throw UserNotFoundException()
 

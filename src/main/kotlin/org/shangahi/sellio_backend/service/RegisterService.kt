@@ -31,7 +31,8 @@ class RegisterService(
     private val smsSender: SmsSender,
     private val pendingRegistrationRepository: PendingRegistrationRepository,
     private val otpSessionService: OtpSessionService,
-    private val otpFlowService: OtpFlowService
+    private val otpFlowService: OtpFlowService,
+    private val otpAbuseService: OtpAbuseService
 ) {
 
     @Transactional
@@ -41,8 +42,13 @@ class RegisterService(
         if (userService.findUserByPhoneNumber(validated.phoneNumber) != null)
             throw UserPhoneNumberAlreadyExistsException()
 
+        val abuse = otpAbuseService.create(validated.phoneNumber)
+        otpAbuseService.ensureNotBlocked(abuse)
+
         val otpSession = otpSessionService.create(validated.phoneNumber)
-        otpSessionService.onOtpResend(otpSession)
+        otpSessionService.validateActive(otpSession)
+        otpAbuseService.onOtpResend(abuse)
+
 
         val pending = pendingRegistrationRepository.findByPhoneNumber(validated.phoneNumber)?.apply {
             fullName = request.fullName
@@ -71,10 +77,13 @@ class RegisterService(
     fun resendOtp(sessionId: String): OtpResponse {
         val uuid = UUID.fromString(sessionId)
         val otpSession = otpSessionService.getOtpSession(uuid)
+        otpSessionService.validateActive(otpSession)
 
-        otpSessionService.ensureNotBlocked(otpSession)
+        val abuse = otpAbuseService.create(otpSession.phoneNumber)
 
-        otpSessionService.onOtpResend(otpSession)
+
+        otpAbuseService.ensureNotBlocked(abuse)
+        otpAbuseService.onOtpResend(abuse)
 
         val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
             ?: throw SessionIdNotFoundException()

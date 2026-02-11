@@ -16,7 +16,8 @@ class AccountService(
     private val otpService: OtpService,
     private val phoneNumberValidator: PhoneNumberValidatorService,
     private val smsSender: SmsSender,
-    private val otpSessionService: OtpSessionService
+    private val otpSessionService: OtpSessionService,
+    private val otpAbuseService: OtpAbuseService
 ) {
 
     @Transactional
@@ -64,11 +65,11 @@ class AccountService(
         otp: String
     ) {
         val uuid = UUID.fromString(sessionId)
-
         val otpSession = otpSessionService.getOtpSession(uuid)
+        val abuse = otpAbuseService.create(otpSession.phoneNumber)
 
-        otpSessionService.ensureNotBlocked(otpSession)
-
+        otpSessionService.validateActive(otpSession)
+        otpAbuseService.ensureNotBlocked(abuse)
         otpService.verifyOtp(uuid, otp)
 
         otpSessionService.markVerified(otpSession)
