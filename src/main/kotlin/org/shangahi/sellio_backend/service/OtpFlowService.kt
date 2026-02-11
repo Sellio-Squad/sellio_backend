@@ -27,6 +27,5 @@ class OtpFlowService(
         }
         otpSessionService.markVerified(otpSession)
         otpAbuseService.onOtpSuccess(otpSession.phoneNumber)
-
     }
 }

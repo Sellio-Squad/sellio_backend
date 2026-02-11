@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service
 @Profile("!prod")
 class FakeOtpGeneratorService : OtpGenerator {
     override fun generateOtp(): String {
-        return "9999"
+        return (1000..9999).random().toString()
     }
 }

@@ -2,7 +2,7 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.entity.OtpAbuse
 import org.shangahi.sellio_backend.repository.OtpAbuseRepository
-import org.shangahi.sellio_backend.service.exception.UnauthorizedException
+import org.shangahi.sellio_backend.service.exception.OtpBlockedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -17,11 +17,12 @@ class OtpAbuseService(
             ?: otpAbuseRepository.save(OtpAbuse(phoneNumber = phoneNumber))
     }
 
+    @Transactional
     fun ensureNotBlocked(abuse: OtpAbuse) {
         if (abuse.blockedUntil != null) {
 
             if (abuse.blockedUntil!!.isAfter(Instant.now())) {
-                throw UnauthorizedException()
+                throw OtpBlockedException()
             }
 
             abuse.blockedUntil = null
@@ -57,6 +58,6 @@ class OtpAbuseService(
 
     companion object {
         private const val MAX_ATTEMPTS = 3
-        private const val BLOCK_DURATION = 3 * 60 * 60L
+        private const val BLOCK_DURATION = 2 * 60 * 60L
     }
 }

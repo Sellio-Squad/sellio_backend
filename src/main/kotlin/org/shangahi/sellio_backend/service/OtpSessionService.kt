@@ -30,7 +30,6 @@ class OtpSessionService(
             phoneNumber = phoneNumber,
             createdAt = Instant.now(),
             expiresAt = Instant.now().plusSeconds(OTP_SESSION_EXPIRE_SECONDS),
-            attemptCount = 0
         )
         return otpSessionRepository.save(session)
     }
