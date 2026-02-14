@@ -16,6 +16,7 @@ fun Product.toProductCardResponse(
     price = this.price,
     mainImageUrl = this.mainImageURL,
     subCategoriesIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
+    description = description ?: "",
     isFavorite = isFavorite
 )
 
