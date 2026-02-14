@@ -21,6 +21,7 @@ class FavoriteStoreService(
     private val storeRepository: StoreRepository,
     private val discountRepository: DiscountRepository,
 ) {
+
     @Transactional
     fun toggleFavoriteStore(
         userId: UUID,

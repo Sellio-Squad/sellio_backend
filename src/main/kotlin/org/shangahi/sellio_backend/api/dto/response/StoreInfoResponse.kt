@@ -17,5 +17,6 @@ data class StoreInfoResponse(
     val avgRating: Double,
     val isFavorite: Boolean,
     val activeStoreDiscounts : List<StoreDiscountResponse>,
+    val sale: String,
     val subCategories: List<SubCategoryResponse>
 )

@@ -1,8 +1,8 @@
 package org.shangahi.sellio_backend.api.mapper
 
 import org.shangahi.sellio_backend.api.dto.response.*
+import org.shangahi.sellio_backend.entity.Discount
 import org.shangahi.sellio_backend.entity.Store
-import org.shangahi.sellio_backend.entity.SubCategory
 import org.springframework.data.domain.Page
 
 fun Store.toStoreDetailsResponse(
@@ -26,6 +26,7 @@ fun Store.toStoreDetailsResponse(
     activeStoreDiscounts = discounts,
     storeContacts = this.contacts.map { it.toStoreContactResponse() },
     isFavorite = isFavorite,
+    sale = (discounts.filter { it.type == Discount.DiscountType.PERCENTAGE }.maxOfOrNull { it.value } ?: 40.0).toInt().toString(), // temp value
     subCategories = subCategories
 )
 
