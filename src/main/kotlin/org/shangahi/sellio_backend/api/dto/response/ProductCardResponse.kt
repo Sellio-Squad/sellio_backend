@@ -7,5 +7,6 @@ data class ProductCardResponse(
     val title: String,
     val price: Double,
     val mainImageUrl: String?,
+    val subCategoriesIds: List<UUID>,
     val isFavorite: Boolean
 )
