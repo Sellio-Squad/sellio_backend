@@ -6,7 +6,7 @@ import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.*
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.MessageResponse
-import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
+import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
 import org.shangahi.sellio_backend.service.AccountService
 import org.shangahi.sellio_backend.service.AuthenticationService
@@ -14,10 +14,7 @@ import org.shangahi.sellio_backend.service.RegisterService
 import org.shangahi.sellio_backend.service.ResetPasswordService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -39,7 +36,7 @@ class AccountController(
 
     @PostMapping("/create")
     @AccountDoc.CreateUser
-    fun create(@RequestBody request: CreateUserRequest): ResponseEntity<OtpRequestResponse> {
+    fun create(@RequestBody request: CreateUserRequest): ResponseEntity<OtpResponse> {
         val response = registerService.prepareRegistration(request)
         return ResponseEntity.ok(response)
     }
@@ -73,12 +70,18 @@ class AccountController(
         authenticationService.logout(userId)
     }
 
+    @PostMapping("/resend-otp/{sessionId}")
+    fun resendOtp(@PathVariable sessionId: String): ResponseEntity<OtpResponse> {
+        val response = registerService.resendOtp(sessionId)
+        return ResponseEntity.ok(response)
+    }
+
     @PostMapping("/change-phone/initiate")
     @Operation(summary = "Request OTP for new phone number", security = [SecurityRequirement(name = "bearer-key")])
     fun initiateChangePhone(
         @RequestBody @Valid request: ChangePhoneRequest,
         @AuthenticationPrincipal userId: UUID
-    ): ResponseEntity<OtpRequestResponse> {
+    ): ResponseEntity<OtpResponse> {
         val response = accountService.initiatePhoneNumberChange(userId, request)
         return ResponseEntity.ok(response)
     }

@@ -10,29 +10,32 @@ data class PendingRegistration(
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "session_id", nullable = false)
-    val sessionId: UUID? = null,
+    @Column(name = "id", nullable = false)
+    val id: UUID? = null,
 
     @Column(name = "full_name", nullable = false)
-    val fullName: String,
+    var fullName: String,
 
     @Column(name = "phone_number", nullable = false, unique = true)
     val phoneNumber: String,
 
     @Column(name = "password", nullable = false)
-    val password: String,
+    var password: String,
 
     @Column(name = "email")
-    val email: String?,
+    var email: String?,
+
+    @Column(name = "country_code", nullable = false)
+    var countryCode: String,
 
     @Column(name = "city", nullable = false)
-    val city: String,
+    var city: String,
 
     @Column(name = "country", nullable = false)
-    val country: String,
+    var country: String,
 
     @Column(name = "avatar_url")
-    val avatarUrl: String? = null,
+    var avatarUrl: String? = null,
 
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant = Instant.now()

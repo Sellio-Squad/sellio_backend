@@ -2,7 +2,8 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.CreateUserRequest
 import org.shangahi.sellio_backend.api.dto.response.AuthResponse
-import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
+import org.shangahi.sellio_backend.api.dto.response.OtpResponse
+import org.shangahi.sellio_backend.entity.OtpSession
 import org.shangahi.sellio_backend.entity.PendingRegistration
 import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.model.ValidatedPhoneNumber
@@ -12,7 +13,6 @@ import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
 import org.shangahi.sellio_backend.security.service.otp.SmsSender
 import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
-import org.shangahi.sellio_backend.service.exception.UserRegistrationPendingException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -29,100 +29,145 @@ class RegisterService(
     private val otpService: OtpService,
     private val phoneNumberValidator: PhoneNumberValidatorService,
     private val smsSender: SmsSender,
-    private val pendingRegistrationRepository: PendingRegistrationRepository
+    private val pendingRegistrationRepository: PendingRegistrationRepository,
+    private val otpSessionService: OtpSessionService,
+    private val otpFlowService: OtpFlowService,
+    private val otpAbuseService: OtpAbuseService
 ) {
 
     @Transactional
-    fun prepareRegistration(request: CreateUserRequest): OtpRequestResponse {
+    fun prepareRegistration(request: CreateUserRequest): OtpResponse {
         val validated = phoneNumberValidator.validate(request.phoneNumber, request.region)
 
         if (userService.findUserByPhoneNumber(validated.phoneNumber) != null)
             throw UserPhoneNumberAlreadyExistsException()
 
-        pendingRegistrationRepository.findByPhoneNumber(validated.phoneNumber)?.let {
-            throw UserRegistrationPendingException()
-        }
+        val abuse = otpAbuseService.create(validated.phoneNumber)
+        otpAbuseService.ensureNotBlocked(abuse)
 
-        val pending = PendingRegistration(
+        val otpSession = otpSessionService.create(validated.phoneNumber)
+        otpSessionService.validateActive(otpSession)
+        otpAbuseService.onOtpResend(abuse)
+
+
+        val pending = pendingRegistrationRepository.findByPhoneNumber(validated.phoneNumber)?.apply {
+            fullName = request.fullName
+            email = request.email
+            city = request.city
+            country = request.country
+            avatarUrl = request.avatarUrl
+            password = passwordEncoder.encode(request.password)
+        } ?: PendingRegistration(
             fullName = request.fullName,
             phoneNumber = validated.phoneNumber,
             password = passwordEncoder.encode(request.password),
             email = request.email,
             city = request.city,
             country = request.country,
-            avatarUrl = request.avatarUrl
+            avatarUrl = request.avatarUrl,
+            countryCode = validated.countryCode
         )
-        val savedPending = pendingRegistrationRepository.save(pending)
 
-        return getOtpResponse(validated, savedPending)
+        pendingRegistrationRepository.save(pending)
+
+        return getOtpResponse(validated, otpSession)
+    }
+
+    @Transactional
+    fun resendOtp(sessionId: String): OtpResponse {
+        val uuid = UUID.fromString(sessionId)
+        val otpSession = otpSessionService.getOtpSession(uuid)
+        otpSessionService.validateActive(otpSession)
+
+        val abuse = otpAbuseService.create(otpSession.phoneNumber)
+
+
+        otpAbuseService.ensureNotBlocked(abuse)
+        otpAbuseService.onOtpResend(abuse)
+
+        val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
+            ?: throw SessionIdNotFoundException()
+
+        val otpLog = otpService.createOtp(uuid)
+
+        smsSender.sendSms(
+            pending.countryCode,
+            pending.phoneNumber,
+            otpLog.otp
+        )
+
+        return OtpResponse(uuid.toString(), otpLog.otp, "OTP  resented successfully")
     }
 
     @Transactional
     fun verifyOtpAndCreateUser(sessionId: String, otp: String): AuthResponse {
         val uuid = UUID.fromString(sessionId)
+        val otpSession = otpSessionService.getOtpSession(uuid)
+        otpFlowService.verifyOtpForSession(sessionId, otp)
 
-        otpService.verifyOtp(uuid, otp)
+        val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
+            ?: throw SessionIdNotFoundException()
 
-        val pending = pendingRegistrationRepository.findById(uuid)
-            .orElseThrow { SessionIdNotFoundException() }
+        val user = createOrRestoreUser(pending)
+        pendingRegistrationRepository.delete(pending)
 
-        val existing = userService.findUserByPhoneNumber(pending.phoneNumber)
-
-        if (existing != null && !existing.isDeleted)
-            throw UserPhoneNumberAlreadyExistsException()
-
-        val deletedUser = userService.findDeletedUserByPhoneNumber(pending.phoneNumber)
-
-        val savedUser = if (deletedUser != null) {
-            val restored = deletedUser.copy(
-                isDeleted = false,
-                deletedAt = null,
-                fullName = pending.fullName,
-                email = pending.email,
-                city = pending.city,
-                country = pending.country,
-                avatarUrl = pending.avatarUrl,
-                password = pending.password,
-                updatedAt = Instant.now()
-            )
-            userService.saveUser(restored)
-        } else {
-            val user = User(
-                phoneNumber = pending.phoneNumber,
-                password = pending.password,
-                fullName = pending.fullName,
-                city = pending.city,
-                country = pending.country,
-                email = pending.email,
-                avatarUrl = pending.avatarUrl
-            )
-            userService.createUser(user)
-        }
-
-        pendingRegistrationRepository.deleteById(uuid)
-
-        val accessToken = jwtService.generateUserToken(savedUser)
-        val refreshToken = refreshTokenService.createRefreshToken(savedUser).refreshToken
-        return AuthResponse(accessToken, refreshToken)
+        return AuthResponse(
+            jwtService.generateUserToken(user),
+            refreshTokenService.createRefreshToken(user).refreshToken
+        )
     }
 
     @Transactional
-    @Scheduled(fixedRate = 2 * 60 * 1000)
+    @Scheduled(fixedRate = CLEANUP_INTERVAL_MS)
     fun deleteExpiredPendingSignups() {
-        val expiryTime = Instant.now().minusSeconds(2 * 60)
+        val expiryTime = Instant.now().minusSeconds(PENDING_SIGNUP_EXPIRY_SECONDS)
         pendingRegistrationRepository.deleteAllByCreatedAtBefore(expiryTime)
+    }
+
+    private fun createOrRestoreUser(pending: PendingRegistration): User {
+        val deletedUser = userService.findDeletedUserByPhoneNumber(pending.phoneNumber)
+
+        return if (deletedUser != null) {
+            userService.saveUser(
+                deletedUser.copy(
+                    isDeleted = false,
+                    deletedAt = null,
+                    fullName = pending.fullName,
+                    email = pending.email,
+                    city = pending.city,
+                    country = pending.country,
+                    avatarUrl = pending.avatarUrl,
+                    password = pending.password,
+                    updatedAt = Instant.now()
+                )
+            )
+        } else {
+            userService.createUser(
+                User(
+                    phoneNumber = pending.phoneNumber,
+                    password = pending.password,
+                    fullName = pending.fullName,
+                    city = pending.city,
+                    country = pending.country,
+                    email = pending.email,
+                    avatarUrl = pending.avatarUrl
+                )
+            )
+        }
     }
 
     private fun getOtpResponse(
         validated: ValidatedPhoneNumber,
-        savedPending: PendingRegistration
-    ): OtpRequestResponse {
-        val otpLog = otpService.createOtp(
-            validated.phoneNumber,
-            savedPending.sessionId ?: throw SessionIdNotFoundException()
-        )
+        otpSession: OtpSession
+    ): OtpResponse {
+        val otpLog = otpService.createOtp(otpSession.sessionId!!)
 
         smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
-        return OtpRequestResponse(otpLog.sessionId.toString())
+        return OtpResponse(otpLog.sessionId.toString(), otpLog.otp, "OTP sent successfully")
+    }
+
+    companion object {
+        private const val PENDING_SIGNUP_EXPIRY_SECONDS = 15 * 60L
+        private const val CLEANUP_INTERVAL_MS = 5 * 60 * 1000L
     }
 }

@@ -8,47 +8,50 @@ import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_UNAUTHORIZED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_USER_REGISTRATION_PENDING
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER_REGION
+import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_BLOCKED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_EXPIRED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_INVALID
+import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_MISMATCH
+import org.shangahi.sellio_backend.service.exception.ErrorCode.SESSION_EXPIRED
 import org.springframework.http.HttpStatus
 
-class InvalidCredentialsException : SellioException (
+class InvalidCredentialsException : SellioException(
     message = "Invalid phone number or password",
     httpStatus = HttpStatus.UNAUTHORIZED,
     code = AUTH_INVALID_CREDENTIALS
 )
 
-class InvalidRefreshTokenException : SellioException (
+class InvalidRefreshTokenException : SellioException(
     message = "Invalid refresh token",
     httpStatus = HttpStatus.UNAUTHORIZED,
     code = AUTH_INVALID_REFRESH_TOKEN
 )
 
-class InvalidPhoneNumberException : SellioException (
+class InvalidPhoneNumberException : SellioException(
     message = "Invalid phone number",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = INVALID_PHONE_NUMBER
 )
 
-class SamePhoneNumberException : SellioException (
+class SamePhoneNumberException : SellioException(
     message = "New phone number cannot be the same as the current one",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = INVALID_PHONE_NUMBER
 )
 
-class InvalidPhoneNumberRegionException : SellioException (
+class InvalidPhoneNumberRegionException : SellioException(
     message = "Invalid phone number region",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = INVALID_PHONE_NUMBER_REGION
 )
 
-class UnauthorizedException : SellioException (
+class UnauthorizedException : SellioException(
     message = "Unauthorized",
     httpStatus = HttpStatus.UNAUTHORIZED,
     code = AUTH_UNAUTHORIZED
 )
 
-class PasswordNotMatchException : SellioException (
+class PasswordNotMatchException : SellioException(
     message = "Password not match",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = AUTH_PASSWORD_NOT_MATCH
@@ -61,25 +64,43 @@ class CurrentPasswordIncorrectException : SellioException(
     code = AUTH_INVALID_CREDENTIALS
 )
 
-class InvalidOtpException : SellioException (
+class InvalidOtpException : SellioException(
     message = "Invalid OTP",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = OTP_INVALID
 )
 
-class OtpExpiredException : SellioException (
+class OtpExpiredException : SellioException(
     message = "OTP expired",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = OTP_EXPIRED
 )
 
-class SessionIdNotFoundException : SellioException (
+class OtpMismatchException : SellioException(
+    message = "Incorrect OTP",
+    httpStatus = HttpStatus.NOT_ACCEPTABLE,
+    code = OTP_MISMATCH
+)
+
+class OtpBlockedException : SellioException(
+    message = "Too many attempts. Try again later",
+    httpStatus = HttpStatus.NOT_ACCEPTABLE,
+    code = OTP_BLOCKED
+)
+
+class SessionExpiredException : SellioException(
+    message = "Session already expired",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = SESSION_EXPIRED
+)
+
+class SessionIdNotFoundException : SellioException(
     message = "Session ID not found",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = AUTH_SESSION_ID_NOT_FOUND
 )
 
-class UserRegistrationPendingException : SellioException (
+class UserRegistrationPendingException : SellioException(
     message = "User registration pending for this phone number",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = AUTH_USER_REGISTRATION_PENDING

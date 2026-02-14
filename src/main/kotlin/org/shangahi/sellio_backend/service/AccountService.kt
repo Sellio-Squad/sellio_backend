@@ -1,12 +1,10 @@
 package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.ChangePhoneRequest
-import org.shangahi.sellio_backend.api.dto.response.OtpRequestResponse
-import org.shangahi.sellio_backend.repository.OtpLogRepository
+import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
 import org.shangahi.sellio_backend.security.service.otp.SmsSender
 import org.shangahi.sellio_backend.service.exception.SamePhoneNumberException
-import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,16 +16,24 @@ class AccountService(
     private val otpService: OtpService,
     private val phoneNumberValidator: PhoneNumberValidatorService,
     private val smsSender: SmsSender,
-    private val otpLogRepository: OtpLogRepository
+    private val otpSessionService: OtpSessionService,
+    private val otpAbuseService: OtpAbuseService
 ) {
 
     @Transactional
-    fun initiatePhoneNumberChange(userId: UUID, request: ChangePhoneRequest): OtpRequestResponse {
-        val validated = phoneNumberValidator.validate(request.phoneNumber, request.region)
+    fun initiatePhoneNumberChange(
+        userId: UUID,
+        request: ChangePhoneRequest
+    ): OtpResponse {
 
-        val currentUser = userService.findById(userId)
+        val validated = phoneNumberValidator.validate(
+            request.phoneNumber,
+            request.region
+        )
 
-        if (currentUser.phoneNumber == validated.phoneNumber) {
+        val user = userService.findById(userId)
+
+        if (user.phoneNumber == validated.phoneNumber) {
             throw SamePhoneNumberException()
         }
 
@@ -35,24 +41,40 @@ class AccountService(
             throw UserPhoneNumberAlreadyExistsException()
         }
 
-        val sessionId = UUID.randomUUID()
+        val otpSession = otpSessionService.create(validated.phoneNumber)
 
-        val otpLog = otpService.createOtp(validated.phoneNumber, sessionId)
+        val otpLog = otpService.createOtp(otpSession.sessionId!!)
 
-        smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
+        smsSender.sendSms(
+            validated.countryCode,
+            validated.phoneNumber,
+            otpLog.otp
+        )
 
-        return OtpRequestResponse(otpLog.sessionId.toString())
+        return OtpResponse(
+            otpSession.sessionId.toString(),
+            otpLog.otp,
+            "OTP sent to new phone number"
+        )
     }
 
     @Transactional
-    fun verifyAndChangePhoneNumber(userId: UUID, sessionId: String, otp: String) {
-        val sessionId = UUID.fromString(sessionId)
+    fun verifyAndChangePhoneNumber(
+        userId: UUID,
+        sessionId: String,
+        otp: String
+    ) {
+        val uuid = UUID.fromString(sessionId)
+        val otpSession = otpSessionService.getOtpSession(uuid)
+        val abuse = otpAbuseService.create(otpSession.phoneNumber)
 
-        otpService.verifyOtp(sessionId, otp)
+        otpSessionService.validateActive(otpSession)
+        otpAbuseService.ensureNotBlocked(abuse)
+        otpService.verifyOtp(uuid, otp)
 
-        val otpLog = otpLogRepository.findLatestBySessionId(sessionId)
-            ?: throw SessionIdNotFoundException()
-        val newPhoneNumber = otpLog.phoneNumber
+        otpSessionService.markVerified(otpSession)
+
+        val newPhoneNumber = otpSession.phoneNumber
 
         if (userService.findUserByPhoneNumber(newPhoneNumber) != null) {
             throw UserPhoneNumberAlreadyExistsException()
@@ -60,11 +82,11 @@ class AccountService(
 
         val user = userService.findById(userId)
 
-        val updatedUser = user.copy(
-            phoneNumber = newPhoneNumber,
-            updatedAt = java.time.Instant.now()
+        userService.saveUser(
+            user.copy(
+                phoneNumber = newPhoneNumber,
+                updatedAt = java.time.Instant.now()
+            )
         )
-        userService.saveUser(updatedUser)
-        otpService.expireOtpBySessionId(sessionId)
     }
 }

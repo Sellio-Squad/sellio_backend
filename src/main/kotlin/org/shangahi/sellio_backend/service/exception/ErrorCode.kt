@@ -54,6 +54,7 @@ internal object ErrorCode {
     const val AUTH_SESSION_ID_NOT_FOUND = "AUTH_004"
     const val AUTH_PASSWORD_NOT_MATCH = "AUTH_005"
     const val AUTH_USER_REGISTRATION_PENDING = "AUTH_006"
+    const val SESSION_EXPIRED = "AUTH_007"
 
     //PHONE_xxx
     const val INVALID_PHONE_NUMBER = "PHONE_001"
@@ -62,6 +63,8 @@ internal object ErrorCode {
     //OTP_xxx
     const val OTP_EXPIRED = "OTP_001"
     const val OTP_INVALID = "OTP_002"
+    const val OTP_MISMATCH = "OTP_003"
+    const val OTP_BLOCKED = "OTP_004"
 
     //STORE_CONTACT_xxx
     const val STORE_CONTACT_TYPE_ALREADY_EXISTS = "STORE_CONTACT_001"
