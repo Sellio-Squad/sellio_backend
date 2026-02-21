@@ -50,14 +50,16 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     )
     fun findAllUsedProductsWithDetails(pageable: Pageable): Page<Product>
 
-    @Query("""
+    @Query(
+        """
         SELECT p FROM Product p
         LEFT JOIN FETCH p.productSubCategories psc
         LEFT JOIN FETCH psc.subCategory sc
         LEFT JOIN FETCH p.images
         LEFT JOIN FETCH p.items
         WHERE p.store.id = :storeId AND sc.category.id = :categoryId
-    """)
+    """
+    )
     fun findCustomProductsByStoreAndCategory(
         @Param("storeId") storeId: UUID,
         @Param("categoryId") categoryId: UUID,
@@ -85,6 +87,25 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     fun findByTitleContainingIgnoreCaseAndStoreCityIgnoreCase(
         title: String,
         city: String,
+        pageable: Pageable
+    ): Page<Product>
+
+    @Query(
+        """
+    SELECT DISTINCT p FROM Product p 
+    JOIN p.productSubCategories psc 
+    JOIN psc.subCategory sc 
+    WHERE sc.category.id = :categoryId
+"""
+    )
+    fun findByCategoryId(@Param("categoryId") categoryId: UUID, pageable: Pageable): Page<Product>
+    @Query("""
+        SELECT DISTINCT p FROM Product p 
+        JOIN p.productSubCategories psc 
+        WHERE psc.subCategory.id = :subCategoryId
+    """)
+    fun findBySubCategoryId(
+        @Param("subCategoryId") subCategoryId: UUID,
         pageable: Pageable
     ): Page<Product>
 }

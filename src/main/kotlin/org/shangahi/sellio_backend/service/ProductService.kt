@@ -40,8 +40,27 @@ class ProductService(
     private val weightRepository: WeightRepository,
     private val storageService: StorageService,
     private val orderItemRepository: OrderItemRepository,
-    private val favoriteProductRepository: FavoriteProductRepository
+    private val favoriteProductRepository: FavoriteProductRepository,
+    private val categoryRepository: CategoryRepository,
 ) {
+    @Transactional(readOnly = true)
+    fun getProductsBySubCategoryId(subCategoryId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
+        if (!subCategoryRepository.existsById(subCategoryId)) {
+            throw SubCategoryNotFoundException()
+        }
+        val productPage = productRepository.findBySubCategoryId(subCategoryId, pageable)
+        return mapPageToResponseWithFavorites(productPage)
+    }
+
+    @Transactional(readOnly = true)
+    fun getProductsByCategoryId(categoryId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
+        if (!categoryRepository.existsById(categoryId)) {
+            throw CategoryNotFoundException()
+        }
+        val productPage = productRepository.findByCategoryId(categoryId, pageable)
+        return mapPageToResponseWithFavorites(productPage)
+    }
+
     @Transactional(readOnly = true)
     fun getStoreProducts(storeId: UUID, pageable: Pageable): PageResponse<ProductCardResponse> {
         if (!storeRepository.existsById(storeId)) {
