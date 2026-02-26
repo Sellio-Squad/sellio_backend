@@ -95,14 +95,18 @@ class ProductService(
         if (productRepository.existsByTitle(request.title)) {
             throw ProductAlreadyExistException()
         }
+
         checkSubCategoryIsExist(request.subCategoryIds)
+
         val store = storeRepository.findById(request.storeId)
             .orElseThrow { StoreNotFoundException() }
+
         val product = request.toEntity(store)
+        product.items = createProductItems(request.items, product, request.price)
         val savedProduct = productRepository.save(product)
+
         createProductSubCategories(request.subCategoryIds, savedProduct)
         createProductImages(request.imageUrls, savedProduct)
-        createProductItems(request.items, savedProduct)
 
         val fullProduct = productRepository.findByIdWithItems(savedProduct.id!!)
             ?: throw ProductSavingException()
@@ -127,12 +131,12 @@ class ProductService(
         request.isUsed?.let { existingProduct.isUsed = it }
         request.isFeatured?.let { existingProduct.isFeatured = it }
 
+        existingProduct.items = createProductItems(request.items, existingProduct)
 
         val savedProduct = productRepository.save(existingProduct)
 
         request.items?.let {
             productItemRepository.deleteAll(existingProduct.items)
-            createProductItems(request.items, savedProduct)
         }
 
         request.subCategoryIds?.let {
@@ -196,7 +200,6 @@ class ProductService(
         return deleted
     }
 
-
     private fun createProductSubCategories(subCategoryIds: List<UUID>, savedProduct: Product) {
         if (subCategoryIds.isNotEmpty()) {
             val subCategories = subCategoryRepository.findAllById(subCategoryIds)
@@ -216,11 +219,15 @@ class ProductService(
         }
     }
 
-    private fun createProductItems(items: List<ProductItemRequest>, savedProduct: Product) {
-        if (items.isNotEmpty()) {
-            val items = items.map { item ->
+    private fun createProductItems(
+        items: List<ProductItemRequest>?,
+        product: Product,
+        defaultPrice: Double? = null
+    ): Set<ProductItem> {
+        return if (items != null && items.isNotEmpty()) {
+            items.map { item ->
                 ProductItem(
-                    product = savedProduct,
+                    product = product,
                     price = item.price,
                     discount = item.discountId?.let { id -> discountRepository.findById(id).orElse(null) },
                     color = item.colorId?.let { id -> colorRepository.findById(id).orElse(null) },
@@ -229,8 +236,15 @@ class ProductService(
                     stock = item.stock
                 )
             }
-            productItemRepository.saveAll(items)
-        }
+        } else {
+            listOf(
+                ProductItem(
+                    product = product,
+                    price = defaultPrice ?: product.items.first().price,
+                    stock = 0
+                )
+            )
+        }.toSet()
     }
 
     @Transactional(readOnly = true)

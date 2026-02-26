@@ -14,12 +14,13 @@ class ThriftProduct(
     description: String?,
     mainImageURL: String?,
     store: Store,
-
+    items: Set<ProductItem> = emptySet()
     ) : Product(
     title = title,
     description = description,
     mainImageURL = mainImageURL,
     store = store,
+    items = items,
     isUsed = true,
     isFeatured = false,
 )

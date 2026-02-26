@@ -29,7 +29,7 @@ open class Product(
     open var mainImageURL: String?,
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    open val items: Set<ProductItem> = emptySet(),
+    open var items: Set<ProductItem> = emptySet(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)

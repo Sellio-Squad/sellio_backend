@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.api.dto.request.ProductItemRequest
 import org.shangahi.sellio_backend.api.dto.request.ThriftProductRequest
+import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
@@ -38,7 +39,7 @@ class ThriftProductService(
 
         checkSubCategoryIsExist(request.subCategoryIds)
 
-        val thriftProduct = ThriftProduct(
+        val product = ThriftProduct(
             condition = request.condition,
             defects = request.defects,
             title = request.title,
@@ -46,10 +47,11 @@ class ThriftProductService(
             mainImageURL = request.mainImageURL,
             store = store
         )
-        val savedProduct = thriftProductRepository.save(thriftProduct)
+        product.items = createProductItems(request.items, product, request.price)
+        val savedProduct = thriftProductRepository.save(product)
+
         createProductSubCategories(request.subCategoryIds, savedProduct)
         createProductImages(request.imageUrls, savedProduct)
-        createProductItems(request.items, savedProduct)
 
         return savedProduct
     }
@@ -97,20 +99,32 @@ class ThriftProductService(
         }
     }
 
-    private fun createProductItems(items: List<ProductItemRequest>, savedProduct: ThriftProduct) {
-        if (items.isNotEmpty()) {
-            val productItems = items.map { item ->
+
+    private fun createProductItems(
+        items: List<ProductItemRequest>?,
+        product: Product,
+        defaultPrice: Double
+    ): Set<ProductItem> {
+        return if (items != null && items.isNotEmpty()) {
+            items.map { item ->
                 ProductItem(
-                    product = savedProduct,
+                    product = product,
                     price = item.price,
-                    stock = item.stock,
                     discount = item.discountId?.let { id -> discountRepository.findById(id).orElse(null) },
                     color = item.colorId?.let { id -> colorRepository.findById(id).orElse(null) },
                     size = item.sizeId?.let { id -> sizeRepository.findById(id).orElse(null) },
-                    weight = item.weightId?.let { id -> weightRepository.findById(id).orElse(null) }
+                    weight = item.weightId?.let { id -> weightRepository.findById(id).orElse(null) },
+                    stock = item.stock
                 )
             }
-            productItemRepository.saveAll(productItems)
-        }
+        } else {
+            listOf(
+                ProductItem(
+                    product = product,
+                    price = defaultPrice,
+                    stock = 0
+                )
+            )
+        }.toSet()
     }
 }
