@@ -80,17 +80,13 @@ class RegisterService(
 
         val abuse = otpAbuseService.create(otpSession.phoneNumber)
 
-
         otpAbuseService.ensureNotBlocked(abuse)
         otpAbuseService.onOtpResend(abuse)
-
-        val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
-            ?: throw SessionIdNotFoundException()
 
         val otpLog = otpService.createOtp(uuid)
 
         otpClientService.sendOtp(
-            pending.phoneNumber,
+            otpSession.phoneNumber,
             otpLog.otp
         )
         return OtpResponse(uuid.toString())
