@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.service
 
+import org.shangahi.sellio_backend.service.exception.OtpExpiredException
 import org.shangahi.sellio_backend.service.exception.OtpMismatchException
 import org.springframework.stereotype.Service
 import java.util.*
@@ -22,6 +23,9 @@ class OtpFlowService(
         try {
             otpService.verifyOtp(uuid, otp)
         } catch (e: OtpMismatchException) {
+            otpAbuseService.onOtpMismatch(abuse)
+            throw e
+        } catch (e: OtpExpiredException) {
             otpAbuseService.onOtpMismatch(abuse)
             throw e
         }

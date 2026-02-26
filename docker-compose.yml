@@ -35,6 +35,7 @@ services:
       storage.bucket: ${STORAGE_BUCKET}
       storage.cdn-endpoint: http://localhost:4566
       jwt.secret: ${JWT_SECRET}
+      otp.service.url: ${OTP_SERVICE_URL}
 
 
       SPRING_JPA_HIBERNATE_DDL_AUTO: update

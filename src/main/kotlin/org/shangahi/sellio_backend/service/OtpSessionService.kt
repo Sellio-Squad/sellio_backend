@@ -2,14 +2,13 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.entity.OtpSession
 import org.shangahi.sellio_backend.repository.OtpSessionRepository
-import org.shangahi.sellio_backend.service.exception.OtpBlockedException
 import org.shangahi.sellio_backend.service.exception.SessionExpiredException
 import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UnauthorizedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 @Service
 class OtpSessionService(
@@ -58,6 +57,6 @@ class OtpSessionService(
 
 
     companion object {
-        private const val OTP_SESSION_EXPIRE_SECONDS = 15 * 60L
+        private const val OTP_SESSION_EXPIRE_SECONDS = 3 * 60 * 60L
     }
 }

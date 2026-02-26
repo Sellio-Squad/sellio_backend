@@ -10,7 +10,6 @@ import org.shangahi.sellio_backend.model.ValidatedPhoneNumber
 import org.shangahi.sellio_backend.repository.PendingRegistrationRepository
 import org.shangahi.sellio_backend.security.service.JwtService
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
-import org.shangahi.sellio_backend.security.service.otp.SmsSender
 import org.shangahi.sellio_backend.service.exception.SessionIdNotFoundException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
 import org.springframework.scheduling.annotation.Scheduled
@@ -28,11 +27,11 @@ class RegisterService(
     private val refreshTokenService: RefreshTokenService,
     private val otpService: OtpService,
     private val phoneNumberValidator: PhoneNumberValidatorService,
-    private val smsSender: SmsSender,
     private val pendingRegistrationRepository: PendingRegistrationRepository,
     private val otpSessionService: OtpSessionService,
     private val otpFlowService: OtpFlowService,
-    private val otpAbuseService: OtpAbuseService
+    private val otpAbuseService: OtpAbuseService,
+    private val otpClientService: OtpClientService
 ) {
 
     @Transactional
@@ -81,22 +80,16 @@ class RegisterService(
 
         val abuse = otpAbuseService.create(otpSession.phoneNumber)
 
-
         otpAbuseService.ensureNotBlocked(abuse)
         otpAbuseService.onOtpResend(abuse)
 
-        val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
-            ?: throw SessionIdNotFoundException()
-
         val otpLog = otpService.createOtp(uuid)
 
-        smsSender.sendSms(
-            pending.countryCode,
-            pending.phoneNumber,
+        otpClientService.sendOtp(
+            otpSession.phoneNumber,
             otpLog.otp
         )
-
-        return OtpResponse(uuid.toString(), otpLog.otp, "OTP  resented successfully")
+        return OtpResponse(uuid.toString())
     }
 
     @Transactional
@@ -162,8 +155,11 @@ class RegisterService(
     ): OtpResponse {
         val otpLog = otpService.createOtp(otpSession.sessionId!!)
 
-        smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
-        return OtpResponse(otpLog.sessionId.toString(), otpLog.otp, "OTP sent successfully")
+        otpClientService.sendOtp(
+            validated.phoneNumber,
+            otpLog.otp
+        )
+        return OtpResponse(otpLog.sessionId.toString())
     }
 
     companion object {

@@ -45,7 +45,6 @@ class OtpAbuseService(
     @Transactional
     fun onOtpResend(abuse: OtpAbuse) {
         abuse.resendCount++
-        abuse.attemptCount = 0
         if (abuse.resendCount >= MAX_ATTEMPTS) {
             abuse.blockedUntil = Instant.now().plusSeconds(BLOCK_DURATION)
         }
@@ -57,7 +56,7 @@ class OtpAbuseService(
     }
 
     companion object {
-        private const val MAX_ATTEMPTS = 3
+        private const val MAX_ATTEMPTS = 4
         private const val BLOCK_DURATION = 2 * 60 * 60L
     }
 }

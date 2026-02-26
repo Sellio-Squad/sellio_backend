@@ -49,6 +49,6 @@ class OtpService(
     }
 
     companion object {
-        private const val OTP_SECONDS = 30L
+        private const val OTP_SECONDS = 60L
     }
 }
