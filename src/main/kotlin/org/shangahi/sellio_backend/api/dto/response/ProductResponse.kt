@@ -8,7 +8,7 @@ data class ProductResponse(
     val description: String?,
     val mainImageURL: String?,
     val storeId: UUID,
-    val price: Double,
+    val minPrice: Double?,
     val isUsed: Boolean,
     val isFeatured: Boolean,
     val isFavorite: Boolean,

@@ -13,14 +13,12 @@ class ThriftProduct(
     title: String,
     description: String?,
     mainImageURL: String?,
-    price: Double,
     store: Store,
 
     ) : Product(
     title = title,
     description = description,
     mainImageURL = mainImageURL,
-    price = price,
     store = store,
     isUsed = true,
     isFeatured = false,

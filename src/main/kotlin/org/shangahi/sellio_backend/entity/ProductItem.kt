@@ -18,7 +18,7 @@ data class ProductItem(
     val product: Product,
 
     @Column(name = "price")
-    val price: Double? = null,
+    val price: Double,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "discount_id", nullable = true)

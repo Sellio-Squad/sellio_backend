@@ -6,7 +6,6 @@ import org.shangahi.sellio_backend.entity.OrderItem
 import org.springframework.data.domain.Page
 
 fun OrderItem.toResponse(): OrderItemResponse {
-    val price = productItem.price ?: productItem.product.price
     val imageUrl = this.customizationImageUrl
         ?: this.productItem.variationImageUrl
         ?: this.productItem.product.mainImageURL
@@ -16,7 +15,7 @@ fun OrderItem.toResponse(): OrderItemResponse {
         quantity = quantity,
         productName = productItem.product.title,
         productImageUrl = imageUrl,
-        price = price,
+        price = productItem.price,
         createdAt = createdAt,
         updatedAt = updatedAt
     )

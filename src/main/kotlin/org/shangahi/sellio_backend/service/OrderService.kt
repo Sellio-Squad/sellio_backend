@@ -97,7 +97,7 @@ class OrderService(
                 val updatedStockItem = item.copy(stock = item.stock - requestItem.quantity)
                 productItemRepository.save(updatedStockItem)
 
-                val itemTotal = (item.price ?: item.product.price) * requestItem.quantity
+                val itemTotal = item.price * requestItem.quantity
                 orderTotal += itemTotal
 
                 orderItemsEntities.add(

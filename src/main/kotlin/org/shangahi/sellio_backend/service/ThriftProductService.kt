@@ -43,7 +43,6 @@ class ThriftProductService(
             defects = request.defects,
             title = request.title,
             description = request.description,
-            price = request.price,
             mainImageURL = request.mainImageURL,
             store = store
         )
@@ -103,7 +102,7 @@ class ThriftProductService(
             val productItems = items.map { item ->
                 ProductItem(
                     product = savedProduct,
-                    price = item.price ?: savedProduct.price,
+                    price = item.price,
                     stock = item.stock,
                     discount = item.discountId?.let { id -> discountRepository.findById(id).orElse(null) },
                     color = item.colorId?.let { id -> colorRepository.findById(id).orElse(null) },

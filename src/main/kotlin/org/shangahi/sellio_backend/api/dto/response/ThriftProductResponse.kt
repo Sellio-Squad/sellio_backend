@@ -8,7 +8,7 @@ data class ThriftProductResponse(
     val description: String?,
     val mainImageURL: String?,
     val storeId: UUID,
-    val price: Double,
+    val minPrice: Double?,
     val isUsed: Boolean = true,
     val isFeatured: Boolean,
     val isFavorite: Boolean,
@@ -24,7 +24,7 @@ data class ThriftProductResponse(
 data class ThriftProductCardResponse(
     val id: UUID,
     val title: String,
-    val price: Double,
+    val minPrice: Double?,
     val mainImageUrl: String?,
     val isFavorite: Boolean,
     val condition: String

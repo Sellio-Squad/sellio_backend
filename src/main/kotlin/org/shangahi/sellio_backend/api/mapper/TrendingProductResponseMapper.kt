@@ -11,7 +11,7 @@ fun TrendingProduct.toResponse(isFavorite: Boolean): TrendingProductResponse {
         id = productId,
         title = productTitle.orEmpty(),
         sold = totalSold,
-        price = price ?: 0.0,
+        minPrice = minPrice,
         image = mainImageURL.orEmpty(),
         isFavorite = isFavorite
     )

@@ -124,7 +124,6 @@ class ProductService(
 
         request.description?.let { existingProduct.description = it }
         request.mainImageURL?.let { existingProduct.mainImageURL = it }
-        request.price?.let { existingProduct.price = it }
         request.isUsed?.let { existingProduct.isUsed = it }
         request.isFeatured?.let { existingProduct.isFeatured = it }
 
