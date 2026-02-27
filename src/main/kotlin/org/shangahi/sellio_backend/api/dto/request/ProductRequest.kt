@@ -13,7 +13,7 @@ data class ProductRequest(
     @field:NotEmpty(message = "Product must have at least one sub-category")
     val subCategoryIds: List<UUID> = emptyList(),
     val imageUrls: List<String> = emptyList(),
-    @field:NotEmpty(message = "At least one item variation is required (for stock)")
+    //@field:NotEmpty(message = "At least one item variation is required (for stock)")
     val items: List<ProductItemRequest> = emptyList(),
     @field:Positive(message = "Price must be greater than zero")
     val price: Double,
@@ -23,7 +23,7 @@ data class ProductRequest(
 
 data class ProductItemRequest(
     @field:Positive(message = "Price must be greater than zero")
-    val price: Double? = null,
+    val price: Double,
     val discountId: UUID? = null,
     val colorId: Int? = null,
     val sizeId: Int? = null,

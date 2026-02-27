@@ -8,6 +8,6 @@ data class TrendingProduct(
     val productDescription: String?,
     val storeId: UUID?,
     val totalSold: Long,
-    val price: Double?,
+    val minPrice: Double?,
     val mainImageURL: String?
 )

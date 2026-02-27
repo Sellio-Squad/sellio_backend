@@ -11,7 +11,7 @@ fun ThriftProduct.toThriftProductCardResponse(
 ): ThriftProductCardResponse = ThriftProductCardResponse(
     id = this.id!!,
     title = this.title,
-    price = this.price,
+    minPrice = this.getMinPrice(),
     mainImageUrl = this.mainImageURL,
     isFavorite = isFavorite,
     condition = condition
@@ -23,37 +23,18 @@ fun ThriftProductRequest.toEntity(store: Store): ThriftProduct =
         description = this.description,
         mainImageURL = this.mainImageURL,
         store = store,
-        price = this.price,
         condition = this.condition,
         defects = this.defects
     )
 
-fun ThriftProduct.toResponse(): ThriftProductResponse =
+fun ThriftProduct.toResponse(isFavorite: Boolean = false): ThriftProductResponse =
     ThriftProductResponse(
         id = this.id!!,
         title = this.title,
         description = this.description,
         mainImageURL = this.mainImageURL,
         storeId = this.store.id!!,
-        price = this.price,
-        isUsed = this.isUsed,
-        isFeatured = this.isFeatured,
-        subCategoryIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
-        imageUrls = this.images.map { it.imageUrl },
-        items = this.items.map { it.toResponse() },
-        isFavorite = false,
-        condition = this.condition,
-        defects = this.defects
-    )
-
-fun ThriftProduct.toResponse(isFavorite: Boolean): ThriftProductResponse =
-    ThriftProductResponse(
-        id = this.id!!,
-        title = this.title,
-        description = this.description,
-        mainImageURL = this.mainImageURL,
-        storeId = this.store.id!!,
-        price = this.price,
+        minPrice = this.getMinPrice(),
         isUsed = this.isUsed,
         isFeatured = this.isFeatured,
         isFavorite = isFavorite,

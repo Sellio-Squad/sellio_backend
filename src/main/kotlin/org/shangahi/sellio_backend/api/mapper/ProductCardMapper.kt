@@ -13,7 +13,7 @@ fun Product.toProductCardResponse(
 ): ProductCardResponse = ProductCardResponse(
     id = this.id!!,
     title = this.title,
-    price = this.price,
+    minPrice = this.getMinPrice(),
     mainImageUrl = this.mainImageURL,
     subCategoriesIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
     description = description ?: "",
@@ -26,7 +26,6 @@ fun ProductRequest.toEntity(store: Store): Product =
         description = this.description,
         mainImageURL = this.mainImageURL,
         store = store,
-        price = this.price,
         isUsed = this.isUsed,
         isFeatured = this.isFeatured
     )
@@ -38,7 +37,7 @@ fun Product.toResponse(): ProductResponse =
         description = this.description,
         mainImageURL = this.mainImageURL,
         storeId = this.store.id!!,
-        price = this.price,
+        minPrice = this.getMinPrice(),
         isUsed = this.isUsed,
         isFeatured = this.isFeatured,
         subCategoryIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
@@ -54,7 +53,7 @@ fun Product.toResponse(isFavorite: Boolean): ProductResponse =
         description = this.description,
         mainImageURL = this.mainImageURL,
         storeId = this.store.id!!,
-        price = this.price,
+        minPrice = this.getMinPrice(),
         isUsed = this.isUsed,
         isFeatured = this.isFeatured,
         isFavorite = isFavorite,
@@ -65,10 +64,9 @@ fun Product.toResponse(isFavorite: Boolean): ProductResponse =
 
 
 fun ProductItem.toResponse(): ProductItemResponse {
-    val price = this.price ?: this.product.price
     return ProductItemResponse(
         id = this.id!!,
-        price = price,
+        price = this.price,
         discountId = this.discount?.id,
         colorId = this.color?.id,
         sizeId = this.size?.id,

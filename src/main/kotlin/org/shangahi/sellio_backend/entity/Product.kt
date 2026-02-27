@@ -29,21 +29,18 @@ open class Product(
     open var mainImageURL: String?,
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    open val items: Set<ProductItem> = emptySet(),
+    open var items: Set<ProductItem> = emptySet(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     open val store: Store,
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonManagedReference
     open val productSubCategories: Set<ProductSubCategory> = emptySet(),
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open val images: Set<ProductImage> = emptySet(),
-
-    @Column(name = "price", nullable = false)
-    open var price: Double,
 
     @Column(name = "is_used", nullable = false)
     open var isUsed: Boolean = false,
@@ -58,16 +55,24 @@ open class Product(
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = true)
     open var updatedAt: Instant? = null,
-){
+) {
+    fun getMinPrice() = items.minOfOrNull { it.price }
+
+
+    fun  getMaxDiscount() = items.filter { it.discount?.type == Discount.DiscountType.PERCENTAGE }
+        .maxOfOrNull { it.discount?.value ?: 0.0 }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as Product
         return id != null && id == other.id
     }
+
     override fun hashCode(): Int = javaClass.hashCode()
+
     @Override
     override fun toString(): String {
-        return "Product(id=$id, title='$title', price=$price)"
+        return "Product(id=$id, title='$title', price=${getMinPrice()})"
     }
 }

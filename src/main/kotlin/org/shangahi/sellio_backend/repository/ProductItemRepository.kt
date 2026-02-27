@@ -21,7 +21,7 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
             p.description,
             p.store.id,
             SUM(oi.quantity), 
-            p.price,           
+            MIN(pi.price),           
             p.mainImageURL
         )
         FROM OrderItem oi
@@ -45,7 +45,11 @@ interface ProductItemRepository : JpaRepository<ProductItem, UUID> {
         p.description,
         p.store.id,
         0L,
-        p.price,
+        (
+            SELECT MIN(pi.price)
+            FROM ProductItem pi
+            WHERE pi.product.id = p.id
+        ),
         p.mainImageURL
     )
     FROM Product p

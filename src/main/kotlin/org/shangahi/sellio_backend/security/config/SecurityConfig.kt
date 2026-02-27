@@ -33,7 +33,7 @@ class SecurityConfig(
                     "/v1/products/store/*",
                     "/v1/products/search",
                     "/v1/products/used",
-                    "/v1/products/*",
+                    "/v1/products/**",
                     "/v1/products/category/*",
                     "/v1/products/subcategory/*",
                     "/v1/products/store/*/subcategory/*",
