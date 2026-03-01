@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.service
 import org.shangahi.sellio_backend.api.dto.request.ChangePhoneRequest
 import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
+import org.shangahi.sellio_backend.security.service.otp.SmsSender
 import org.shangahi.sellio_backend.service.exception.SamePhoneNumberException
 import org.shangahi.sellio_backend.service.exception.UserPhoneNumberAlreadyExistsException
 import org.springframework.stereotype.Service
@@ -14,9 +15,9 @@ class AccountService(
     private val userService: UserService,
     private val otpService: OtpService,
     private val phoneNumberValidator: PhoneNumberValidatorService,
+    private val smsSender: SmsSender,
     private val otpSessionService: OtpSessionService,
-    private val otpAbuseService: OtpAbuseService,
-    private val otpClientService: OtpClientService
+    private val otpAbuseService: OtpAbuseService
 ) {
 
     @Transactional
@@ -44,12 +45,16 @@ class AccountService(
 
         val otpLog = otpService.createOtp(otpSession.sessionId!!)
 
-        otpClientService.sendOtp(
+        smsSender.sendSms(
+            validated.countryCode,
             validated.phoneNumber,
             otpLog.otp
         )
+
         return OtpResponse(
             otpSession.sessionId.toString(),
+            otpLog.otp,
+            "OTP sent to new phone number"
         )
     }
 
