@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.service
 import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.repository.UserRepository
 import org.shangahi.sellio_backend.security.service.PhoneNumberValidatorService
+import org.shangahi.sellio_backend.security.service.otp.SmsSender
 import org.shangahi.sellio_backend.service.exception.UnauthorizedException
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -14,11 +15,11 @@ class ForgotPasswordService(
     private val userService: UserService,
     private val userRepository: UserRepository,
     private val otpService: OtpService,
+    private val smsSender: SmsSender,
     private val phoneNumberValidator: PhoneNumberValidatorService,
     private val passwordEncoder: PasswordEncoder,
     private val otpSessionService: OtpSessionService,
-    private val otpAbuseService: OtpAbuseService,
-    private val otpClientService: OtpClientService
+    private val otpAbuseService: OtpAbuseService
 ) {
 
     fun requestReset(phoneNumber: String, region: String?): OtpResponse {
@@ -37,13 +38,9 @@ class ForgotPasswordService(
 
         otpAbuseService.onOtpResend(abuse)
 
+        smsSender.sendSms(validated.countryCode, validated.phoneNumber, otpLog.otp)
 
-        otpClientService.sendOtp(
-            validated.phoneNumber,
-            otpLog.otp
-        )
-
-        return OtpResponse(otpLog.sessionId.toString())
+        return OtpResponse(otpLog.sessionId.toString(), otpLog.otp, "lets create another one to remember")
     }
 
 
