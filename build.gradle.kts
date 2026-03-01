@@ -46,6 +46,8 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.apache.httpcomponents.client5:httpclient5")
+
 }
 
 kotlin {

@@ -8,16 +8,20 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.exchange
+import java.util.function.Supplier
 
 @Repository
 class CountryCityRepositoryImp(
     restTemplateBuilder: RestTemplateBuilder
 ) : CountryCityRepository {
 
-    private val restTemplate = restTemplateBuilder.build()
+    private val restTemplate = restTemplateBuilder
+        .requestFactory(Supplier { HttpComponentsClientHttpRequestFactory() })
+        .build()
 
     override fun getCitiesByCountryIso2(iso2: String): CitiesModel {
         return try {
