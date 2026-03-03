@@ -52,6 +52,7 @@ class OtpAbuseService(
         otpAbuseRepository.save(abuse)
     }
 
+    @Transactional
     fun onOtpSuccess(phoneNumber: String) {
         otpAbuseRepository.deleteByPhoneNumber(phoneNumber)
     }

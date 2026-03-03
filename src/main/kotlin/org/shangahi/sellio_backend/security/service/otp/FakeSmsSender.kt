@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service
 @Service
 @Profile("!prod")
 class FakeSmsSender : SmsSender {
-    override fun sendSms(phoneNumber: String, countryCode: String, message: String) {
+    override fun sendSms(phoneNumber: String, countryCode: String?, message: String) {
     }
 }

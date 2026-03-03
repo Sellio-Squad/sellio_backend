@@ -85,15 +85,11 @@ class RegisterService(
         otpAbuseService.ensureNotBlocked(abuse)
         otpAbuseService.onOtpResend(abuse)
 
-        val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
-            ?: throw SessionIdNotFoundException()
-
         val otpLog = otpService.createOtp(uuid)
 
         smsSender.sendSms(
-            pending.countryCode,
-            pending.phoneNumber,
-            otpLog.otp
+            phoneNumber = otpSession.phoneNumber,
+            message = otpLog.otp
         )
 
         return OtpResponse(uuid.toString(), otpLog.otp, "OTP  resented successfully")
