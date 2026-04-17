@@ -224,8 +224,16 @@ class ProductService(
         product: Product,
         defaultPrice: Double? = null
     ): Set<ProductItem> {
+        val basePrice = defaultPrice ?: product.items.firstOrNull()?.price ?: 0.0
+
+        val baseItem = ProductItem(
+            product = product,
+            price = basePrice,
+            stock = items?.firstOrNull()?.stock ?: 0
+        )
+
         return if (items != null && items.isNotEmpty()) {
-            items.map { item ->
+            val variationItems = items.map { item ->
                 ProductItem(
                     product = product,
                     price = item.price,
@@ -236,17 +244,11 @@ class ProductService(
                     stock = item.stock
                 )
             }
+            (listOf(baseItem) + variationItems).toSet()
         } else {
-            listOf(
-                ProductItem(
-                    product = product,
-                    price = defaultPrice ?: product.items.first().price,
-                    stock = 0
-                )
-            )
-        }.toSet()
+            setOf(baseItem)
+        }
     }
-
     @Transactional(readOnly = true)
     fun getUsedProducts(pageable: Pageable): Page<Product> {
         return productRepository.findAllUsedProductsWithDetails(pageable)
