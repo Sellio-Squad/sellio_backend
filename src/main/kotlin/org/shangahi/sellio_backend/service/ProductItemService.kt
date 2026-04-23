@@ -61,6 +61,8 @@ class ProductItemService(
         val product = productRepository.findByIdOrNull(productId)
             ?: throw ProductNotFoundException()
 
+        removeBaseItemIfExists(product)
+
         val productItem = mapToProductItem(request, product)
 
         return productItemRepository.save(productItem)
@@ -71,6 +73,8 @@ class ProductItemService(
 
         val product = productRepository.findByIdOrNull(productId)
             ?: throw ProductNotFoundException()
+
+        removeBaseItemIfExists(product)
 
         val newItems = requests.map { request ->
             mapToProductItem(request, product)
@@ -160,5 +164,17 @@ class ProductItemService(
 
         val savedItem = productItemRepository.save(updatedItem)
         return savedItem
+    }
+
+    private fun removeBaseItemIfExists(product: Product) {
+        val items = productItemRepository.findAllByProductIdWithDetails(product.id!!)
+        if (items.size == 1) {
+            val single = items.first()
+            val isBaseItem = single.color == null && single.size == null
+                    && single.weight == null && single.discount == null
+            if (isBaseItem) {
+                productItemRepository.delete(single)
+            }
+        }
     }
 }
