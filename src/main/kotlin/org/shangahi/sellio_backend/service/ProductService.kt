@@ -224,7 +224,7 @@ class ProductService(
         product: Product,
         defaultPrice: Double? = null
     ): Set<ProductItem> {
-        val basePrice = defaultPrice ?: product.items.firstOrNull()?.price ?: 0.0
+        val basePrice = defaultPrice ?: product.items.firstOrNull()?.price ?: throw ProductBasePriceException()
 
         val baseItem = ProductItem(
             product = product,

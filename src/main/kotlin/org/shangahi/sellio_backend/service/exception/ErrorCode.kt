@@ -25,6 +25,7 @@ internal object ErrorCode {
     const val PROD_TITLE_ALREADY_EXISTS = "PROD_003"
     const val PROD_NOT_FOUND = "PROD_004"
     const val PROD_SAVING = "PROD_005"
+    const val PROD_BASE = "PROD_006"
 
     //ITEM_xxx
     const val ITEM_OUT_OF_STOCK = "ITEM_001"
