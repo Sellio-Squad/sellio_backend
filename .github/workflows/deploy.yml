@@ -1,10 +1,9 @@
 name: Deploy to Server
 
 on:
-  workflow_run:
-    workflows: ["Build & Push Image"]
-    types:
-      - completed
+  push:
+    branches:
+      - production
 
 jobs:
   deploy:
@@ -17,5 +16,5 @@ jobs:
       - name: Restart containers
         run: |
           cd ~/sellio_backend
-          docker compose down
+          docker compose pull
           docker compose up -d
