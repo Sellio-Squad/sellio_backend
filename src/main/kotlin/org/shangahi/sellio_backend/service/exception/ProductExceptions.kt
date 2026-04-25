@@ -31,3 +31,9 @@ class ProductAlreadyExistException : SellioException(
     code = ErrorCode.PROD_TITLE_ALREADY_EXISTS,
     message = "This Product title already exists"
 )
+
+class ProductBasePriceException : SellioException(
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = ErrorCode.PROD_BASE,
+    message = "base price is not available"
+)
