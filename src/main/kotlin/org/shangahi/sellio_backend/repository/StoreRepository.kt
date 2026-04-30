@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.repository
 
 import org.shangahi.sellio_backend.entity.Store
+import org.shangahi.sellio_backend.entity.User
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -27,5 +28,7 @@ interface StoreRepository : JpaRepository<Store, UUID> {
         city: String,
         pageable: Pageable
     ): Page<Store>
+
+    fun findStoreByOwner(owner: User): Store?
 
 }
