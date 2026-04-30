@@ -209,6 +209,13 @@ class StoreService(
         return storeRepository.save(updated)
     }
 
+    @Transactional(readOnly = true)
+    fun getStoreByOwner(userId: UUID): Store {
+        val user = userRepository.findByIdAndIsDeletedFalse(userId)
+            ?: throw UserNotFoundException()
+        return storeRepository.findStoreByOwner(user)
+    }
+
     private fun storeCreationValidation(ownerId: UUID, request: CreateStoreRequest) {
 
         if (storeRepository.isExistByOwnerId(ownerId))
