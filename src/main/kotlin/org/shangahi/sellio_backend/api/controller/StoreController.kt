@@ -91,11 +91,4 @@ class StoreController(
         val storesPage = storeService.getPagedTopStores(pageable)
         return storesPage.toPageResponse { it }
     }
-
-    @StoreDoc.StoreOwner
-    @GetMapping("/owner")
-    fun getOwnerStores(@AuthenticationPrincipal ownerId: UUID): ResponseEntity<StoreResponse> {
-        return ResponseEntity.ok(storeService.getStoreByOwner(ownerId).toStoreResponse())
-    }
-
 }

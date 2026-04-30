@@ -5,6 +5,7 @@ services:
   db:
     image: postgres:15-alpine
     container_name: sellio-postgres
+    restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
@@ -23,6 +24,7 @@ services:
     build:
       context: .
     container_name: sellio-app
+    restart: unless-stopped
     ports:
       - "8080:8080"
     environment:

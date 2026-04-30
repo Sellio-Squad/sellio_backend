@@ -1,0 +1,20 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - deployment
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull latest image
+        run: docker pull kafo9991/sellio-app:latest
+
+      - name: Restart containers
+        run: |
+          cd ~/sellio_backend
+          docker compose pull
+          docker compose up -d

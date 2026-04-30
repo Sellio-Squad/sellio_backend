@@ -338,53 +338,5 @@ annotation class StoreDoc {
     )
     annotation class SearchByStoreTitle
 
-    @Operation(
-        summary = "Get Store by their Owner request",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = StoreResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "store result",
-                                value = """
-                                    {
-  {
-    "id": "c2488bcb-170d-487f-9f7a-9592d4c558ef",
-    "title": "not nice store",
-    "city": "samarra",
-    "government": "saladin",
-    "country": "iraq",
-    "avatarImageURL": null,
-    "coverImageURL": null
-}
-                        
-                        """
-                            )
-                        ],
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal server error",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "InternalServerErrorExample",
-                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
-                            )
-                        ]
-                    )
-                ]
-            ),
-        ]
-    )
-    annotation class StoreOwner
+
 }
