@@ -213,7 +213,7 @@ class StoreService(
     fun getStoreByOwner(userId: UUID): Store {
         val user = userRepository.findByIdAndIsDeletedFalse(userId)
             ?: throw UserNotFoundException()
-        return storeRepository.findStoreByOwner(user)
+        return storeRepository.findStoreByOwner(user) ?: throw StoreNotFoundException()
     }
 
     private fun storeCreationValidation(ownerId: UUID, request: CreateStoreRequest) {

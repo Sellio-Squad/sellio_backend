@@ -29,6 +29,6 @@ interface StoreRepository : JpaRepository<Store, UUID> {
         pageable: Pageable
     ): Page<Store>
 
-    fun findStoreByOwner(owner: User): Store
+    fun findStoreByOwner(owner: User): Store?
 
 }
