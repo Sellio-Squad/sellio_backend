@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @EnableScheduling
 @SpringBootApplication
-class SellioBackendApplication
+class SellioBackendApplication  
 
 fun main(args: Array<String>) {
     runApplication<SellioBackendApplication>(*args)
