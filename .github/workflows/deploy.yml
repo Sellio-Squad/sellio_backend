@@ -55,6 +55,6 @@ jobs:
     steps:
       - name: Pull latest image and restart containers
         run: |
-          cd ~/sellio_backend
+          cd ~/sellio/backend
           docker compose pull
           docker compose up -d --remove-orphans
