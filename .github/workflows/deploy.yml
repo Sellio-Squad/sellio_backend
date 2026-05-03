@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ghcr.io/sellio-squad/sellio-backend
 
 jobs:
   build-and-push:
@@ -42,11 +42,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository@L }}:latest .
+          docker build -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository }}:latest
+          docker push $IMAGE_NAME:latest
 
   deploy:
     runs-on: self-hosted
