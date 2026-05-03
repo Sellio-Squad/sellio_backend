@@ -27,6 +27,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Build Spring Boot app
         run: ./gradlew clean build -x test
 
@@ -50,7 +53,7 @@ jobs:
     needs: build-and-push
 
     steps:
-      - name: Pull latest image and restart
+      - name: Pull latest image and restart containers
         run: |
           cd ~/sellio_backend
           docker compose pull
