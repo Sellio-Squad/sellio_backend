@@ -33,9 +33,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DB_PASSWORD}
       storage.key: ${STORAGE_KEY}
       storage.secret: ${STORAGE_SECRET}
-      storage.endpoint: http://localhost:9000
+      storage.endpoint: http://localhost:4566
       storage.bucket: ${STORAGE_BUCKET}
-      storage.cdn-endpoint: http://localhost:9000
+      storage.cdn-endpoint: http://localhost:4566
       jwt.secret: ${JWT_SECRET}
       otp.service.url: ${OTP_SERVICE_URL}
 
