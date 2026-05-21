@@ -31,13 +31,28 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     @Query(
         """
     SELECT DISTINCT p FROM Product p
+    LEFT JOIN FETCH p.store
     LEFT JOIN FETCH p.images
     LEFT JOIN FETCH p.items
-    LEFT JOIN FETCH p.productSubCategories
+    LEFT JOIN FETCH p.productSubCategories psc
+    LEFT JOIN FETCH psc.subCategory
     WHERE p.id = :id
 """
     )
     fun findByIdWithItems(@Param("id") id: UUID): Product?
+
+    @Query(
+        """
+        SELECT DISTINCT p FROM Product p
+        LEFT JOIN FETCH p.store
+        LEFT JOIN FETCH p.images
+        LEFT JOIN FETCH p.items
+        LEFT JOIN FETCH p.productSubCategories psc
+        LEFT JOIN FETCH psc.subCategory
+        WHERE p.id IN :ids
+    """
+    )
+    fun findAllByIdWithItems(@Param("ids") ids: Collection<UUID>): List<Product>
 
     @Query(
         """
