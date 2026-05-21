@@ -10,6 +10,7 @@ import org.shangahi.sellio_backend.api.dto.request.ProductRequest
 import org.shangahi.sellio_backend.api.dto.request.ProductUpdateRequest
 import org.shangahi.sellio_backend.api.dto.response.ProductResponse
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
+import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.swagger.ErrorResponseExample
 
 annotation class ProductDoc {
@@ -569,5 +570,70 @@ annotation class ProductDoc {
     )
     annotation class UpdateProduct
 
+    @Operation(
+        summary = "Get trending products",
+        description = "Retrieve a paginated list of trending products, each with its nested product items.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Trending products retrieved successfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = PageResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "Trending products page",
+                                value = """
+                                    {
+                                        "data": [
+                                            {
+                                                "id": "15eceee7-b54b-4af5-85fd-dd233d4312f6",
+                                                "title": "tablet",
+                                                "description": "A high-end tablet",
+                                                "mainImageURL": "https://s3.aws/tablet.jpg",
+                                                "storeId": "7f3f4e4a-1f8f-4c6b-9ff4-fd0d7b8f0f21",
+                                                "minPrice": 1500.0,
+                                                "isUsed": false,
+                                                "isFeatured": true,
+                                                "isFavorite": false,
+                                                "subCategoryIds": [
+                                                  "2f8e4c8f-6c2d-4dcb-a6b8-90f9d5f91f49"
+                                                ],
+                                                "imageUrls": [
+                                                  "https://s3.aws/tablet-1.jpg"
+                                                ],
+                                            }
+                                        ],
+                                        "totalElements": 1,
+                                        "page": 0,
+                                        "pageSize": 20,
+                                        "totalPages": 1
+                                    }
+                                """
+                            )
+                        ],
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerErrorExample",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+    annotation class GetTrendingProducts
 
 }
