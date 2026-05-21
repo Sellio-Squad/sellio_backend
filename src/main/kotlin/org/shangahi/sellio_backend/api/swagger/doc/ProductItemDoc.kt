@@ -87,62 +87,6 @@ annotation class ProductItemDoc {
     annotation class GetProductItems
 
     @Operation(
-        summary = "Get trending products",
-        description = "Retrieve a paginated list of trending products, based on sales or other metrics.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Trending products retrieved successfully",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = PageResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "Trending products page",
-                                value = """
-                                    {
-                                        "data": [
-                                            {
-                                                "id": "15eceee7-b54b-4af5-85fd-dd233d4312f6",
-                                                "title": "tablet",
-                                                "sold": 0,
-                                                "price": 1500.0,
-                                                "image": "https://s3.aws/tablet.jpg"
-                                            }
-                                        ],
-                                        "totalElements": 1,
-                                        "page": 0,
-                                        "pageSize": 20,
-                                        "totalPages": 1
-                                    }
-                                """
-                            )
-                        ],
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal server error",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "InternalServerErrorExample",
-                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
-                            )
-                        ]
-                    )
-                ]
-            )
-        ]
-    )
-    annotation class GetTrendingProducts
-
-    @Operation(
         summary = "Insert a single new product item (variation)",
         description = "Add a new item (e.g., 'Red, Large, 10 stock') to an existing product.",
         requestBody = RequestBody(
