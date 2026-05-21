@@ -15,6 +15,7 @@ import org.shangahi.sellio_backend.entity.Product
 import org.shangahi.sellio_backend.entity.ProductImage
 import org.shangahi.sellio_backend.entity.ProductItem
 import org.shangahi.sellio_backend.entity.ProductSubCategory
+import org.shangahi.sellio_backend.model.OrderStatus
 import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.security.SecurityUtils
 import org.shangahi.sellio_backend.service.exception.*
@@ -282,6 +283,31 @@ class ProductService(
         return productPage.toPageResponse { it.toResponse() }
     }
 
+    @Transactional(readOnly = true)
+    fun getTrendingProducts(userId: UUID?, pageable: Pageable): PageResponse<ProductCardResponse> {
+        val trendingProducts =
+            productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
+                .takeIf { !it.isEmpty }
+                ?: productItemRepository.findAllProducts(pageable)
+
+        val productIds = trendingProducts.content.map { it.productId }
+        val productsById = productRepository.findAllByIdWithItems(productIds).associateBy { it.id }
+
+        val favoriteIds = if (userId != null && productIds.isNotEmpty()) {
+            favoriteProductRepository.findFavoriteProductIdsByUserIdAndProductIds(userId, productIds)
+        } else {
+            emptySet()
+        }
+
+        return trendingProducts.toPageResponse { trendingProduct ->
+            val product = productsById[trendingProduct.productId]
+                ?: throw ProductNotFoundException()
+
+            product.toProductCardResponse(
+                isFavorite = favoriteIds.contains(trendingProduct.productId)
+            )
+        }
+    }
 
     @Transactional(readOnly = true)
     fun getProductsBySubCategoryAndStore(

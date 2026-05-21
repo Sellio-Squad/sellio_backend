@@ -142,6 +142,18 @@ class ProductController(
         return productsPage.toPageResponse { it.toResponse() }
     }
 
+    @ProductDoc.GetTrendingProducts
+    @GetMapping("/trending")
+    fun getTrendingProducts(
+        @AuthenticationPrincipal userId: UUID?,
+        @ParameterObject
+        @PageableDefault(page = 0, size = 20)
+        pageable: Pageable
+    ): PageResponse<ProductCardResponse> {
+        val trendingProducts = productService.getTrendingProducts(userId, pageable)
+        return trendingProducts
+    }
+
     @DeleteMapping("/{id}")
     fun deleteProduct(@PathVariable id: UUID): ResponseEntity<String> {
         val message = productService.deleteProduct(id)

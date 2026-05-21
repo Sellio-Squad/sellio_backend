@@ -23,7 +23,6 @@ class ThriftProductService(
     private val storeRepository: StoreRepository,
     private val subCategoryRepository: SubCategoryRepository,
     private val productSubcategoryRepository: ProductSubcategoryRepository,
-    private val productItemRepository: ProductItemRepository,
     private val productImageRepository: ProductImageRepository,
     private val discountRepository: DiscountRepository,
     private val colorRepository: ColorRepository,
