@@ -28,7 +28,7 @@ annotation class StoreContactDoc {
                             name = "CreateContactsExample",
                             value = """
                             {
-                              "contacts": [
+                              [
                                 { "type": "EMAIL", "value": "store@example.com" },
                                 { "type": "PHONE", "value": "07712345678" }
                               ]
