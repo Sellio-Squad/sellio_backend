@@ -129,7 +129,7 @@ fun getProductRatingSummary(productId: UUID): ProductRatingSummaryResponse {
         return orderItemRepository.existsByUserIdAndProductIdAndStatusIn(
             userId,
             productId,
-            listOf(OrderStatus.COMPLETED, OrderStatus.CANCELLED)
+            listOf(OrderStatus.COMPLETED)
         )
     }
 

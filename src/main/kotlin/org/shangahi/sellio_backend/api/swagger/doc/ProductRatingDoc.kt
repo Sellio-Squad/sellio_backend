@@ -18,7 +18,7 @@ annotation class ProductRatingDoc {
 
     @Operation(
         summary = "Add or update a product rating",
-        description = "Submit a rating for a product. Replaces the existing rating if the user has already rated it. Requires a COMPLETED or CANCELLED order for the product.",
+        description = "Submit a rating for a product. Replaces the existing rating if the user has already rated it. Requires a COMPLETED order for the product.",
         requestBody = RequestBody(
             required = true,
             description = "Rating details (1-5 stars and a comment)",
