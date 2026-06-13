@@ -78,4 +78,9 @@ internal object ErrorCode {
     //CATEG_SECTION_xxx
     const val CATEG_SECTION_ALREADY_EXISTS = "CATEG_SECTION_001"
     const val CATEG_SECTION_NOT_FOUND = "CATEG_SECTION_002"
+
+    //RATING_xxx
+    const val RATING_NOT_PURCHASED = "RATING_001"
+    const val RATING_NOT_FOUND = "RATING_002"
+    const val RATING_NOT_OWNER = "RATING_003"
 }

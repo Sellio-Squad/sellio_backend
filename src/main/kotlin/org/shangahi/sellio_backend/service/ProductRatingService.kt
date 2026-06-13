@@ -15,6 +15,9 @@ import org.shangahi.sellio_backend.repository.ProductRepository
 import org.shangahi.sellio_backend.repository.UserRepository
 import org.shangahi.sellio_backend.security.SecurityUtils
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
+import org.shangahi.sellio_backend.service.exception.ProductNotPurchasedException
+import org.shangahi.sellio_backend.service.exception.RatingNotFoundException
+import org.shangahi.sellio_backend.service.exception.UnauthorizedRatingDeletionException
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.PageRequest
@@ -39,7 +42,7 @@ fun addRating(productId: UUID, request: ProductRatingRequest): MessageResponse {
 
     val canReview = checkReviewEligibility(userId, productId)
     if (!canReview) {
-        throw IllegalStateException("You can only rate products you have purchased.")
+        throw ProductNotPurchasedException()
     }
 
     val existingRating = productRatingRepository.findByProductIdAndUserId(productId, userId)
@@ -137,10 +140,10 @@ fun getProductRatingSummary(productId: UUID): ProductRatingSummaryResponse {
     fun deleteRating(ratingId: UUID) {
         val userId = SecurityUtils.getCurrentUserId() ?: throw UserNotFoundException()
         val rating = productRatingRepository.findByIdOrNull(ratingId) 
-            ?: throw NoSuchElementException("Rating not found")
+            ?: throw RatingNotFoundException()
 
         if (rating.user.id != userId) {
-            throw IllegalStateException("You are not authorized to delete this rating")
+            throw UnauthorizedRatingDeletionException()
         }
 
         productRatingRepository.delete(rating)
