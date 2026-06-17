@@ -22,6 +22,18 @@ interface OrderItemRepository : JpaRepository<OrderItem, UUID> {
         JOIN FETCH pi.product p
         WHERE oi.order.id IN :orderIds
     """)
-        fun findAllByOrderId(@Param("orderIds") orderIds: List<UUID>): List<OrderItem>
+    fun findAllByOrderId(@Param("orderIds") orderIds: List<UUID>): List<OrderItem>
 
+    @Query("""
+        SELECT COUNT(oi) > 0 
+        FROM OrderItem oi 
+        WHERE oi.order.user.id = :userId 
+        AND oi.productItem.product.id = :productId 
+        AND oi.order.status IN :statuses
+    """)
+    fun existsByUserIdAndProductIdAndStatusIn(
+        @Param("userId") userId: UUID,
+        @Param("productId") productId: UUID,
+        @Param("statuses") statuses: List<OrderStatus>
+    ): Boolean
 }
