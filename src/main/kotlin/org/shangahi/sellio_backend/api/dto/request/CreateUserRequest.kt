@@ -2,7 +2,6 @@ package org.shangahi.sellio_backend.api.dto.request
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import java.util.UUID
 
 data class CreateUserRequest(
     @field:NotBlank(message = "Full name is required")
@@ -24,6 +23,5 @@ data class CreateUserRequest(
     @field:NotBlank(message = "Region is required")
     val region: String,
     val avatarUrl: String?,
-    @field:NotBlank(message = "Email is required")
     val email: String?
 )
