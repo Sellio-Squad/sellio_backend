@@ -56,6 +56,7 @@ internal object ErrorCode {
     const val AUTH_PASSWORD_NOT_MATCH = "AUTH_005"
     const val AUTH_USER_REGISTRATION_PENDING = "AUTH_006"
     const val SESSION_EXPIRED = "AUTH_007"
+    const val AUTH_USER_ROLE = "AUTH_008"
 
     //PHONE_xxx
     const val INVALID_PHONE_NUMBER = "PHONE_001"
