@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.entity
 
 import jakarta.persistence.*
+import org.shangahi.sellio_backend.model.Role
 import java.time.Instant
 
 @Entity
@@ -16,6 +17,10 @@ data class RefreshToken(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "active_role", nullable = false)
+    val activeRole: Role,
 
     @Column(nullable = false)
     val expiryDate: Instant
