@@ -1,9 +1,12 @@
 package org.shangahi.sellio_backend.security.service
 
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.shangahi.sellio_backend.entity.User
+import org.shangahi.sellio_backend.model.Role
+import org.shangahi.sellio_backend.service.exception.MissingActiveRoleException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.Duration
@@ -22,25 +25,36 @@ class JwtService(
         Base64.getDecoder().decode(jwtSecret)
     )
 
-    fun generateUserToken(
-        user: User,
-    ): String {
+    fun generateUserToken(user: User, activeRole: Role): String {
         return Jwts.builder()
             .setSubject(user.id.toString())
+            .claim(ACTIVE_ROLE_CLAIM, activeRole.name)
             .setIssuedAt(Date())
             .setExpiration(Date.from(Instant.now().plus(accessTokenExpiration)))
             .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact()
     }
 
-    fun parseClaims(token: String): UUID {
-        val subject = Jwts.parserBuilder()
+    fun parseSubject(token: String): UUID {
+        return UUID.fromString(parseClaims(token).subject)
+    }
+
+    fun getActiveRole(token: String): Role {
+        val roleName = parseClaims(token)[ACTIVE_ROLE_CLAIM] as? String
+            ?: throw MissingActiveRoleException()
+
+        return Role.valueOf(roleName)
+    }
+
+    private fun parseClaims(token: String): Claims {
+        return Jwts.parserBuilder()
             .setSigningKey(secretKey)
             .build()
             .parseClaimsJws(token)
             .body
-            .subject
+    }
 
-        return UUID.fromString(subject)
+    companion object {
+        const val ACTIVE_ROLE_CLAIM = "activeRole"
     }
 }
