@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import org.shangahi.sellio_backend.model.Role
 import java.time.Instant
 import java.time.LocalDateTime
 import java.util.*
@@ -15,6 +16,15 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+        name = "user_roles",
+        joinColumns = [JoinColumn(name = "user_id")]
+    )
+    @Column(name = "role")
+    val roles: Set<Role> = setOf(Role.CUSTOMER),
 
     @Column(name = "full_name", nullable = false)
     val fullName: String,
