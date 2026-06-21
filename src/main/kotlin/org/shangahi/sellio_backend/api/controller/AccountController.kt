@@ -53,7 +53,7 @@ class AccountController(
     fun refreshToken(
         @RequestBody request: RefreshTokenRequest
     ): AuthResponse {
-        return authenticationService.refreshToken(request.refreshToken, Role.CUSTOMER)
+        return authenticationService.refreshToken(request.refreshToken, request.role)
     }
 
     @PostMapping("/reset-password")
