@@ -30,7 +30,8 @@ annotation class AccountDoc {
                             value = """
                             {
                               "phoneNumber": "+96407712345678",
-                              "password": "12345678"
+                              "password": "12345678",
+                              "role":"CUSTOMER"
                             }
                         """
                         )
@@ -219,7 +220,8 @@ annotation class AccountDoc {
                             value = """
                             {
                               "otp": "9999",
-                              "sessionId": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                              "sessionId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                              "role":"CUSTOMER"
                             }
                         """
                         )
@@ -320,7 +322,8 @@ annotation class AccountDoc {
                             name = "RefreshTokenRequestExample",
                             value = """
                             {
-                              "refreshToken": "refresh_token_here"
+                              "refreshToken": "refresh_token_here",
+                              "role":"CUSTOMER"
                             }
                         """
                         )

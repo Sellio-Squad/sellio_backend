@@ -32,7 +32,7 @@ class AccountController(
     fun login(
         @RequestBody request: LoginRequest
     ): AuthResponse {
-        return authenticationService.login(request.phoneNumber, request.password,Role.CUSTOMER)
+        return authenticationService.login(request.phoneNumber, request.password, request.role)
     }
 
     @PostMapping("/create")
@@ -45,7 +45,7 @@ class AccountController(
     @PostMapping("/create/verify-otp")
     @AccountDoc.VerifyOtp
     fun verifyOtp(@RequestBody request: VerifyOtpRequest): AuthResponse {
-        return registerService.verifyOtpAndCreateUser(request.sessionId, request.otp, Role.CUSTOMER)
+        return registerService.verifyOtpAndCreateUser(request.sessionId, request.otp, request.role)
     }
 
     @PostMapping("/refresh-token")
@@ -53,7 +53,7 @@ class AccountController(
     fun refreshToken(
         @RequestBody request: RefreshTokenRequest
     ): AuthResponse {
-        return authenticationService.refreshToken(request.refreshToken,Role.CUSTOMER)
+        return authenticationService.refreshToken(request.refreshToken, Role.CUSTOMER)
     }
 
     @PostMapping("/reset-password")
