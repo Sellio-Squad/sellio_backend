@@ -42,11 +42,6 @@ class JwtAuthenticationFilter(
             if (SecurityContextHolder.getContext().authentication == null) {
                 val user = userService.findById(userId)
 
-                if (activeRole !in user.roles) {
-                    response.status = HttpServletResponse.SC_FORBIDDEN
-                    response.writer.write("Role not assigned to user")
-                    return
-                }
 
                 val authorities = listOf(
                     SimpleGrantedAuthority("ROLE_${activeRole.name}")
