@@ -10,6 +10,7 @@ import org.shangahi.sellio_backend.service.UserService
 import org.shangahi.sellio_backend.service.exception.UserNotFoundException
 import org.springframework.context.annotation.Lazy
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
@@ -31,18 +32,25 @@ class JwtAuthenticationFilter(
             filterChain.doFilter(request, response)
             return
         }
+
         val token = authHeader.substringAfter(BEARER_PREFIX).trim()
 
         try {
-            val userId = jwtService.parseClaims(token)
+            val userId = jwtService.parseSubject(token)
+            val activeRole = jwtService.getActiveRole(token)
 
             if (SecurityContextHolder.getContext().authentication == null) {
                 val user = userService.findById(userId)
 
+
+                val authorities = listOf(
+                    SimpleGrantedAuthority("ROLE_${activeRole.name}")
+                )
+
                 val authentication = UsernamePasswordAuthenticationToken(
                     user.id,
                     null,
-                    emptyList()
+                    authorities
                 )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
@@ -69,5 +77,4 @@ class JwtAuthenticationFilter(
         private const val AUTH_HEADER = "Authorization"
         private const val BEARER_PREFIX = "Bearer "
     }
-
 }

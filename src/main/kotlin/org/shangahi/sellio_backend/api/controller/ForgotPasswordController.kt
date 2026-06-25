@@ -3,7 +3,7 @@ package org.shangahi.sellio_backend.api.controller
 import jakarta.validation.Valid
 import org.shangahi.sellio_backend.api.dto.request.RequestOtpRequest
 import org.shangahi.sellio_backend.api.dto.request.ResetPasswordRequest
-import org.shangahi.sellio_backend.api.dto.request.VerifyOtpRequest
+import org.shangahi.sellio_backend.api.dto.request.VerifyForgotPasswordOtpRequest
 import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.api.swagger.doc.ForgotPasswordDoc
 import org.shangahi.sellio_backend.service.ForgotPasswordService
@@ -31,7 +31,7 @@ class ForgotPasswordController(
 
     @PostMapping("/verify")
     @ForgotPasswordDoc.VerifyOtp
-    fun verifyOtp(@RequestBody request: VerifyOtpRequest) {
+    fun verifyOtp(@RequestBody request: VerifyForgotPasswordOtpRequest) {
         otpFlowService.verifyOtpForSession(request.sessionId, request.otp)
     }
 
