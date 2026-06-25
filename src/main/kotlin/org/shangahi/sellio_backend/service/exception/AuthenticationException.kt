@@ -6,6 +6,7 @@ import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_PASSWORD_NOT
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_SESSION_ID_NOT_FOUND
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_UNAUTHORIZED
 import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_USER_REGISTRATION_PENDING
+import org.shangahi.sellio_backend.service.exception.ErrorCode.AUTH_USER_ROLE
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER
 import org.shangahi.sellio_backend.service.exception.ErrorCode.INVALID_PHONE_NUMBER_REGION
 import org.shangahi.sellio_backend.service.exception.ErrorCode.OTP_BLOCKED
@@ -104,4 +105,10 @@ class UserRegistrationPendingException : SellioException(
     message = "User registration pending for this phone number",
     httpStatus = HttpStatus.BAD_REQUEST,
     code = AUTH_USER_REGISTRATION_PENDING
+)
+
+class MissingActiveRoleException : SellioException(
+    message = "Missing active role in the request",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = AUTH_USER_ROLE
 )

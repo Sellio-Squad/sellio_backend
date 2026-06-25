@@ -8,6 +8,7 @@ import org.shangahi.sellio_backend.api.dto.response.AuthResponse
 import org.shangahi.sellio_backend.api.dto.response.MessageResponse
 import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.api.swagger.doc.AccountDoc
+import org.shangahi.sellio_backend.model.Role
 import org.shangahi.sellio_backend.service.AccountService
 import org.shangahi.sellio_backend.service.AuthenticationService
 import org.shangahi.sellio_backend.service.RegisterService
@@ -31,7 +32,7 @@ class AccountController(
     fun login(
         @RequestBody request: LoginRequest
     ): AuthResponse {
-        return authenticationService.login(request.phoneNumber, request.password)
+        return authenticationService.login(request.phoneNumber, request.password, request.role)
     }
 
     @PostMapping("/create")
@@ -44,7 +45,7 @@ class AccountController(
     @PostMapping("/create/verify-otp")
     @AccountDoc.VerifyOtp
     fun verifyOtp(@RequestBody request: VerifyOtpRequest): AuthResponse {
-        return registerService.verifyOtpAndCreateUser(request.sessionId, request.otp)
+        return registerService.verifyOtpAndCreateUser(request.sessionId, request.otp, request.role)
     }
 
     @PostMapping("/refresh-token")
@@ -52,7 +53,7 @@ class AccountController(
     fun refreshToken(
         @RequestBody request: RefreshTokenRequest
     ): AuthResponse {
-        return authenticationService.refreshToken(request.refreshToken)
+        return authenticationService.refreshToken(request.refreshToken, request.role)
     }
 
     @PostMapping("/reset-password")

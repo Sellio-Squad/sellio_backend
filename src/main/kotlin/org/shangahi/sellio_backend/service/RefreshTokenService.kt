@@ -2,6 +2,7 @@ package org.shangahi.sellio_backend.service
 
 import org.shangahi.sellio_backend.entity.RefreshToken
 import org.shangahi.sellio_backend.entity.User
+import org.shangahi.sellio_backend.model.Role
 import org.shangahi.sellio_backend.repository.RefreshTokenRepository
 import org.shangahi.sellio_backend.service.exception.InvalidRefreshTokenException
 import org.springframework.stereotype.Service
@@ -15,13 +16,14 @@ class RefreshTokenService(
     private val refreshTokenRepository: RefreshTokenRepository,
 ) {
 
-    fun createRefreshToken(user: User): RefreshToken {
+    fun createRefreshToken(user: User,activeRole: Role): RefreshToken {
         val token = UUID.randomUUID().toString()
         val expiryDate = Instant.now().plus(Duration.ofDays(60))
 
         val refreshToken = RefreshToken(
             refreshToken = token,
             user = user,
+            activeRole = activeRole,
             expiryDate = expiryDate
         )
 

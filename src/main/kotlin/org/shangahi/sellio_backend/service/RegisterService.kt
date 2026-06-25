@@ -6,6 +6,7 @@ import org.shangahi.sellio_backend.api.dto.response.OtpResponse
 import org.shangahi.sellio_backend.entity.OtpSession
 import org.shangahi.sellio_backend.entity.PendingRegistration
 import org.shangahi.sellio_backend.entity.User
+import org.shangahi.sellio_backend.model.Role
 import org.shangahi.sellio_backend.model.ValidatedPhoneNumber
 import org.shangahi.sellio_backend.repository.PendingRegistrationRepository
 import org.shangahi.sellio_backend.security.service.JwtService
@@ -96,7 +97,7 @@ class RegisterService(
     }
 
     @Transactional
-    fun verifyOtpAndCreateUser(sessionId: String, otp: String): AuthResponse {
+    fun verifyOtpAndCreateUser(sessionId: String, otp: String, role: Role): AuthResponse {
         val uuid = UUID.fromString(sessionId)
         val otpSession = otpSessionService.getOtpSession(uuid)
         otpFlowService.verifyOtpForSession(sessionId, otp)
@@ -104,12 +105,12 @@ class RegisterService(
         val pending = pendingRegistrationRepository.findByPhoneNumber(otpSession.phoneNumber)
             ?: throw SessionIdNotFoundException()
 
-        val user = createOrRestoreUser(pending)
+        val user = createOrRestoreUser(pending, role)
         pendingRegistrationRepository.delete(pending)
 
         return AuthResponse(
-            jwtService.generateUserToken(user),
-            refreshTokenService.createRefreshToken(user).refreshToken
+            jwtService.generateUserToken(user,role),
+            refreshTokenService.createRefreshToken(user,role).refreshToken
         )
     }
 
@@ -120,12 +121,12 @@ class RegisterService(
         pendingRegistrationRepository.deleteAllByCreatedAtBefore(expiryTime)
     }
 
-    private fun createOrRestoreUser(pending: PendingRegistration): User {
-        val deletedUser = userService.findDeletedUserByPhoneNumber(pending.phoneNumber)
+    private fun createOrRestoreUser(pending: PendingRegistration, role: Role): User {
+        val user = userService.findDeletedUserByPhoneNumber(pending.phoneNumber)
 
-        return if (deletedUser != null) {
+        return if (user != null) {
             userService.saveUser(
-                deletedUser.copy(
+                user.copy(
                     isDeleted = false,
                     deletedAt = null,
                     fullName = pending.fullName,
@@ -134,12 +135,14 @@ class RegisterService(
                     country = pending.country,
                     avatarUrl = pending.avatarUrl,
                     password = pending.password,
-                    updatedAt = Instant.now()
+                    updatedAt = Instant.now(),
+                    roles = assignRole(user.roles, role)
                 )
             )
         } else {
             userService.createUser(
                 User(
+                    roles = setOf(role),
                     phoneNumber = pending.phoneNumber,
                     password = pending.password,
                     fullName = pending.fullName,
@@ -150,6 +153,10 @@ class RegisterService(
                 )
             )
         }
+    }
+
+    private fun assignRole(existingRoles: Set<Role>, role: Role): Set<Role> {
+        return if (role == Role.CUSTOMER) existingRoles else existingRoles + role
     }
 
     private fun getOtpResponse(
