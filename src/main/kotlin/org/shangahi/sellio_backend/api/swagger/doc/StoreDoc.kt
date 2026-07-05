@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.shangahi.sellio_backend.api.dto.request.CreateStoreRequest
 import org.shangahi.sellio_backend.api.dto.response.ErrorResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreCreationResponse
 import org.shangahi.sellio_backend.api.dto.response.StoreInfoResponse
@@ -100,30 +101,31 @@ annotation class StoreDoc {
     )
     annotation class GetStoreInfo
 
-
     @Operation(
-        summary = "Insert new store",
-        description = "Insert new store info and make suer to use unique phone number and owner Id ",
+        summary = "Create a new store",
+        description = "Creates a new store for the authenticated user. The request must be sent as multipart/form-data and include the store images.",
         requestBody = RequestBody(
             required = true,
-            description = "Insert required fields to add new store",
+            description = "Store information and images",
             content = [
                 Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = StoreCreationResponse::class),
+                    mediaType = "multipart/form-data",
+                    schema = Schema(implementation = CreateStoreRequest::class),
                     examples = [
                         ExampleObject(
-                            name = "AddStoreRequestExample",
+                            name = "CreateStoreRequestExample",
                             value = """
-                            {
-                                "ownerId": "c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0",
-                                "title": "laptop-store",
-                                "description": "store for selling laptops",
-                                "phoneNumber": "01212121213",
-                                "city": "cairo",
-                                "government": "cairo",
-                                "country": "egypt"
-                            }
+                        {
+                          "title": "Laptop Store",
+                          "description": "Store for selling laptops",
+                          "city": "Cairo",
+                          "country": "Egypt",
+                          "categoryIds": [
+                            "be136218-f697-4289-85f7-1aaf904f9035"
+                          ],
+                          "avatarImage": "<image file>",
+                          "coverImage": "<image file>"
+                        }
                         """
                         )
                     ]
@@ -133,50 +135,24 @@ annotation class StoreDoc {
         responses = [
             ApiResponse(
                 responseCode = "201",
-                description = "Store Inserted successfully",
-
+                description = "Store created successfully",
                 content = [
                     Content(
                         mediaType = "application/json",
                         schema = Schema(implementation = StoreCreationResponse::class),
                         examples = [
                             ExampleObject(
-                                name = "Store info",
+                                name = "StoreCreatedResponse",
                                 value = """
                             {
-                                "id": "be136218-f697-4289-85f7-1aaf904f9035",
-                                "title": "laptop-store",
-                                "ownerId": "c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0",
-                                "avatarUrl": "",
-                                "coverUrl": "",
-                                "createdAt": "2025-11-10T17:13:24.908618400Z"
+                              "id": "be136218-f697-4289-85f7-1aaf904f9035",
+                              "title": "Laptop Store",
+                              "avatarUrl": "https://cdn.example.com/stores/avatars/avatar.jpg",
+                              "coverUrl": "https://cdn.example.com/stores/covers/cover.jpg",
+                              "createdAt": "2025-11-10T17:13:24.908618400Z"
                             }
-                        """
+                            """
                             )
-                        ],
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "409",
-                description = "Conflict errors",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "PhoneNumberAlreadyExistErrorExample",
-                                value = ErrorResponseExample.STORE_PHONE_NUMBER_ALREADY_EXISTS
-                            ),
-                            ExampleObject(
-                                name = "EmailAlreadyExistErrorExample",
-                                value = ErrorResponseExample.STORE_EMAIL_ALREADY_EXISTS
-                            ),
-                            ExampleObject(
-                                name = "StoreTitleAlreadyExistErrorExample",
-                                value = ErrorResponseExample.STORE_TITLE_ALREADY_EXISTS
-                            ),
                         ]
                     )
                 ]
@@ -190,8 +166,40 @@ annotation class StoreDoc {
                         schema = Schema(implementation = ErrorResponse::class),
                         examples = [
                             ExampleObject(
-                                name = "MissedFieldErrorExample",
+                                name = "RequestBodyError",
                                 value = ErrorResponseExample.REQUEST_BODY_ERROR
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Conflict",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "StoreTitleAlreadyExists",
+                                value = ErrorResponseExample.STORE_TITLE_ALREADY_EXISTS
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Referenced category not found",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "CategoryNotFound",
+                                value = ErrorResponseExample.CATEG_NOT_FOUND
                             )
                         ]
                     )
@@ -206,17 +214,16 @@ annotation class StoreDoc {
                         schema = Schema(implementation = ErrorResponse::class),
                         examples = [
                             ExampleObject(
-                                name = "InternalServerErrorExample",
+                                name = "InternalServerError",
                                 value = ErrorResponseExample.INTERNAL_SERVER_ERROR
                             )
                         ]
                     )
                 ]
-            ),
+            )
         ]
     )
     annotation class CreateStore
-
 
     @Operation(
         summary = "Top Stores",

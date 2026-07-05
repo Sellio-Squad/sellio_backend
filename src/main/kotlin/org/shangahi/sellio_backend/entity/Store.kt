@@ -36,14 +36,17 @@ data class Store(
     @Column(name = "city", nullable = false)
     val city: String,
 
-    @Column(name = "government", nullable = false)
-    val government: String,
+    @Column(name = "government", nullable = true)
+    val government: String? = null,
 
     @Column(name = "country", nullable = false)
     val country: String,
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
     val favoriteByUsers: Set<FavoriteStore> = emptySet(),
+
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val storeCategories: Set<StoreCategory> = emptySet(),
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

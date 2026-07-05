@@ -13,14 +13,12 @@ fun Store.toStoreDetailsResponse(
     subCategories: List<SubCategoryResponse>
 ) = StoreInfoResponse(
     id = this.id ?: throw IllegalStateException("Store ID was null for Store ${this.title}"),
-    ownerId = this.owner.id ?: throw IllegalStateException("Store owner ID was null for Store ${this.title}"),
     title = this.title,
     description = this.description,
     avatarImageURL = this.avatarImageURL,
     coverImageURL = this.coverImageURL,
     featuredProducts = featuredProducts,
     city = this.city,
-    government = this.government,
     country = this.country,
     avgRating = averageRating,
     activeStoreDiscounts = discounts,
@@ -35,7 +33,6 @@ fun Store.toStoreResponse(): StoreResponse {
         id = id,
         title = title,
         city = city,
-        government = government,
         country = country,
         avatarImageURL = avatarImageURL,
         coverImageURL = coverImageURL

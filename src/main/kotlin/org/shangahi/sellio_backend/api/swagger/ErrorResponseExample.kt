@@ -152,7 +152,7 @@ object ErrorResponseExample {
       "timestamp": "2025-11-05T21:50:12.995Z",
       "status": 403,
       "error": "Forbidden",
-      "message": "this owner ID already has a store",
+      "message": "You already has a store",
       "path": "/v1/stores",
       "code": "STORE_006"
       "validationErrors": null

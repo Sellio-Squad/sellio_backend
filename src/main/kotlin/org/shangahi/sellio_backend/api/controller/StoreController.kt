@@ -29,8 +29,8 @@ class StoreController(
 ) {
     @StoreDoc.CreateStore
     @PostMapping("/create")
-    fun addStore(
-        @RequestBody request: CreateStoreRequest,
+    fun createStore(
+        @ModelAttribute request: CreateStoreRequest,
         @AuthenticationPrincipal ownerId: UUID
     ): ResponseEntity<StoreCreationResponse> {
 
