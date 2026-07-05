@@ -9,7 +9,7 @@ import org.shangahi.sellio_backend.api.mapper.toStoreCardResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDetailsResponse
 import org.shangahi.sellio_backend.api.mapper.toStoreDiscountResponse
 import org.shangahi.sellio_backend.entity.Store
-import org.shangahi.sellio_backend.model.ContactType
+import org.shangahi.sellio_backend.entity.StoreCategory
 import org.shangahi.sellio_backend.repository.*
 import org.shangahi.sellio_backend.security.SecurityUtils
 import org.shangahi.sellio_backend.service.exception.*
@@ -34,8 +34,9 @@ class StoreService(
     private val favoriteProductRepository: FavoriteProductRepository,
     private val storageService: StorageService,
     private val discountRepository: DiscountRepository,
-    private val storeContactRepository: StoreContactRepository,
-    private val subCategoryService: SubCategoryService
+    private val subCategoryService: SubCategoryService,
+    private val categoryRepository: CategoryRepository,
+    private val storeCategoryRepository: StoreCategoryRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -148,37 +149,44 @@ class StoreService(
         ownerId: UUID,
         request: CreateStoreRequest
     ): StoreCreationResponse {
-        if (storeRepository.existsByTitle(request.title))
-            throw StoreTitleAlreadyExistException()
+
+        storeCreationValidation(ownerId, request)
 
         val owner = userRepository.findByIdOrNull(ownerId)
             ?: throw UserNotFoundException()
 
-        storeCreationValidation(ownerId, request)
-
-        if (storeRepository.existsByTitle(request.title)) {
-            throw StoreTitleAlreadyExistException()
+        val categories = categoryRepository.findAllById(request.categoryIds).toSet()
+        if (categories.size != request.categoryIds.size) {
+            throw CategoryNotFoundException()
         }
 
-        storeCreationValidation(ownerId, request)
-
-        val newStore = Store(
-            owner = owner,
-            title = request.title,
-            description = request.description,
-            city = request.city,
-            government = request.government,
-            country = request.country,
+        val store = storeRepository.save(
+            Store(
+                owner = owner,
+                title = request.title,
+                description = request.description,
+                city = request.city,
+                country = request.country
+            )
         )
 
-        val savedStore = storeRepository.save(newStore)
+        val storeCategories = categories.map { category ->
+            StoreCategory(store = store, category = category)
+        }
+        storeCategoryRepository.saveAll(storeCategories)
+
+        val updatedStore = uploadStoreImages(
+            storeId = store.id!!,
+            newAvatar = request.avatarImage,
+            newCover = request.coverImage
+        )
+
         return StoreCreationResponse(
-            id = savedStore.id!!,
-            title = savedStore.title,
-            ownerId = savedStore.owner.id!!,
-            avatarUrl = savedStore.avatarImageURL.orEmpty(),
-            coverUrl = savedStore.coverImageURL.orEmpty(),
-            createdAt = savedStore.createdAt ?: Instant.now()
+            id = updatedStore.id!!,
+            title = updatedStore.title,
+            avatarUrl = updatedStore.avatarImageURL.orEmpty(),
+            coverUrl = updatedStore.coverImageURL.orEmpty(),
+            createdAt = updatedStore.createdAt ?: Instant.now()
         )
     }
 
@@ -224,13 +232,6 @@ class StoreService(
         if (storeRepository.existsByTitle(request.title))
             throw StoreTitleAlreadyExistException()
 
-        if (request.phoneNumber != null && storeContactRepository.existsByTypeAndValue(
-                ContactType.PHONE,
-                request.phoneNumber
-            )
-        ) {
-            throw StorePhoneNumberExistException()
-        }
     }
 
 
