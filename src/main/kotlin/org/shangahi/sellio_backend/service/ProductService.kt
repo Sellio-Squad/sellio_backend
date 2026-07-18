@@ -286,9 +286,9 @@ class ProductService(
     @Transactional(readOnly = true)
     fun getTrendingProducts(userId: UUID?, pageable: Pageable): PageResponse<ProductCardResponse> {
         val trendingProducts =
-            productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
+            productRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
                 .takeIf { !it.isEmpty }
-                ?: productItemRepository.findAllProducts(pageable)
+                ?: productRepository.findAllProducts(pageable)
 
         val productIds = trendingProducts.content.map { it.productId }
         val productsById = productRepository.findAllByIdWithItems(productIds).associateBy { it.id }
@@ -322,7 +322,7 @@ class ProductService(
     @Transactional
     fun deleteProduct(productId: UUID): String {
         val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
-        val isOrdered = product.items.any { orderItemRepository.existsByProductItemId(it.id!!) }
+        val isOrdered = orderItemRepository.existsByProductId(product.id!!)
 
         if (isOrdered) {
             throw ProductItemInUseException()
@@ -375,4 +375,3 @@ class ProductService(
         }
     }
 }
-

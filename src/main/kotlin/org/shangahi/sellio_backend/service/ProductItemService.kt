@@ -20,7 +20,6 @@ class ProductItemService(
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
     private val discountRepository: DiscountRepository,
-    private val cartItemRepository: CartItemRepository,
     private val orderItemRepository: OrderItemRepository
 ) {
     fun getProductItems(productId: UUID): List<ProductItem> {
@@ -93,11 +92,7 @@ class ProductItemService(
             throw ProductItemNotFoundException()
         }
 
-        if (cartItemRepository.existsByProductItemId(itemId)) {
-            throw ProductItemInUseException()
-        }
-
-        if (orderItemRepository.existsByProductItemId(itemId)) {
+        if (orderItemRepository.existsByProductId(item.product.id!!)) {
             throw ProductItemInUseException()
         }
 
@@ -155,3 +150,4 @@ class ProductItemService(
         }
     }
 }
+

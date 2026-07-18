@@ -13,13 +13,18 @@ import java.util.*
 @Repository
 interface OrderItemRepository : JpaRepository<OrderItem, UUID> {
 
-    fun findAllByStatus(status: OrderStatus, pageable: Pageable): Page<OrderItem>
-    fun existsByProductItemId(productItemId: UUID): Boolean
+    fun existsByProductId(productId: UUID): Boolean
 
-        @Query("""
+    @Query("""
         SELECT oi FROM OrderItem oi
-        JOIN FETCH oi.productItem pi
-        JOIN FETCH pi.product p
+        JOIN oi.order o
+        WHERE o.status = :status
+    """)
+    fun findByOrderStatus(@Param("status") status: OrderStatus, pageable: Pageable): Page<OrderItem>
+
+    @Query("""
+        SELECT oi FROM OrderItem oi
+        JOIN FETCH oi.product p
         WHERE oi.order.id IN :orderIds
     """)
     fun findAllByOrderId(@Param("orderIds") orderIds: List<UUID>): List<OrderItem>
@@ -28,7 +33,7 @@ interface OrderItemRepository : JpaRepository<OrderItem, UUID> {
         SELECT COUNT(oi) > 0 
         FROM OrderItem oi 
         WHERE oi.order.user.id = :userId 
-        AND oi.productItem.product.id = :productId 
+        AND oi.product.id = :productId 
         AND oi.order.status IN :statuses
     """)
     fun existsByUserIdAndProductIdAndStatusIn(
