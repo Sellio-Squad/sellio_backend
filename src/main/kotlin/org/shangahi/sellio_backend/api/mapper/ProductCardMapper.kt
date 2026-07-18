@@ -27,7 +27,8 @@ fun ProductRequest.toEntity(store: Store): Product =
         mainImageURL = this.mainImageURL,
         store = store,
         isUsed = this.isUsed,
-        isFeatured = this.isFeatured
+        isFeatured = this.isFeatured,
+        stock = stock
     )
 
 fun Product.toResponse(): ProductResponse =

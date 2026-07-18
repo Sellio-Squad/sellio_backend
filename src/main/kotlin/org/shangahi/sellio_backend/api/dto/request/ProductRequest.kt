@@ -18,7 +18,9 @@ data class ProductRequest(
     @field:Positive(message = "Price must be greater than zero")
     val price: Double,
     val isUsed: Boolean = false,
-    val isFeatured: Boolean = false
+    val isFeatured: Boolean = false,
+    @field:Positive(message = "stock must be greater than zero")
+    val stock: Int,
 )
 
 data class ProductItemRequest(

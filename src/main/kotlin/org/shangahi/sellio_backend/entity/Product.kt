@@ -42,6 +42,12 @@ open class Product(
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open val images: Set<ProductImage> = emptySet(),
 
+    @Column(name = "price", nullable = false)
+    open var price: Double = 0.0,
+
+    @Column(name = "stock", nullable = false)
+    open var stock: Int,
+
     @Column(name = "is_used", nullable = false)
     open var isUsed: Boolean = false,
 
