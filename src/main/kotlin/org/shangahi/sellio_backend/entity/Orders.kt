@@ -5,6 +5,7 @@ import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.shangahi.sellio_backend.model.OrderStatus
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -23,8 +24,8 @@ data class Orders(
     @JoinColumn(name = "store_id", nullable = false)
     val store: Store,
 
-    @Column(name = "total_price", nullable = false)
-    val totalPrice: Double = 0.0,
+    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    val totalPrice: BigDecimal = BigDecimal.ZERO,
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     val items: Set<OrderItem> = emptySet(),
