@@ -44,7 +44,9 @@ class ThriftProductService(
             title = request.title,
             description = request.description,
             mainImageURL = request.mainImageURL,
-            store = store
+            store = store,
+            stock = request.items.sumOf { it.stock },
+            price = request.price
         )
         product.items = createProductItems(request.items, product, request.price)
         val savedProduct = thriftProductRepository.save(product)
