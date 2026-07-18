@@ -18,11 +18,11 @@ data class CartItem(
     val cart: Cart,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_item_id", nullable = false)
-    val productItem: ProductItem,
+    @JoinColumn(name = "product_id", nullable = false)
+    val product: Product,
 
     @Column(name = "quantity", nullable = false)
-    val quantity: Int,
+    var quantity: Int,
 
     @Column(name = "customization_image_url", nullable = true)
     val customizationImageUrl: String? = null,
