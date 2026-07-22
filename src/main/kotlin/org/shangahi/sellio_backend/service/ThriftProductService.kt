@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.util.*
 
 @Service
@@ -104,7 +105,7 @@ class ThriftProductService(
     private fun createProductItems(
         items: List<ProductItemRequest>?,
         product: Product,
-        defaultPrice: Double
+        defaultPrice: BigDecimal
     ): Set<ProductItem> {
         return if (items != null && items.isNotEmpty()) {
             items.map { item ->

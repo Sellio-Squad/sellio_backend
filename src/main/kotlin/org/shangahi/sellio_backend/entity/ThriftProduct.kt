@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.entity
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 @Table(name = "thrift_product")
 @Entity
@@ -15,7 +16,7 @@ class ThriftProduct(
     mainImageURL: String?,
     store: Store,
     stock: Int,
-    price: Double,
+    price: BigDecimal,
     items: Set<ProductItem> = emptySet()
 ) : Product(
     title = title,

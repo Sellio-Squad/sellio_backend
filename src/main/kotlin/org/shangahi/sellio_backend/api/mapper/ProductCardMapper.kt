@@ -28,7 +28,8 @@ fun ProductRequest.toEntity(store: Store): Product =
         store = store,
         isUsed = this.isUsed,
         isFeatured = this.isFeatured,
-        stock = stock
+        stock = this.stock,
+        price = this.price
     )
 
 fun Product.toResponse(): ProductResponse =
@@ -40,11 +41,13 @@ fun Product.toResponse(): ProductResponse =
         storeId = this.store.id!!,
         minPrice = this.getMinPrice(),
         isUsed = this.isUsed,
+        price = this.price,
+        stock = this.stock,
         isFeatured = this.isFeatured,
+        isFavorite = false,
         subCategoryIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
         imageUrls = this.images.map { it.imageUrl },
         items = this.items.map { it.toResponse() },
-        isFavorite = false
     )
 
 fun Product.toResponse(isFavorite: Boolean): ProductResponse =
@@ -58,6 +61,8 @@ fun Product.toResponse(isFavorite: Boolean): ProductResponse =
         isUsed = this.isUsed,
         isFeatured = this.isFeatured,
         isFavorite = isFavorite,
+        price = this.price,
+        stock = this.stock,
         subCategoryIds = this.productSubCategories.mapNotNull { it.subCategory?.id },
         imageUrls = this.images.map { it.imageUrl },
         items = this.items.map { it.toResponse() }

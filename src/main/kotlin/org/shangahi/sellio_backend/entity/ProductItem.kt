@@ -3,6 +3,7 @@ package org.shangahi.sellio_backend.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -18,7 +19,7 @@ data class ProductItem(
     val product: Product,
 
     @Column(name = "price")
-    val price: Double,
+    val price: BigDecimal,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "discount_id", nullable = true)

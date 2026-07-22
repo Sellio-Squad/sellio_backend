@@ -25,6 +25,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
+import java.math.BigDecimal
 import java.util.*
 
 @Service
@@ -103,7 +104,7 @@ class ProductService(
             .orElseThrow { StoreNotFoundException() }
 
         val product = request.toEntity(store)
-        product.items = createProductItems(request.items, product, request.price)
+        product.items = createProductItems(request.items, product)
         val savedProduct = productRepository.save(product)
 
         createProductSubCategories(request.subCategoryIds, savedProduct)
@@ -222,10 +223,9 @@ class ProductService(
 
     private fun createProductItems(
         items: List<ProductItemRequest>?,
-        product: Product,
-        defaultPrice: Double? = null
+        product: Product
     ): Set<ProductItem> {
-        val basePrice = defaultPrice ?: product.items.firstOrNull()?.price ?: throw ProductBasePriceException()
+        val basePrice = product.price
 
         val baseItem = ProductItem(
             product = product,
