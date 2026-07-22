@@ -15,6 +15,8 @@ import org.shangahi.sellio_backend.repository.ProductRepository
 import org.shangahi.sellio_backend.service.exception.CartIsEmptyException
 import org.shangahi.sellio_backend.service.exception.CartItemQuantityExceedsStockException
 import org.shangahi.sellio_backend.service.exception.CartNotFoundException
+import org.shangahi.sellio_backend.service.exception.OrderCannotBeCancelledException
+import org.shangahi.sellio_backend.service.exception.OrderNotFoundException
 import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -118,5 +120,27 @@ class OrderService(
         val orderIds = ordersPage.content.map { it.id!! }
         val allOrderItems = orderItemRepository.findAllByOrderId(orderIds)
         return allOrderItems.groupBy { it.order.id }
+    }
+
+    @Transactional
+    fun cancelOrder(userId: UUID, orderId: UUID) {
+        val order = orderRepository.findByIdWithLock(orderId)
+            ?: throw OrderNotFoundException()
+
+        if (order.user.id != userId) {
+            throw OrderNotFoundException()
+        }
+
+        if (order.status != OrderStatus.PROCESSING) {
+            throw OrderCannotBeCancelledException(order.status)
+        }
+
+        val orderItems = orderItemRepository.findAllByOrderId(listOf(orderId))
+        orderItems.forEach { item ->
+            val product = productRepository.findByIdWithLock(item.product.id!!)
+            product?.let { product.stock += item.quantity }
+        }
+
+        order.status = OrderStatus.CANCELLED
     }
 }

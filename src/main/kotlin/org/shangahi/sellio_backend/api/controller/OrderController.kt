@@ -19,6 +19,7 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import org.springframework.http.HttpStatus
 import java.util.*
 
 
@@ -52,6 +53,16 @@ class OrderController(
             orderIds = orderService.confirmOrder(userId, request?.note)
         )
         return ResponseEntity.ok(response)
+    }
+
+    @OrderDoc.CancelOrder
+    @PutMapping("/{orderId}/cancel")
+    fun cancelOrder(
+        @PathVariable orderId: UUID,
+        @AuthenticationPrincipal userId: UUID,
+    ): ResponseEntity<Unit> {
+        orderService.cancelOrder(userId, orderId)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @OrderDoc.GetOrderHistory

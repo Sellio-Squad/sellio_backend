@@ -85,6 +85,10 @@ internal object ErrorCode {
     const val RATING_NOT_FOUND = "RATING_002"
     const val RATING_NOT_OWNER = "RATING_003"
 
+    //ORDER_xxx
+    const val ORDER_NOT_FOUND = "ORDER_001"
+    const val ORDER_CANNOT_CANCEL = "ORDER_002"
+
     //CART_xxx
     const val CART_NOT_FOUND = "CART_001"
     const val CART_ITEM_NOT_FOUND = "CART_002"

@@ -36,7 +36,7 @@ data class Orders(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    val status: OrderStatus = OrderStatus.PROCESSING,
+    var status: OrderStatus = OrderStatus.PROCESSING,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

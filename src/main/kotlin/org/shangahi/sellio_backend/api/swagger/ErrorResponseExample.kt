@@ -535,5 +535,29 @@ object ErrorResponseExample {
     }
 """
 //endregion
+
+    //region Order
+    const val ORDER_NOT_FOUND = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 404,
+      "error": "Not Found",
+      "message": "Order not found",
+      "path": "/v1/orders/",
+      "code": "ORDER_001"
+    }
+"""
+
+    const val ORDER_CANNOT_CANCEL = """
+    {
+      "timestamp": "2025-11-05T21:50:12.995Z",
+      "status": 400,
+      "error": "Bad Request",
+      "message": "Order cannot be cancelled in its current status: COMPLETED",
+      "path": "/v1/orders/",
+      "code": "ORDER_002"
+    }
+"""
+//endregion
 }
 

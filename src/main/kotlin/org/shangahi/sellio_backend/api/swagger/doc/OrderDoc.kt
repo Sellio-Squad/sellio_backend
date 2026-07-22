@@ -252,4 +252,64 @@ annotation class OrderDoc {
         ]
     )
     annotation class GetCompletedOrders
+
+    @Operation(
+        summary = "Cancel an order",
+        description = "Cancel a PROCESSING order. Stock is restored and the order status is set to CANCELLED.",
+        responses = [
+            ApiResponse(
+                responseCode = "204",
+                description = "Order cancelled successfully"
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request — order cannot be cancelled in its current status",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "OrderCannotBeCancelledExample",
+                                value = ErrorResponseExample.ORDER_CANNOT_CANCEL
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Order not found",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "OrderNotFoundExample",
+                                value = ErrorResponseExample.ORDER_NOT_FOUND
+                            )
+                        ]
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = ErrorResponse::class),
+                        examples = [
+                            ExampleObject(
+                                name = "InternalServerErrorExample",
+                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+    annotation class CancelOrder
 }
