@@ -4,7 +4,6 @@ import org.shangahi.sellio_backend.api.dto.response.OrderItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.entity.OrderItem
 import org.springframework.data.domain.Page
-import java.math.BigDecimal
 import java.math.RoundingMode
 
 fun OrderItem.toResponse(): OrderItemResponse {
@@ -16,7 +15,7 @@ fun OrderItem.toResponse(): OrderItemResponse {
         quantity = quantity,
         productName = product.title,
         productImageUrl = imageUrl,
-        price = BigDecimal.valueOf(product.price).setScale(2, RoundingMode.HALF_UP),
+        price = product.price.setScale(2, RoundingMode.HALF_UP),
         createdAt = createdAt,
         updatedAt = updatedAt
     )

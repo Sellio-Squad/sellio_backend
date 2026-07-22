@@ -31,6 +31,7 @@ class OrderService(
     private val cartItemRepository: CartItemRepository,
     private val productRepository: ProductRepository
 ) {
+    @Transactional(readOnly = true)
     fun getCompletedOrdersItems(pageable: Pageable): Page<OrderItem> {
         return orderItemRepository.findByOrderStatus(status = OrderStatus.COMPLETED, pageable = pageable)
     }
@@ -73,7 +74,7 @@ class OrderService(
             product.stock -= cartItem.quantity
             validatedItems.add(product to cartItem)
 
-            val itemTotal = BigDecimal.valueOf(product.price)
+            val itemTotal = product.price
                 .multiply(BigDecimal.valueOf(cartItem.quantity.toLong()))
             orderTotal = orderTotal.add(itemTotal)
         }

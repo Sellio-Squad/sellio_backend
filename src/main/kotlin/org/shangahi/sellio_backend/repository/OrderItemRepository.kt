@@ -17,6 +17,7 @@ interface OrderItemRepository : JpaRepository<OrderItem, UUID> {
 
     @Query("""
         SELECT oi FROM OrderItem oi
+        JOIN FETCH oi.product
         JOIN oi.order o
         WHERE o.status = :status
     """)

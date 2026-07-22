@@ -6,7 +6,7 @@ import org.shangahi.sellio_backend.api.dto.response.ConfirmOrderResponse
 import org.shangahi.sellio_backend.api.dto.response.OrderHistoryResponse
 import org.shangahi.sellio_backend.api.dto.response.OrderItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
-import org.shangahi.sellio_backend.api.mapper.OrderHistoryResponse
+import org.shangahi.sellio_backend.api.mapper.toOrderHistoryResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
 import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.OrderDoc
@@ -69,7 +69,7 @@ class OrderController(
         val itemsGroupedByOrder = orderService.getOrderItemsGroupedByOrder(orders)
         return orders.toPageResponse {
             val orderItems = itemsGroupedByOrder[it.id] ?: emptyList()
-            it.OrderHistoryResponse(orderItems)
+            it.toOrderHistoryResponse(orderItems)
         }
     }
 }

@@ -28,6 +28,7 @@ data class Orders(
     val totalPrice: BigDecimal = BigDecimal.ZERO,
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OrderBy("createdAt ASC")
     val items: Set<OrderItem> = emptySet(),
 
     @Column(name = "note", nullable = true)
