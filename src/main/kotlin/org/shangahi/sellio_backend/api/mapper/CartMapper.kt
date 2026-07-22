@@ -18,7 +18,7 @@ fun Cart.toResponse(): CartResponse {
 }
 
 fun CartItem.toResponse(): CartItemResponse {
-    val unitPrice = BigDecimal.valueOf(product.price).setScale(2, RoundingMode.HALF_UP)
+    val unitPrice = product.price.setScale(2, RoundingMode.HALF_UP)
     return CartItemResponse(
         id = id!!,
         productId = product.id!!,

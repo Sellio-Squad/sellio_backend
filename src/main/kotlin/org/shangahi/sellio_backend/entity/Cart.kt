@@ -18,6 +18,7 @@ data class Cart(
     val user: User,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart")
+    @OrderBy("createdAt ASC")
     val cartItems: Set<CartItem> = emptySet(),
 
     @CreationTimestamp

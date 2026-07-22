@@ -26,7 +26,7 @@ class CartService(
 
     @Transactional
     fun getOrCreateCart(userId: UUID): CartResponse {
-        val cart = cartRepository.findByUserId(userId)
+        val cart = cartRepository.findWithItemsByUserId(userId)
             ?: createNewCart(userId)
         return cart.toResponse()
     }
@@ -61,7 +61,7 @@ class CartService(
             cartItemRepository.save(cartItem)
         }
 
-        return cartRepository.findByUserId(userId)!!.toResponse()
+        return cartRepository.findWithItemsByUserId(userId)!!.toResponse()
     }
 
     @Transactional
@@ -84,7 +84,7 @@ class CartService(
         item.quantity = request.quantity
         cartItemRepository.save(item)
 
-        return cartRepository.findByUserId(userId)!!.toResponse()
+        return cartRepository.findWithItemsByUserId(userId)!!.toResponse()
     }
 
     @Transactional
@@ -99,7 +99,7 @@ class CartService(
 
         cartItemRepository.delete(item)
 
-        return cartRepository.findByUserId(userId)!!.toResponse()
+        return cartRepository.findWithItemsByUserId(userId)!!.toResponse()
     }
     private fun createNewCart(userId: UUID): Cart {
         val user = userRepository.findByIdOrNull(userId)
