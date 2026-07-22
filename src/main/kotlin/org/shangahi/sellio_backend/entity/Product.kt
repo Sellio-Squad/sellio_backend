@@ -5,6 +5,7 @@ import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -43,7 +44,7 @@ open class Product(
     open val images: Set<ProductImage> = emptySet(),
 
     @Column(name = "price", nullable = false)
-    open var price: Double = 0.0,
+    open var price: BigDecimal,
 
     @Column(name = "stock", nullable = false)
     open var stock: Int,
@@ -66,7 +67,7 @@ open class Product(
 
 
     fun  getMaxDiscount() = items.filter { it.discount?.type == Discount.DiscountType.PERCENTAGE }
-        .maxOfOrNull { it.discount?.value ?: 0.0 }
+        .maxOfOrNull { it.discount?.value ?: BigDecimal.ZERO }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

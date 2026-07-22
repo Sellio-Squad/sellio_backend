@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.dto.response
 
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -9,7 +10,7 @@ data class DiscountResponse(
     val productId: UUID?,
     val subCategoryId: UUID?,
     val type: String,
-    val value: Double,
+    val value: BigDecimal,
     val startDate: Instant?,
     val endDate: Instant?
 )
