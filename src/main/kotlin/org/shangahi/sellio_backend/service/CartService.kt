@@ -34,7 +34,7 @@ class CartService(
     @Transactional
     fun addItem(userId: UUID, request: AddCartItemRequest): CartResponse {
         val cart = getCartForUser(userId)
-        val product = productRepository.findByIdOrNull(request.productId)
+        val product = productRepository.findByIdWithLock(request.productId)
             ?: throw ProductNotFoundException()
 
         if (request.quantity <= 0) {
@@ -61,7 +61,8 @@ class CartService(
             cartItemRepository.save(cartItem)
         }
 
-        return cartRepository.findWithItemsByUserId(userId)!!.toResponse()
+        return cartRepository.findWithItemsByUserId(userId)
+            ?.toResponse() ?: throw CartNotFoundException()
     }
 
     @Transactional
@@ -77,14 +78,18 @@ class CartService(
         if (request.quantity <= 0) {
             throw CartItemInvalidQuantityException()
         }
-        if (request.quantity > item.product.stock) {
-            throw CartItemQuantityExceedsStockException(item.product.stock)
+
+        val product = productRepository.findByIdWithLock(item.product.id!!)
+            ?: throw ProductNotFoundException()
+        if (request.quantity > product.stock) {
+            throw CartItemQuantityExceedsStockException(product.stock)
         }
 
         item.quantity = request.quantity
         cartItemRepository.save(item)
 
-        return cartRepository.findWithItemsByUserId(userId)!!.toResponse()
+        return cartRepository.findWithItemsByUserId(userId)
+            ?.toResponse() ?: throw CartNotFoundException()
     }
 
     @Transactional
@@ -99,7 +104,8 @@ class CartService(
 
         cartItemRepository.delete(item)
 
-        return cartRepository.findWithItemsByUserId(userId)!!.toResponse()
+        return cartRepository.findWithItemsByUserId(userId)
+            ?.toResponse() ?: throw CartNotFoundException()
     }
     private fun createNewCart(userId: UUID): Cart {
         val user = userRepository.findByIdOrNull(userId)
