@@ -33,7 +33,8 @@ class CartService(
 
     @Transactional
     fun addItem(userId: UUID, request: AddCartItemRequest): CartResponse {
-        val cart = getCartForUser(userId)
+        val cart = cartRepository.findWithItemsByUserId(userId)
+            ?: throw CartNotFoundException()
         val product = productRepository.findByIdWithLock(request.productId)
             ?: throw ProductNotFoundException()
 
@@ -42,6 +43,11 @@ class CartService(
         }
         if (request.quantity > product.stock) {
             throw CartItemQuantityExceedsStockException(product.stock)
+        }
+
+        val existingStore = cart.cartItems.firstOrNull()?.product?.store
+        if (existingStore != null && existingStore.id != product.store.id) {
+            throw CartCrossStoreException(existingStore.title)
         }
 
         val existingItem = cartItemRepository.findByCartIdAndProductId(cart.id!!, product.id!!)

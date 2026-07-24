@@ -95,4 +95,5 @@ internal object ErrorCode {
     const val CART_QUANTITY_EXCEEDS_STOCK = "CART_003"
     const val CART_INVALID_QUANTITY = "CART_004"
     const val CART_IS_EMPTY = "CART_005"
+    const val CART_CROSS_STORE = "CART_006"
 }

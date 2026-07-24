@@ -31,3 +31,9 @@ class CartIsEmptyException : SellioException(
     code = ErrorCode.CART_IS_EMPTY,
     message = "Cart is empty. Add items before placing an order"
 )
+
+class CartCrossStoreException(storeTitle: String) : SellioException(
+    httpStatus = HttpStatus.BAD_REQUEST,
+    code = ErrorCode.CART_CROSS_STORE,
+    message = "Cart already contains items from store '$storeTitle'. Only one store per cart is allowed"
+)
