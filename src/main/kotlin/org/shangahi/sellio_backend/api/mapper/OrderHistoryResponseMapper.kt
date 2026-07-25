@@ -5,7 +5,7 @@ import org.shangahi.sellio_backend.entity.OrderItem
 import org.shangahi.sellio_backend.entity.Orders
 
 
-fun Orders.OrderHistoryResponse(orderItems: List<OrderItem>): OrderHistoryResponse {
+fun Orders.toOrderHistoryResponse(orderItems: List<OrderItem>): OrderHistoryResponse {
 
     return OrderHistoryResponse(
         orderId = id!!,

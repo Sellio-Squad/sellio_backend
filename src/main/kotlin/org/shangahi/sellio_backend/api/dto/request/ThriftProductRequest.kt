@@ -1,9 +1,11 @@
 package org.shangahi.sellio_backend.api.dto.request
 
+import jakarta.validation.constraints.Digits
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
+import java.math.BigDecimal
 import java.util.*
 
 data class ThriftProductRequest(
@@ -23,7 +25,8 @@ data class ThriftProductRequest(
     val imageUrls: List<String> = emptyList(),
 
     @field:Positive(message = "Price must be greater than zero")
-    val price: Double,
+    @field:Digits(integer = 10, fraction = 2)
+    val price: BigDecimal,
 
     @field:NotBlank(message = "Condition is required for thrift items")
     val condition: String,

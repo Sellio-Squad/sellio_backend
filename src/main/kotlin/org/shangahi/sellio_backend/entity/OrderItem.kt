@@ -4,7 +4,6 @@ import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
-import org.shangahi.sellio_backend.model.OrderStatus
 import java.time.Instant
 import java.util.*
 
@@ -16,16 +15,12 @@ data class OrderItem(
     val id: UUID? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_item_id", nullable = false)
-    val productItem: ProductItem,
+    @JoinColumn(name = "product_id", nullable = false)
+    val product: Product,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     val order: Orders,
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    val status: OrderStatus = OrderStatus.PROCESSING,
 
     @Column(name = "quantity", nullable = false)
     val quantity: Int,

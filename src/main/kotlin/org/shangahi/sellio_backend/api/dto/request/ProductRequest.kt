@@ -1,8 +1,10 @@
 package org.shangahi.sellio_backend.api.dto.request
 
+import jakarta.validation.constraints.Digits
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
+import java.math.BigDecimal
 import java.util.*
 
 data class ProductRequest(
@@ -16,14 +18,18 @@ data class ProductRequest(
     //@field:NotEmpty(message = "At least one item variation is required (for stock)")
     val items: List<ProductItemRequest> = emptyList(),
     @field:Positive(message = "Price must be greater than zero")
-    val price: Double,
+    @field:Digits(integer = 10, fraction = 2)
+    val price: BigDecimal,
     val isUsed: Boolean = false,
-    val isFeatured: Boolean = false
+    val isFeatured: Boolean = false,
+    @field:Positive(message = "stock must be greater than zero")
+    val stock: Int,
 )
 
 data class ProductItemRequest(
     @field:Positive(message = "Price must be greater than zero")
-    val price: Double,
+    @field:Digits(integer = 10, fraction = 2)
+    val price: BigDecimal,
     val discountId: UUID? = null,
     val colorId: Int? = null,
     val sizeId: Int? = null,

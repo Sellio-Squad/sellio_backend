@@ -1,10 +1,14 @@
 package org.shangahi.sellio_backend.repository
 
 import org.shangahi.sellio_backend.entity.Product
+import org.shangahi.sellio_backend.model.OrderStatus
+import org.shangahi.sellio_backend.model.TrendingProduct
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import jakarta.persistence.LockModeType
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
@@ -113,6 +117,7 @@ interface ProductRepository : JpaRepository<Product, UUID> {
     WHERE sc.category.id = :categoryId
 """
     )
+
     fun findByCategoryId(@Param("categoryId") categoryId: UUID, pageable: Pageable): Page<Product>
     @Query("""
         SELECT DISTINCT p FROM Product p 
@@ -123,4 +128,51 @@ interface ProductRepository : JpaRepository<Product, UUID> {
         @Param("subCategoryId") subCategoryId: UUID,
         pageable: Pageable
     ): Page<Product>
+
+    @Query("""
+    SELECT new org.shangahi.sellio_backend.model.TrendingProduct(
+        p.id,
+        p.title,
+        p.description,
+        p.store.id,
+        SUM(oi.quantity),
+        MIN(p.price),
+        p.mainImageURL
+    )
+    FROM OrderItem oi
+    JOIN oi.product p
+    JOIN oi.order o
+    WHERE o.status = :status
+    GROUP BY
+        p.id,
+        p.title,
+        p.description,
+        p.store.id,
+        p.mainImageURL,
+        p.price
+    ORDER BY SUM(oi.quantity) DESC
+""")
+    fun findTrendingProducts(
+        @Param("status") status: OrderStatus,
+        pageable: Pageable
+    ): Page<TrendingProduct>
+
+    @Query("""
+    SELECT new org.shangahi.sellio_backend.model.TrendingProduct(
+        p.id,
+        p.title,
+        p.description,
+        p.store.id,
+        0L,
+        p.price,
+        p.mainImageURL
+    )
+    FROM Product p
+    ORDER BY p.createdAt DESC
+""")
+    fun findAllProducts(pageable: Pageable): Page<TrendingProduct>
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Product p WHERE p.id = :id")
+    fun findByIdWithLock(@Param("id") id: UUID): Product?
 }

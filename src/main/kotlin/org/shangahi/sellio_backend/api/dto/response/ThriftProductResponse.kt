@@ -1,5 +1,6 @@
 package org.shangahi.sellio_backend.api.dto.response
 
+import java.math.BigDecimal
 import java.util.*
 
 data class ThriftProductResponse(
@@ -8,7 +9,7 @@ data class ThriftProductResponse(
     val description: String?,
     val mainImageURL: String?,
     val storeId: UUID,
-    val minPrice: Double?,
+    val minPrice: BigDecimal?,
     val isUsed: Boolean = true,
     val isFeatured: Boolean,
     val isFavorite: Boolean,
@@ -24,7 +25,7 @@ data class ThriftProductResponse(
 data class ThriftProductCardResponse(
     val id: UUID,
     val title: String,
-    val minPrice: Double?,
+    val minPrice: BigDecimal?,
     val mainImageUrl: String?,
     val isFavorite: Boolean,
     val condition: String

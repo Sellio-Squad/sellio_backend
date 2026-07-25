@@ -25,6 +25,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
+import java.math.BigDecimal
 import java.util.*
 
 @Service
@@ -103,7 +104,7 @@ class ProductService(
             .orElseThrow { StoreNotFoundException() }
 
         val product = request.toEntity(store)
-        product.items = createProductItems(request.items, product, request.price)
+        product.items = createProductItems(request.items, product)
         val savedProduct = productRepository.save(product)
 
         createProductSubCategories(request.subCategoryIds, savedProduct)
@@ -222,10 +223,9 @@ class ProductService(
 
     private fun createProductItems(
         items: List<ProductItemRequest>?,
-        product: Product,
-        defaultPrice: Double? = null
+        product: Product
     ): Set<ProductItem> {
-        val basePrice = defaultPrice ?: product.items.firstOrNull()?.price ?: throw ProductBasePriceException()
+        val basePrice = product.price
 
         val baseItem = ProductItem(
             product = product,
@@ -286,9 +286,9 @@ class ProductService(
     @Transactional(readOnly = true)
     fun getTrendingProducts(userId: UUID?, pageable: Pageable): PageResponse<ProductCardResponse> {
         val trendingProducts =
-            productItemRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
+            productRepository.findTrendingProducts(OrderStatus.COMPLETED, pageable)
                 .takeIf { !it.isEmpty }
-                ?: productItemRepository.findAllProducts(pageable)
+                ?: productRepository.findAllProducts(pageable)
 
         val productIds = trendingProducts.content.map { it.productId }
         val productsById = productRepository.findAllByIdWithItems(productIds).associateBy { it.id }
@@ -322,7 +322,7 @@ class ProductService(
     @Transactional
     fun deleteProduct(productId: UUID): String {
         val product = productRepository.findByIdWithItems(productId) ?: throw ProductNotFoundException()
-        val isOrdered = product.items.any { orderItemRepository.existsByProductItemId(it.id!!) }
+        val isOrdered = orderItemRepository.existsByProductId(product.id!!)
 
         if (isOrdered) {
             throw ProductItemInUseException()
@@ -375,4 +375,3 @@ class ProductService(
         }
     }
 }
-

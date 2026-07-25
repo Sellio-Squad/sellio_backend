@@ -5,6 +5,7 @@ import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -42,6 +43,12 @@ open class Product(
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open val images: Set<ProductImage> = emptySet(),
 
+    @Column(name = "price", nullable = false)
+    open var price: BigDecimal,
+
+    @Column(name = "stock", nullable = false)
+    open var stock: Int,
+
     @Column(name = "is_used", nullable = false)
     open var isUsed: Boolean = false,
 
@@ -60,7 +67,7 @@ open class Product(
 
 
     fun  getMaxDiscount() = items.filter { it.discount?.type == Discount.DiscountType.PERCENTAGE }
-        .maxOfOrNull { it.discount?.value ?: 0.0 }
+        .maxOfOrNull { it.discount?.value ?: BigDecimal.ZERO }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -24,7 +24,9 @@ fun ThriftProductRequest.toEntity(store: Store): ThriftProduct =
         mainImageURL = this.mainImageURL,
         store = store,
         condition = this.condition,
-        defects = this.defects
+        defects = this.defects,
+        stock = this.items.sumOf { it.stock },
+        price = this.price
     )
 
 fun ThriftProduct.toResponse(isFavorite: Boolean = false): ThriftProductResponse =
