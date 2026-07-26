@@ -195,65 +195,6 @@ annotation class OrderDoc {
     annotation class GetOrderHistory
 
     @Operation(
-        summary = "Get completed order items",
-        description = "Retrieve paginated list of all completed order items (admin).",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Completed items retrieved successfully",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = PageResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "CompletedItemsExample",
-                                value = """
-                                {
-                                    "data": [
-                                        {
-                                            "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-                                            "productId": "00000000-0000-0000-0000-000000000001",
-                                            "productName": "Wireless Headphones",
-                                            "productImageUrl": "https://example.com/images/headphones.jpg",
-                                            "quantity": 1,
-                                            "price": 79.99,
-                                            "createdAt": "2025-11-07T13:42:51.484Z",
-                                            "updatedAt": "2025-11-07T13:42:51.484Z"
-                                        }
-                                    ],
-                                    "totalElements": 1,
-                                    "page": 0,
-                                    "pageSize": 20,
-                                    "totalPages": 1
-                                }
-                                """
-                            )
-                        ]
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal server error",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = ErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                name = "InternalServerErrorExample",
-                                value = ErrorResponseExample.INTERNAL_SERVER_ERROR
-                            )
-                        ]
-                    )
-                ]
-            )
-        ]
-    )
-    annotation class GetCompletedOrders
-
-    @Operation(
         summary = "Cancel an order",
         description = "Cancel a PROCESSING order. Stock is restored and the order status is set to CANCELLED.",
         responses = [
