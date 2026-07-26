@@ -31,4 +31,6 @@ interface StoreRepository : JpaRepository<Store, UUID> {
 
     fun findStoreByOwner(owner: User): Store?
 
+    fun findByOwnerId(@Param("ownerId") ownerId: UUID): Store?
+
 }

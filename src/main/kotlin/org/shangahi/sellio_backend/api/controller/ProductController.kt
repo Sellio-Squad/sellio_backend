@@ -60,8 +60,11 @@ class ProductController(
 
     @ProductDoc.CreateProduct
     @PostMapping("/create")
-    fun create(@Valid @RequestBody request: ProductRequest): ResponseEntity<ProductResponse> {
-        val saved = productService.create(request).toResponse()
+    fun create(
+        @AuthenticationPrincipal userId: UUID,
+        @Valid @RequestBody request: ProductRequest
+    ): ResponseEntity<ProductResponse> {
+        val saved = productService.create(request, userId).toResponse()
         return ResponseEntity.ok(saved)
     }
 
