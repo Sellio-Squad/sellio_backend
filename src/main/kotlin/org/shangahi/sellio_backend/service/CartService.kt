@@ -64,16 +64,17 @@ class CartService(
                 product = product,
                 quantity = request.quantity
             )
+            cart.cartItems.add(cartItem)
             cartItemRepository.save(cartItem)
         }
 
-        return cartRepository.findWithItemsByUserId(userId)
-            ?.toResponse() ?: throw CartNotFoundException()
+        return cart.toResponse()
     }
 
     @Transactional
     fun updateItemQuantity(userId: UUID, itemId: UUID, request: UpdateCartItemRequest): CartResponse {
-        val cart = getCartForUser(userId)
+        val cart = cartRepository.findWithItemsByUserId(userId)
+            ?: throw CartNotFoundException()
         val item = cartItemRepository.findByIdOrNull(itemId)
             ?: throw CartItemNotFoundException()
 
@@ -94,13 +95,13 @@ class CartService(
         item.quantity = request.quantity
         cartItemRepository.save(item)
 
-        return cartRepository.findWithItemsByUserId(userId)
-            ?.toResponse() ?: throw CartNotFoundException()
+        return cart.toResponse()
     }
 
     @Transactional
     fun removeItem(userId: UUID, itemId: UUID): CartResponse {
-        val cart = getCartForUser(userId)
+        val cart = cartRepository.findWithItemsByUserId(userId)
+            ?: throw CartNotFoundException()
         val item = cartItemRepository.findByIdOrNull(itemId)
             ?: throw CartItemNotFoundException()
 
@@ -108,10 +109,10 @@ class CartService(
             throw CartItemNotFoundException()
         }
 
+        cart.cartItems.remove(item)
         cartItemRepository.delete(item)
 
-        return cartRepository.findWithItemsByUserId(userId)
-            ?.toResponse() ?: throw CartNotFoundException()
+        return cart.toResponse()
     }
     private fun createNewCart(userId: UUID): Cart {
         val user = userRepository.findByIdOrNull(userId)
