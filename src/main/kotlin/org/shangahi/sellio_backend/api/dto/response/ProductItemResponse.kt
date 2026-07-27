@@ -1,10 +1,11 @@
 package org.shangahi.sellio_backend.api.dto.response
 
+import java.math.BigDecimal
 import java.util.UUID
 
 data class ProductItemResponse(
     val id: UUID,
-    val price: Double?,
+    val price: BigDecimal?,
     val discountId: UUID?,
     val variationImageUrl: String?,
     val colorId: Int?,

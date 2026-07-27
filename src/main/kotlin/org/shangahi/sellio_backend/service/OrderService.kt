@@ -1,47 +1,101 @@
 package org.shangahi.sellio_backend.service
 
-import org.shangahi.sellio_backend.api.dto.request.ConfirmOrderRequest
-import org.shangahi.sellio_backend.api.dto.request.OrderItemRequest
-import org.shangahi.sellio_backend.entity.*
+import org.shangahi.sellio_backend.entity.CartItem
+import org.shangahi.sellio_backend.entity.OrderItem
+import org.shangahi.sellio_backend.entity.Orders
+import org.shangahi.sellio_backend.entity.Product
+import org.shangahi.sellio_backend.entity.Store
+import org.shangahi.sellio_backend.entity.User
 import org.shangahi.sellio_backend.model.OrderStatus
+import org.shangahi.sellio_backend.repository.CartItemRepository
+import org.shangahi.sellio_backend.repository.CartRepository
 import org.shangahi.sellio_backend.repository.OrderItemRepository
 import org.shangahi.sellio_backend.repository.OrderRepository
-import org.shangahi.sellio_backend.repository.ProductItemRepository
-import org.shangahi.sellio_backend.repository.UserRepository
-import org.shangahi.sellio_backend.service.exception.ProductItemNotEnoughStockException
-import org.shangahi.sellio_backend.service.exception.ProductItemNotFoundException
-import org.shangahi.sellio_backend.service.exception.ProductItemOutOfStockException
-import org.shangahi.sellio_backend.service.exception.UserNotFoundException
+import org.shangahi.sellio_backend.repository.ProductRepository
+import org.shangahi.sellio_backend.service.exception.CartIsEmptyException
+import org.shangahi.sellio_backend.service.exception.CartItemQuantityExceedsStockException
+import org.shangahi.sellio_backend.service.exception.CartNotFoundException
+import org.shangahi.sellio_backend.service.exception.OrderCannotBeCancelledException
+import org.shangahi.sellio_backend.service.exception.OrderNotFoundException
+import org.shangahi.sellio_backend.service.exception.ProductNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.util.*
 
 @Service
 class OrderService(
     private val orderItemRepository: OrderItemRepository,
-    private val userRepository: UserRepository,
-    private val productItemRepository: ProductItemRepository,
-    private val orderRepository: OrderRepository
+    private val orderRepository: OrderRepository,
+    private val cartRepository: CartRepository,
+    private val cartItemRepository: CartItemRepository,
+    private val productRepository: ProductRepository
 ) {
-    fun getCompletedOrdersItems(pageable: Pageable): Page<OrderItem> {
-        return orderItemRepository.findAllByStatus(pageable = pageable, status = OrderStatus.COMPLETED)
+    @Transactional
+    fun confirmOrder(userId: UUID, note: String?): List<UUID> {
+        val cart = cartRepository.findByUserId(userId)
+            ?: throw CartNotFoundException()
+
+        val cartItems = cartItemRepository.findByCartId(cart.id!!)
+        if (cartItems.isEmpty()) {
+            throw CartIsEmptyException()
+        }
+
+        val itemsByStore = cartItems.groupBy { it.product.store }
+        val createdOrderIds = mutableListOf<UUID>()
+
+        itemsByStore.forEach { (store, storeItems) ->
+            val orderId = createOrder(cart.user, store, storeItems, note)
+            createdOrderIds.add(orderId)
+        }
+
+        cartItemRepository.deleteByCartId(cart.id)
+
+        return createdOrderIds
     }
 
-    @Transactional
-    fun confirmOrder(userId: UUID, request: ConfirmOrderRequest): List<UUID> {
-        val user = userRepository.findByIdOrNull(userId) ?: throw UserNotFoundException()
-        val requestItemsMap = request.items.associateBy { it.productItemId }
-        val productItemIds = request.items.map { it.productItemId }
-        val productItems: List<ProductItem> = productItemRepository.findAllById(productItemIds)
-        if (productItems.size != productItemIds.size) {
-            throw ProductItemNotFoundException()
+    private fun createOrder(user: User, store: Store, storeItems: List<CartItem>, note: String?): UUID {
+        var orderTotal = BigDecimal.ZERO
+        val validatedItems = mutableListOf<Pair<Product, CartItem>>()
+
+        storeItems.forEach { cartItem ->
+            val product = productRepository.findByIdWithLock(cartItem.product.id!!)
+                ?: throw ProductNotFoundException()
+
+            if (cartItem.quantity > product.stock) {
+                throw CartItemQuantityExceedsStockException(product.stock)
+            }
+
+            product.stock -= cartItem.quantity
+            validatedItems.add(product to cartItem)
+
+            val itemTotal = product.price
+                .multiply(BigDecimal.valueOf(cartItem.quantity.toLong()))
+            orderTotal = orderTotal.add(itemTotal)
         }
-        val itemsByStore = productItems.groupBy { it.product.store }
-        val createdOrderIds = orderProcessing(user, request, requestItemsMap, itemsByStore)
-        return createdOrderIds
+
+        val order = Orders(
+            user = user,
+            store = store,
+            note = note,
+            status = OrderStatus.PROCESSING,
+            totalPrice = orderTotal
+        )
+        orderRepository.save(order)
+
+        val orderItems = validatedItems.map { (product, cartItem) ->
+            OrderItem(
+                product = product,
+                order = order,
+                quantity = cartItem.quantity,
+                customizationImageUrl = cartItem.customizationImageUrl,
+            )
+        }
+        orderItemRepository.saveAll(orderItems)
+
+        return order.id!!
     }
 
     @Transactional(readOnly = true)
@@ -50,77 +104,38 @@ class OrderService(
         status: OrderStatus?,
         pageable: Pageable
     ): Page<Orders> {
-
-        val ordersPage = if (status != null) {
+        return if (status != null) {
             orderRepository.findAllByUserIdAndStatus(userId, status, pageable)
         } else {
             orderRepository.findAllByUserId(userId, pageable)
         }
-        if (ordersPage.isEmpty) {
-            return Page.empty()
-        }
-
-        return ordersPage
     }
 
-    fun groupedItemsByOrder(ordersPage: Page<Orders>): Map<UUID?, List<OrderItem>> {
+    fun getOrderItemsGroupedByOrder(ordersPage: Page<Orders>): Map<UUID?, List<OrderItem>> {
         val orderIds = ordersPage.content.map { it.id!! }
         val allOrderItems = orderItemRepository.findAllByOrderId(orderIds)
         return allOrderItems.groupBy { it.order.id }
     }
 
-    private fun orderProcessing(
-        user: User,
-        request: ConfirmOrderRequest,
-        requestItemsMap: Map<UUID, OrderItemRequest>,
-        itemsByStore: Map<Store, List<ProductItem>>
-    ): List<UUID> {
-        val createdOrderIds = mutableListOf<UUID>()
-        itemsByStore.forEach { store, storeProductItems ->
-            val order = Orders(
-                user = user,
-                store = store,
-                note = request.note,
-                status = OrderStatus.PROCESSING,
-                totalPrice = 0.0
-            )
-            var orderTotal = 0.0
-            val orderItemsEntities = mutableListOf<OrderItem>()
-            storeProductItems.forEach { item ->
-                val requestItem = requestItemsMap[item.id] ?: throw ProductItemNotFoundException()
-                if (item.stock == 0) {
-                    throw ProductItemOutOfStockException()
-                }
-                if (item.stock < requestItem.quantity) {
-                    throw ProductItemNotEnoughStockException(requestItem.quantity, item.stock)
-                }
-                val updatedStockItem = item.copy(stock = item.stock - requestItem.quantity)
-                productItemRepository.save(updatedStockItem)
+    @Transactional
+    fun cancelOrder(userId: UUID, orderId: UUID) {
+        val order = orderRepository.findByIdWithLock(orderId)
+            ?: throw OrderNotFoundException()
 
-                val itemTotal = item.price * requestItem.quantity
-                orderTotal += itemTotal
-
-                orderItemsEntities.add(
-                    OrderItem(
-                        productItem = item,
-                        order = order,
-                        quantity = requestItem.quantity,
-                        customizationImageUrl = requestItem.customizationImageUrl,
-                        status = OrderStatus.PROCESSING
-                    )
-                )
-            }
-            orderRepository.save(order)
-            orderItemRepository.saveAll(orderItemsEntities)
-            orderRepository.save(
-                order.copy(
-                    totalPrice = orderTotal
-                )
-            )
-
-            createdOrderIds.add(order.id!!)
+        if (order.user.id != userId) {
+            throw OrderNotFoundException()
         }
-        return createdOrderIds
-    }
 
+        if (order.status != OrderStatus.PROCESSING) {
+            throw OrderCannotBeCancelledException(order.status)
+        }
+
+        val orderItems = orderItemRepository.findAllByOrderId(listOf(orderId))
+        orderItems.forEach { item ->
+            val product = productRepository.findByIdWithLock(item.product.id!!)
+            product?.let { product.stock += item.quantity }
+        }
+
+        order.status = OrderStatus.CANCELLED
+    }
 }

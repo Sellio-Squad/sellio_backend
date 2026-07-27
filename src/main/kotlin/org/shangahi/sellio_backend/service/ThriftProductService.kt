@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.util.*
 
 @Service
@@ -44,7 +45,9 @@ class ThriftProductService(
             title = request.title,
             description = request.description,
             mainImageURL = request.mainImageURL,
-            store = store
+            store = store,
+            stock = request.items.sumOf { it.stock },
+            price = request.price
         )
         product.items = createProductItems(request.items, product, request.price)
         val savedProduct = thriftProductRepository.save(product)
@@ -102,7 +105,7 @@ class ThriftProductService(
     private fun createProductItems(
         items: List<ProductItemRequest>?,
         product: Product,
-        defaultPrice: Double
+        defaultPrice: BigDecimal
     ): Set<ProductItem> {
         return if (items != null && items.isNotEmpty()) {
             items.map { item ->

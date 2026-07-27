@@ -115,9 +115,7 @@ class StoreService(
             ?: throw StoreNotFoundException()
         val products = productRepository.findAllByStoreId(storeId)
         products.forEach { product ->
-            val inUse = product.items.any { item ->
-                orderItemRepository.existsByProductItemId(item.id!!)
-            }
+            val inUse = orderItemRepository.existsByProductId(product.id!!)
             if (inUse) throw ProductItemInUseException()
         }
         store.avatarImageURL?.let { storageService.deleteImage(it) }

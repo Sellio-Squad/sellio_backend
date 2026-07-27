@@ -4,18 +4,18 @@ import org.shangahi.sellio_backend.api.dto.response.OrderItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.entity.OrderItem
 import org.springframework.data.domain.Page
+import java.math.RoundingMode
 
 fun OrderItem.toResponse(): OrderItemResponse {
     val imageUrl = this.customizationImageUrl
-        ?: this.productItem.variationImageUrl
-        ?: this.productItem.product.mainImageURL
+        ?: this.product.mainImageURL
     return OrderItemResponse(
         id = id,
-        productId = productItem.id,
+        productId = product.id,
         quantity = quantity,
-        productName = productItem.product.title,
+        productName = product.title,
         productImageUrl = imageUrl,
-        price = productItem.price,
+        price = product.price.setScale(2, RoundingMode.HALF_UP),
         createdAt = createdAt,
         updatedAt = updatedAt
     )

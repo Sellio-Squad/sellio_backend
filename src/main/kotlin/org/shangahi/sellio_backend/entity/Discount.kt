@@ -1,6 +1,7 @@
 package org.shangahi.sellio_backend.entity
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -32,7 +33,7 @@ data class Discount(
     val type: DiscountType,
 
     @Column(name = "value", nullable = false)
-    val value: Double,
+    val value: BigDecimal,
 
     @Column(name = "start_date")
     val startDate: Instant? = null,

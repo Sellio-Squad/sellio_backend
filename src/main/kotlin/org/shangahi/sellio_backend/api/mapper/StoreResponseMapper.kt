@@ -4,6 +4,7 @@ import org.shangahi.sellio_backend.api.dto.response.*
 import org.shangahi.sellio_backend.entity.Discount
 import org.shangahi.sellio_backend.entity.Store
 import org.springframework.data.domain.Page
+import java.math.BigDecimal
 
 fun Store.toStoreDetailsResponse(
     featuredProducts: List<ProductCardResponse>,
@@ -24,7 +25,7 @@ fun Store.toStoreDetailsResponse(
     activeStoreDiscounts = discounts,
     storeContacts = this.contacts.map { it.toStoreContactResponse() },
     isFavorite = isFavorite,
-    sale = (discounts.filter { it.type == Discount.DiscountType.PERCENTAGE }.maxOfOrNull { it.value } ?: 40.0).toInt().toString(), // temp value
+    sale = (discounts.filter { it.type == Discount.DiscountType.PERCENTAGE }.maxOfOrNull { it.value } ?: BigDecimal.valueOf(40.0)).toString(), // temp value
     subCategories = subCategories
 )
 
