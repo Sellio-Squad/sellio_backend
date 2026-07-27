@@ -33,11 +33,6 @@ class OrderService(
     private val cartItemRepository: CartItemRepository,
     private val productRepository: ProductRepository
 ) {
-    @Transactional(readOnly = true)
-    fun getCompletedOrdersItems(pageable: Pageable): Page<OrderItem> {
-        return orderItemRepository.findByOrderStatus(status = OrderStatus.COMPLETED, pageable = pageable)
-    }
-
     @Transactional
     fun confirmOrder(userId: UUID, note: String?): List<UUID> {
         val cart = cartRepository.findByUserId(userId)

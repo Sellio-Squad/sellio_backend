@@ -11,7 +11,6 @@ data class ProductRequest(
     val title: String,
     val description: String?,
     val mainImageURL: String?,
-    val storeId: UUID,
     @field:NotEmpty(message = "Product must have at least one sub-category")
     val subCategoryIds: List<UUID> = emptyList(),
     val imageUrls: List<String> = emptyList(),

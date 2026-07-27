@@ -118,7 +118,6 @@ annotation class ProductDoc {
   "title": "keyboard",
   "description": "this is new keyboard product",
   "mainImageURL": "imge/url",
-  "storeId": "57a212fc-e4ac-4f70-90cd-21f95dc600ba",
   "price": 500.0,
   "isFeatured": true,
   "subCategoryIds": [

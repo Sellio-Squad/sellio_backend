@@ -93,15 +93,15 @@ class ProductService(
     }
 
     @Transactional
-    fun create(request: ProductRequest): Product {
+    fun create(request: ProductRequest, userId: UUID): Product {
         if (productRepository.existsByTitle(request.title)) {
             throw ProductAlreadyExistException()
         }
 
         checkSubCategoryIsExist(request.subCategoryIds)
 
-        val store = storeRepository.findById(request.storeId)
-            .orElseThrow { StoreNotFoundException() }
+        val store = storeRepository.findByOwnerId(userId)
+            ?: throw StoreNotFoundException()
 
         val product = request.toEntity(store)
         product.items = createProductItems(request.items, product)

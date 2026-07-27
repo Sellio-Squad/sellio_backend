@@ -4,11 +4,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.shangahi.sellio_backend.api.dto.request.ConfirmOrderRequest
 import org.shangahi.sellio_backend.api.dto.response.ConfirmOrderResponse
 import org.shangahi.sellio_backend.api.dto.response.OrderHistoryResponse
-import org.shangahi.sellio_backend.api.dto.response.OrderItemResponse
 import org.shangahi.sellio_backend.api.dto.response.PageResponse
 import org.shangahi.sellio_backend.api.mapper.toOrderHistoryResponse
 import org.shangahi.sellio_backend.api.mapper.toPageResponse
-import org.shangahi.sellio_backend.api.mapper.toResponse
 import org.shangahi.sellio_backend.api.swagger.doc.OrderDoc
 import org.shangahi.sellio_backend.model.OrderStatus
 import org.shangahi.sellio_backend.service.OrderService
@@ -29,17 +27,6 @@ import java.util.*
 class OrderController(
     private val orderService: OrderService,
 ) {
-    @OrderDoc.GetCompletedOrders
-    @GetMapping("/completed")
-    fun getCompletedOrders(
-        @ParameterObject
-        @PageableDefault(page = 0, size = 20)
-        pageable: Pageable
-    ): PageResponse<OrderItemResponse> {
-        val ordersPage = orderService.getCompletedOrdersItems(pageable)
-        return ordersPage.toPageResponse { it.toResponse() }
-    }
-
     @OrderDoc.ConfirmOrder
     @PostMapping("/confirm")
     fun confirmOrder(
